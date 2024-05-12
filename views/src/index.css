@@ -17,6 +17,14 @@
     animation: squish 200ms ease-in-out;
 }
 
+.circle-btn > * {
+    stroke: white;
+    fill: black;
+    height: 100%;
+    width: 100%;
+}
+
+
 @keyframes squish {
     50% {
         scale: 1.4 0.6;
