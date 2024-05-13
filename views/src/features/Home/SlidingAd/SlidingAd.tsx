@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import FenderAd from '../../images/ad/FenderAd.png';
-import GibsonAd from '../../images/ad/GibsonAd.png';
-import TaylorAd from '../../images/ad/TaylorAd.png';
+import FenderAd from "../../../images/ad/FenderAd.png"
+import GibsonAd from '../../../images/ad/GibsonAd.png';
+import TaylorAd from '../../../images/ad/TaylorAd.png';
 import { ArrowBigLeft, ArrowBigRight, Circle, CircleDot } from 'lucide-react';
 
 const adImages = [FenderAd, GibsonAd, TaylorAd];
@@ -30,9 +30,10 @@ export const SlidingAd = () => {
 
         // Clear the interval when the component unmounts
         return () => clearInterval(interval);
-    }, [])
+    }, [imageIndex])
+
     return (
-        <div className='w-3/4 h-full flex flex-col items-center relative m-auto'>
+        <div className='w-3/4 h-full flex flex-col items-center relative m-auto mt-8 mb-8'>
             <div className='w-full h-full flex flex-row overflow-hidden'>
                 {adImages.map(url => (
                     <img 

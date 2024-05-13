@@ -1,7 +1,11 @@
-import { SlidingAd } from "../SlidingAd/SlidingAd"
+import { SlidingAd } from "./SlidingAd/SlidingAd"
+import { Categories } from "./Categories/Categories"
 
 export const Home = () => {
     return (
-        <SlidingAd />
+        <>
+            <SlidingAd />
+            <Categories />
+        </>
     )
 }
