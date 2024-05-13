@@ -4,10 +4,24 @@ import { ShoppingCart } from "../ShoppingCart/ShoppingCart";
 
 export const Header = () => {
     return (
-            <div className="flex items-end justify-around bg-red-800 pt-2 pb-5">
-                <img src={logo} width="250" />
+        <div className="flex flex-col items-end justify-between bg-red-800 pt-2 pb-5 w-full">
+            <div className="flex w-full items-end justify-between">
+                <div className="mx-3">
+                    <img src={logo} width="250" />
+                </div>
+
+                <div className="w-full justify-center hidden sm:flex">
+                    <SearchBar />
+                </div>
+
+                <div className="w-28 flex justify-center">
+                    <ShoppingCart />
+                </div>
+            </div>
+
+            <div className="sm:hidden justify-center w-full flex pt-5">
                 <SearchBar />
-                <ShoppingCart />
-            </div>    
+            </div>
+        </div>
     )
 }

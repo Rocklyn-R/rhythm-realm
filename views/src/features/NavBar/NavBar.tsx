@@ -1,6 +1,6 @@
 export const NavBar = () => {
     return (
-        <div>
+        <div className="hidden sm:block">
             <ul className="flex justify-around p-2 bg-gray-900 text-gray-100 text-lg">
                 <li><a href="#" className="hover:underline">Guitars</a></li>
                 <li><a href="#" className="hover:underline">Basses</a></li>
