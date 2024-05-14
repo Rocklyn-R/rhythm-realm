@@ -7,40 +7,41 @@ import WindsImg from "../../../images/categories/Winds.png";
 import AudioImg from "../../../images/categories/Audio.png";
 import AccessoriesImg from "../../../images/categories/Accessories.png";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
+import { getCategories } from "../../../api/categories";
+import { useDispatch, useSelector } from "react-redux";
+import { selectCategories, setCategories } from "../../../redux-store/CategoriesSlice";
+
 
 export const Categories = () => {
-
-    //const instrumentCategories = ["Guitars", "Basses", "Drums", "Keys", "Strings", "Winds", "Audio", "Accessories"];
-    const instrumentCategories = {
-        Guitars: GuitarsImg,
-        Basses: BassesImg,
-        Drums: DrumsImg,
-        Keys: KeysImg,
-        Strings: StringsImg,
-        Winds: WindsImg,
-        Audio: AudioImg,
-        Accessories: AccessoriesImg
-    }
+    const dispatch = useDispatch();
+    const instrumentCategories = useSelector(selectCategories);
 
     useEffect(() => {
-        const someFunc = () => {
-           const object =  Object.entries(instrumentCategories);
-           console.log(object);
-        };
-        someFunc(); // Call the function inside useEffect
-    }, []); //
+        const fetchCategories = async () => {
+            const categoryData = await getCategories();
+            if (categoryData) {
+                dispatch(setCategories(categoryData));
+                console.log(instrumentCategories)
+            }
+        }
+        fetchCategories();
+    }, [dispatch])
+
+   
+ 
     return (
         <div className="flex flex-col items-center">
             <h1 className="mb-8 text-3xl text-center font-bold">Rhythm Realm - Online Shop for Musical Instruments</h1>
             <h2 className="text-center text-xl">Shop by category:</h2>
             <div className="flex flex-wrap justify-center sm:w-full md:w-full lg:w-5/6">
-                {Object.entries(instrumentCategories).map(([category, imgSrc]) => (
+              {instrumentCategories.map((category) => (
                 <div className="border border-black mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8">
                     <button>
-                        <a>
-                            <img src={imgSrc} />
-                            {category}
-                        </a>
+                        <Link to={`/${category.name}`}>
+                            <img src={category.image} />
+                            {category.name}
+                        </Link>
                     </button>
                 </div>
             ))}
