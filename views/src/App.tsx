@@ -19,8 +19,8 @@ function App() {
             element={<Home />}
           />  
           <Route 
-            path="/guitars"
-            element={<Subcategories category="guitars" />}
+            path="/:categoryName"
+            element={<Subcategories />}
           />
         </Routes>
       </div >

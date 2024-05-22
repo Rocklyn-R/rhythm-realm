@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session');
 require('dotenv').config();
-const { getCategories } = require("./controllers/categories");
+const { getCategories, getSubcategories } = require("./controllers/categories");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -25,6 +25,7 @@ app.use(session({
 }));
 
 app.get("/", getCategories);
+app.get('/subcategories', getSubcategories)
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`)

@@ -26,9 +26,8 @@ export const SlidingAd = () => {
     useEffect(() => {
         const interval = setInterval(() => {
             showNextImage();
-        }, 5000); // 6000 milliseconds = 6 seconds
-
-        // Clear the interval when the component unmounts
+        }, 5000); 
+     
         return () => clearInterval(interval);
     }, [imageIndex])
 
