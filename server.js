@@ -25,7 +25,10 @@ app.use(session({
 }));
 
 app.get("/", getCategories);
-app.get('/subcategories', getSubcategories)
+app.get('/subcategories', getSubcategories);
+
+const productsRouter = require('./routes/products');
+app.use('/products', productsRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`)

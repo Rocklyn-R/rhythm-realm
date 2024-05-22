@@ -23,6 +23,7 @@ const getSubcategories = async (req, res) => {
     }
 }
 
+
 module.exports = {
     getCategories,
     getSubcategories

@@ -22,7 +22,6 @@ export const Categories = () => {
             const categoryData = await getCategories();
             if (categoryData) {
                 dispatch(setCategories(categoryData));
-                console.log(instrumentCategories)
             }
         }
         fetchCategories();
