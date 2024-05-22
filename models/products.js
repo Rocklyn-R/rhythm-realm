@@ -8,7 +8,17 @@ const productsGet = async (name) => {
 
     try {
         const result = await db.query(query, [name]);
-        console.log(result.rows);
+        return result.rows
+    } catch (error) {
+        throw error;
+    }
+}
+
+const selectedProductGet = async (name) => {
+    const query = `SELECT * FROM products WHERE name = $1`;
+    try {
+        const result = await db.query(query, [name]);
+        console.log(result.rows)
         return result.rows
     } catch (error) {
         throw error;
@@ -16,5 +26,6 @@ const productsGet = async (name) => {
 }
 
 module.exports = {
-    productsGet
+    productsGet,
+    selectedProductGet
 }
