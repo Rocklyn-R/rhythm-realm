@@ -21,4 +21,20 @@ export interface Product {
     image1: string;
     image2: string;
     image3: string;
+    manufacturer: string;
+    product_id: number;
+    variant_name: string;
 }
+
+export interface Cart {
+    id: number;
+    category_id: number;
+    subcategory_id: number;
+    name: string;
+    price: string;
+    description: string;
+    image1: string;
+    image2: string;
+    manufacturer: string;
+}
+

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { selectSelectedProduct } from "../../../redux-store/CategoriesSlice"
+import { selectSelectedProduct } from "../../../redux-store/ProductsSlice"
 
 export const ImageGallery = () => {
     const selectedProduct = useSelector(selectSelectedProduct);

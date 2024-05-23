@@ -1,13 +1,13 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import categoriesReducer from "./CategoriesSlice";
+import productsReducer from "./ProductsSlice";
 
 export interface RootState {
-    categories: ReturnType<typeof categoriesReducer>;
+    products: ReturnType<typeof productsReducer>;
 }
 
 const store = configureStore({
     reducer: combineReducers({
-        categories: categoriesReducer
+        products: productsReducer
     })
 });
 

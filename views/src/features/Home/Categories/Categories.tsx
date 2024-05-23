@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../../../api/categories";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCategories, setCategories } from "../../../redux-store/CategoriesSlice";
+import { selectCategories, setCategories } from "../../../redux-store/ProductsSlice";
 
 
 export const Categories = () => {

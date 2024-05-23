@@ -3,8 +3,8 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { Category, Subcategory, Product } from "../types/types";
 import { RootState } from "./store";
 
-export const CategorySlice = createSlice({
-    name: "category",
+export const ProductsSlice = createSlice({
+    name: "products",
     initialState: {
         categories: [
             { id: 1, name: 'Guitars', image: 'https://i.imgur.com/aHtc8VN.png' },
@@ -18,7 +18,8 @@ export const CategorySlice = createSlice({
         ] as Category[],
         subcategories: [] as Subcategory[],
         products: [] as Product[],
-        selectedProduct: {} as Product
+        selectedProduct: {} as Product,
+        cart: []
     },
     reducers: {
         setCategories: (state, action: PayloadAction<Category[]>) => {
@@ -41,11 +42,11 @@ export const {
     setSubcategories,
     setProducts,
     setSelectedProduct
-} = CategorySlice.actions
+} = ProductsSlice.actions
 
-export const selectCategories = (state: RootState) => state.categories.categories;
-export const selectSubcategories = (state: RootState) => state.categories.subcategories;
-export const selectProducts = (state: RootState) => state.categories.products;
-export const selectSelectedProduct = (state: RootState) => state.categories.selectedProduct;
+export const selectCategories = (state: RootState) => state.products.categories;
+export const selectSubcategories = (state: RootState) => state.products.subcategories;
+export const selectProducts = (state: RootState) => state.products.products;
+export const selectSelectedProduct = (state: RootState) => state.products.selectedProduct;
 
-export default CategorySlice.reducer;
+export default ProductsSlice.reducer;

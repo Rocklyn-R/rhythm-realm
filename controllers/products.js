@@ -1,4 +1,4 @@
-const { productsGet, selectedProductGet } = require('../models/products');
+const { productsGet, selectedProductGet, variantsGetAll } = require('../models/products');
 
 const getProducts = async (req, res) => {
     const { subcategory } = req.query;
@@ -13,13 +13,24 @@ const getProducts = async (req, res) => {
 }
 
 const getSelectedProduct = async (req, res) => {
-    const { name } = req.query;
-    console.log(name);
+    const { name, variant } = req.query;
     try {
-        const result = await selectedProductGet(name);
+        const result = await selectedProductGet(name, variant);
         console.log(result);
         if (result) {
             res.status(200).json({ selectedProduct: result })
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+const getAllVariants = async (req, res) => {
+    const { id } = req.query;
+    try {
+        const result = await variantsGetAll(id);
+        if (result) {
+            res.status(200).json({ variants: result })
         }
     } catch (error) {
         res.status(500).json({ message: "Internal server error" })

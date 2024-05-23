@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { useSelector } from "react-redux"
-import { selectCategories, selectSubcategories, setSubcategories } from "../../redux-store/CategoriesSlice"
+import { selectCategories, selectSubcategories, setSubcategories } from "../../redux-store/ProductsSlice"
 import { useEffect, useState } from "react"
 import { getSubcategories } from "../../api/categories"
 import { useDispatch } from "react-redux"
@@ -8,7 +8,8 @@ import { useParams } from "react-router-dom"
 import { formatSubcategoryNameForUrl } from "../../utilities/utilities"
 import { Breadcrumbs } from "../Breadcrumbs/Breadcrumb"
 import { getCategories } from "../../api/categories";
-import { setCategories } from "../../redux-store/CategoriesSlice"
+import { setCategories } from "../../redux-store/ProductsSlice";
+
 
 export interface BreadcrumbPaths {
     name: string;

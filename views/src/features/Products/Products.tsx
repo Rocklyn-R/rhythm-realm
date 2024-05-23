@@ -1,6 +1,6 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { formatCategoryNameForDisplay } from "../../utilities/utilities";
-import { selectCategories, selectProducts, selectSubcategories, setProducts, setSelectedProduct, setSubcategories } from "../../redux-store/CategoriesSlice";
+import { selectCategories, selectProducts, selectSubcategories, setProducts, setSelectedProduct, setSubcategories } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import { getSubcategories } from "../../api/categories";
@@ -48,9 +48,9 @@ export const Products = () => {
                 {allProducts.map(product => (
                     <div className="mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8 bg-white">
                         <button className="hover:border border-black" onClick={() => dispatch(setSelectedProduct(product))}>
-                            <Link to={`/${categoryName}/${subcategoryName}/${product.name}`}>
+                            <Link to={`/${categoryName}/${subcategoryName}/${product.name}/${product.variant_name}`}>
                                 <img src={product.image1} />
-                                <p className="p-1">{product.name}</p>
+                                <p className="p-1">{product.name} {product.variant_name}</p>
                                 <p className="pt-1">${product.price}</p>
                             </Link>
                         </button>
