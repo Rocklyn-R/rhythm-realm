@@ -13,13 +13,22 @@ export const getProducts = async (subcategory: string) => {
 
 export const getSelectedProduct = async (name: string, variant: string) => {
     try {
-        console.log(name);
-        console.log(variant);
         const response = await fetch(`http://localhost:4000/products/selected-product?name=${name}&variant=${variant}`);
         const data = await response.json();
-        console.log(data.selectedProduct)
         if (response.ok) {
             return data.selectedProduct[0];
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getAllVariants = async (id: number) => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/variants?id=${id}`);
+        const data = await response.json();
+        if (response.ok) {
+            return data.variants;
         }
     } catch (error) {
         throw error;
