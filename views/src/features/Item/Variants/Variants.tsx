@@ -21,9 +21,9 @@ export const Variants = () => {
                 <Link to={`/${categoryName}/${subcategoryName}/${selectedProduct.name}/${variant.variant_name}`}>
                  <button
                     key={variant.id}
-                    className={`mr-4 my-4 p-2 bg-white rounded-md ${variant.variant_name === selectedProduct.variant_name ? 'border-red-800 border-2' : 'border-gray-400 border'}`}
+                    className={`w-1/5 mr-4 my-4 p-2 bg-white rounded-md ${variant.variant_name === selectedProduct.variant_name ? 'border-red-800 border-2' : 'border-gray-400 border'}`}
                 >
-                    <img src={variant.image1} width="100" />
+                    <img src={variant.image1} />
                 </button>
                 </Link>
             ))}

@@ -27,24 +27,24 @@ export const Categories = () => {
         fetchCategories();
     }, [dispatch])
 
-   
- 
+
+
     return (
         <div className="flex flex-col items-center">
-            <h1 className="mb-8 text-3xl text-center font-bold">Rhythm Realm - Online Shop for Musical Instruments</h1>
-            <h2 className="text-center text-xl">Shop by category:</h2>
-            <div className="flex flex-wrap justify-center sm:w-full md:w-full lg:w-5/6">
-              {instrumentCategories.map((category) => (
-                <div className="border border-black mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8">
-                    <button>
-                        <Link to={`/${category.name}`}>
-                            <img src={category.image} />
-                            {category.name}
-                        </Link>
-                    </button>
-                </div>
-            ))}
+        <h1 className="mb-8 text-3xl text-center font-bold">Rhythm Realm - Online Shop for Musical Instruments</h1>
+        <h2 className="text-center text-xl">Shop by category:</h2>
+        <div className="flex flex-wrap justify-center">
+          {instrumentCategories.map((category) => (
+            <div key={category.name} className="border border-black w-32 xxs:w-36 md:w-40 lg:w-48 mx-6 my-4 flex">
+              <button>
+                <Link to={`/${category.name}`}>
+                  <img src={category.image} alt={category.name} />
+                  {category.name}
+                </Link>
+              </button>
             </div>
+          ))}
         </div>
+      </div>
     )
 }

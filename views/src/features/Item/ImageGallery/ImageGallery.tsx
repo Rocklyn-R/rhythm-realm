@@ -26,9 +26,9 @@ export const ImageGallery = () => {
 
     return (
 
-        <div className='m-4 bg-white w-1/2 ml-10 h-full flex flex-col items-center relative'>
+        <div className='m-4 pb-4 bg-white lg:w-1/2 md:w-4/5 lg:ml-10 h-full flex flex-col items-center relative overflow-hidden'>
             
-            <div className='w-full flex flex-row overflow-hidden pb-8'>
+            <div className='lg:w-full md:w-5/6 flex flex-row lg-overflow-hidden pb-8'>
 
                 {galleryImages.map(url => (
                     <img

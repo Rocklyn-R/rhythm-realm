@@ -38,37 +38,13 @@ export const Subcategories: React.FC = () => {
     }, [dispatch, categoryName]);
 
 
-
-
-  /*  useEffect(() => {
-        const newPaths = [
-            { name: 'Home', url: '/' },
-            { name: categoryNameCapitalized, url: `/${categoryName}` },
-        ];
-
-        if (currentSubcategory && categoryName) {
-            newPaths.push({
-                name: currentSubcategory,
-                url: `/${categoryName.toLowerCase()}/${formatSubcategoryName(currentSubcategory)}`,
-            });
-        }
-
-        setPaths(newPaths);
-    }, [currentSubcategory, categoryName, categoryNameCapitalized]);
-
-    const handleSubcategoryClick = (subcategoryName: string) => {
-        setCurrentSubcategory(subcategoryName);
-    }*/
-
-
-
     return (
         <div className="flex flex-col items-center">
     
             <h2 className="text-center text-xl">{categoryNameCapitalized}:</h2>
-            <div className="flex flex-wrap justify-center sm:w-full md:w-full lg:w-5/6">
+            <div className="flex flex-wrap justify-center">
                 {categoryName && subcategories.map(subcategory => (
-                    <div className="border border-black mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8">
+                    <div className="border border-black w-32 sm:w-36 md:w-40 lg:w-48 mx-6 my-4 flex">
                         <button>
                             <Link
                                 to={`/${categoryName}/${(subcategory.name)}`}

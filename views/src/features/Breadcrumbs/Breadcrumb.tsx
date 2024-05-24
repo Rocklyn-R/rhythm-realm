@@ -42,7 +42,7 @@ export const Breadcrumbs = () => {
                 {isLastSegment(subcategoryName) ? (
                     <span>{subcategoryName}</span>
                 ) : (
-                    <Link to={`/${categoryName}/${subcategoryName}`} className="underline hover:no-underline">
+                    <Link to={`/${categoryName}/${subcategoryName}`} className="whitespace-nowrap underline hover:no-underline">
                         {subcategoryName}
                     </Link>
                 )}

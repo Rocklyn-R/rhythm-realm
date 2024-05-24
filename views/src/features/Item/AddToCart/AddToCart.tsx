@@ -12,7 +12,7 @@ export const AddToCart = () => {
     }
 
     return (
-        <div className="border-gray-400 border-b pb-4 mb-4 w-full">
+        <div className="border-gray-400 border-b pb-4 mb-4 w-full flex">
             <Select
                 value={quantity}
                 onChange={handleChange}
@@ -25,7 +25,7 @@ export const AddToCart = () => {
                     </MenuItem>
                 ))}
             </Select>
-            <button className="px-36 py-4 ml-4 rounded-md bg-black text-white text-xl">Add to cart</button>
+            <button className="flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl">Add to cart</button>
         </div>
     )
 }
