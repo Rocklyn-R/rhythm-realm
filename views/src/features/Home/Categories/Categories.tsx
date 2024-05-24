@@ -37,7 +37,7 @@ export const Categories = () => {
               {instrumentCategories.map((category) => (
                 <div className="border border-black mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8">
                     <button>
-                        <Link to={`/${category.name.toLowerCase()}`}>
+                        <Link to={`/${category.name}`}>
                             <img src={category.image} />
                             {category.name}
                         </Link>

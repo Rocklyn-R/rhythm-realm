@@ -5,7 +5,6 @@ import { useEffect, useState } from "react"
 import { getSubcategories } from "../../api/categories"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
-import { formatSubcategoryNameForUrl } from "../../utilities/utilities"
 import { Breadcrumbs } from "../Breadcrumbs/Breadcrumb"
 import { getCategories } from "../../api/categories";
 import { setCategories } from "../../redux-store/ProductsSlice";
@@ -20,16 +19,13 @@ export interface BreadcrumbPaths {
 export const Subcategories: React.FC = () => {
     const { categoryName } = useParams<{ categoryName: string }>()
     const allCategories = useSelector(selectCategories);
-    const id = allCategories.find(item => item.name.toLowerCase() === categoryName)!.id;
+    const id = allCategories.find(item => item.name === categoryName)!.id;
     const dispatch = useDispatch();
     const subcategories = useSelector(selectSubcategories);
 
     const categoryNameCapitalized = categoryName
         ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1)
         : '';
-
-
-    
 
     useEffect(() => {
         const fetchSubcategories = async () => {
@@ -75,8 +71,7 @@ export const Subcategories: React.FC = () => {
                     <div className="border border-black mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8">
                         <button>
                             <Link
-                                to={`/${categoryName.toLowerCase()}/${formatSubcategoryNameForUrl(subcategory.name)}`}
-                                state={{ subcategoryName: subcategory.name }}
+                                to={`/${categoryName}/${(subcategory.name)}`}
                             >
                                 <img src={subcategory.image} />
                                 {subcategory.name}

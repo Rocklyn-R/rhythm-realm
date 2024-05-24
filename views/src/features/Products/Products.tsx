@@ -10,7 +10,7 @@ import { getProducts } from "../../api/products";
 export const Products = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
     const allCategories = useSelector(selectCategories)
-    const id = allCategories.find(item => item.name.toLowerCase() === categoryName)!.id;
+    const id = allCategories.find(item => item.name === categoryName)!.id;
     const allSubcategories = useSelector(selectSubcategories);
     const dispatch = useDispatch();
     const allProducts = useSelector(selectProducts);

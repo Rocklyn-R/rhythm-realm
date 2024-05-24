@@ -10,6 +10,8 @@ import { setCategories } from './redux-store/ProductsSlice';
 import { useDispatch } from 'react-redux';
 import { getCategories } from './api/categories';
 import { Item } from './features/Item/Item';
+import { Breadcrumbs } from './features/Breadcrumbs/Breadcrumb';
+import { Layout } from './Layout';
 
 
 function App() {
@@ -17,14 +19,15 @@ function App() {
   return (
 
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-100">
-        <Header />
-        <NavBar />
         <Routes>
           <Route 
             path="/"
-            element={<Home />}
-          />  
+            element={<Layout />}
+          >
+            <Route 
+              index
+              element={<Home />}
+            />  
           <Route 
             path="/:categoryName"
             element={<Subcategories />}
@@ -37,8 +40,8 @@ function App() {
             path="/:categoryName/:subcategoryName/:productName/:variantName"
             element={<Item />}
           />
+          </Route>
         </Routes>
-      </div >
     </BrowserRouter>
 
   );

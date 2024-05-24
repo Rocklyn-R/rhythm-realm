@@ -1,22 +1,77 @@
-import { Link } from "react-router-dom"
-import { BreadcrumbPaths } from "../Subcategories/Subcategories"
-import React from "react"
+import { Link, useParams, useLocation } from "react-router-dom";
+import { BreadcrumbPaths } from "../Subcategories/Subcategories";
+import React from "react";
 
 interface BreadcrumbsProps {
     paths: BreadcrumbPaths[]
 }
 
-export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ paths }) => {
+export const Breadcrumbs = () => {
+    const { categoryName, subcategoryName, productName, variantName } = useParams();
+    const location = useLocation();
+    const pathSegments = location.pathname.split('/').filter(Boolean); // Splitting the path and filtering out empty strings
+    const isLastSegment = (segment: string) => {
+        // Decode the segment for comparison
+        const decodedLastSegment = decodeURIComponent(pathSegments[pathSegments.length - 1]);
+        // Check if the decoded segment matches the last segment in the path
+        return decodedLastSegment === segment;
+    };
+
     return (
-        <div className="flex m-4 self-start">
-           {paths.map((path, index) => (
-                <React.Fragment key={index}>
-                    <Link className="underline" to={path.url}>
-                        {path.name}
+        <div className="flex m-4 self-start space-x-2">
+         {location.pathname !== "/" && (
+                <>
+                    <Link to="/" className="underline hover:no-underline">Home</Link>
+                </>
+            )}
+        {categoryName && (
+            <>
+                <span>/</span>
+                {isLastSegment(categoryName) ? (
+                    <span>{categoryName}</span>
+                ) : (
+                    <Link to={`/${categoryName}`} className="underline hover:no-underline">
+                        {categoryName}
                     </Link>
-                    {index < paths.length - 1 && <p className="mx-3">/</p>}
-                </React.Fragment>
-            ))}
-        </div>
+                )}
+            </>
+        )}
+        {subcategoryName && (
+            <>
+                <span>/</span>
+                {isLastSegment(subcategoryName) ? (
+                    <span>{subcategoryName}</span>
+                ) : (
+                    <Link to={`/${categoryName}/${subcategoryName}`} className="underline hover:no-underline">
+                        {subcategoryName}
+                    </Link>
+                )}
+            </>
+        )}
+        {productName && !variantName && (
+            <>
+                 <span>/</span>
+                {isLastSegment(productName) ? (
+                    <span>{productName}</span>
+                ) : (
+                    <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
+                       {productName} {variantName}
+                    </Link>
+                )}
+            </>
+        )}
+        {productName && variantName && (
+            <>
+                <span>/</span>
+                {isLastSegment(variantName) ? (
+                    <span>{productName} {variantName}</span>
+                ) : (
+                    <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
+                       {productName} {variantName}
+                    </Link>
+                )}
+            </>
+        )}
+    </div>
     )
 }

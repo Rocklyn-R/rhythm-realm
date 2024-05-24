@@ -24,6 +24,17 @@
     width: 100%;
 }
 
+.gallery-arrow-btn > * {
+    height: 3rem;
+    width: 3rem;
+}
+
+.gallery-gray-btn > * {
+    stroke: #edebeb;
+    height: 3rem;
+    width: 3rem;
+}
+
 
 @keyframes squish {
     50% {
