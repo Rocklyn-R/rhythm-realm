@@ -28,13 +28,14 @@ const selectedProductGet = async (name, variant) => {
 }
 
 const variantsGetAll = async (id) => {
-    const query = `SELECT prodcuts.*, variants.*
-    FROM products 
+    const query = `SELECT products.*, variants.*
+    FROM products
     JOIN variants ON products.id = variants.product_id
-    WHERE product.id = $1`
+    WHERE products.id = $1`;
     try {
         const result = await db.query(query, [id]);
-        return result.rows
+        console.log(result.rows);
+        return result.rows;
     } catch (error) {
         throw error;
     }

@@ -16,7 +16,6 @@ const getSelectedProduct = async (req, res) => {
     const { name, variant } = req.query;
     try {
         const result = await selectedProductGet(name, variant);
-        console.log(result);
         if (result) {
             res.status(200).json({ selectedProduct: result })
         }
@@ -28,6 +27,7 @@ const getSelectedProduct = async (req, res) => {
 const getAllVariants = async (req, res) => {
     const { id } = req.query;
     try {
+        console.log(id);
         const result = await variantsGetAll(id);
         if (result) {
             res.status(200).json({ variants: result })
@@ -39,5 +39,6 @@ const getAllVariants = async (req, res) => {
 
 module.exports = {
     getProducts,
-    getSelectedProduct
+    getSelectedProduct,
+    getAllVariants
 }
