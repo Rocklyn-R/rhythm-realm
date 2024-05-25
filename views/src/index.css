@@ -35,6 +35,11 @@
     width: 3rem;
 }
 
+.product-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end
+}
 
 @keyframes squish {
     50% {

@@ -1,14 +1,28 @@
 import { useState } from 'react';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { selectSelectedProduct } from '../../../redux-store/ProductsSlice';
+import { addItemToCart } from '../../../redux-store/CartSlice';
 
 export const AddToCart = () => {
 
     const [quantity, setQuantity] = useState<number>(1);
+    const dispatch = useDispatch();
+    const selectedProduct = useSelector(selectSelectedProduct);
 
     const handleChange = (event: SelectChangeEvent<number>) => {
         const selectedQuantity = typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
         setQuantity(selectedQuantity);
+    }
+
+    const handleAddToCart = () => {
+        const productWithQuantity = {
+            ...selectedProduct,
+            quantity: quantity
+        }
+        dispatch(addItemToCart(productWithQuantity))
     }
 
     return (
@@ -25,7 +39,10 @@ export const AddToCart = () => {
                     </MenuItem>
                 ))}
             </Select>
-            <button className="flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl">Add to cart</button>
+            <button
+                className="flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl"
+                onClick={() => handleAddToCart()}
+            >Add to cart</button>
         </div>
     )
 }

@@ -19,7 +19,7 @@ export const Item = () => {
             const selectedProductData = await getSelectedProduct(productName!, variantName!);
             if (selectedProductData) {
                 dispatch(setSelectedProduct(selectedProductData));
-                const variantData = await getAllVariants(selectedProductData.product_id);
+                const variantData = await getAllVariants(selectedProductData.id);
                 if (variantData) {
                     dispatch(setVariants(variantData));
                 }

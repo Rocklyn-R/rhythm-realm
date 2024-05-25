@@ -20,7 +20,6 @@ export const ProductsSlice = createSlice({
         products: [] as Product[],
         selectedProduct: {} as Product,
         variants: [] as Product[],
-        cart: []
     },
     reducers: {
         setCategories: (state, action: PayloadAction<Category[]>) => {
