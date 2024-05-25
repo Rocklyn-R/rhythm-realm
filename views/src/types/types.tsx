@@ -13,29 +13,22 @@ export interface Subcategory {
 
 export interface Product {
     id: number;
-    category_id: number;
-    subcategory_id: number;
+    //category_id: number;
+    //subcategory_id: number;
     name: string;
     price: string;
     description: string;
+    manufacturer: string;
     image1: string;
     image2: string;
     image3: string;
-    manufacturer: string;
-    product_id: number;
+    category_name: string;
+    subcategory_name: string;
     variant_name: string;
 }
 
-export interface Cart {
-    id: number;
-    category_id: number;
-    subcategory_id: number;
-    name: string;
-    price: string;
-    description: string;
-    image1: string;
-    image2: string;
-    manufacturer: string;
+export interface Cart extends Product {
+    quantity: number;
 }
 
 

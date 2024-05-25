@@ -42,14 +42,14 @@ export const Subcategories: React.FC = () => {
         <div className="flex flex-col items-center">
     
             <h2 className="text-center text-xl">{categoryNameCapitalized}:</h2>
-            <div className="flex flex-wrap justify-center">
+            <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:w-full md:w-full lg:w-5/6 gap-4 px-8">
                 {categoryName && subcategories.map(subcategory => (
-                    <div className="border border-black w-32 sm:w-36 md:w-40 lg:w-48 mx-6 my-4 flex">
-                        <button>
+                    <div className="w-40 sm:w-40 md:w-46 lg:w-48 mt-8 mx-auto">
+                        <button className="border border-gray-300 rounded-md">
                             <Link
                                 to={`/${categoryName}/${(subcategory.name)}`}
                             >
-                                <img src={subcategory.image} />
+                                <img src={subcategory.image} className="block w-full border border-white rounded-t-md" />
                                 {subcategory.name}
                             </Link>
                         </button>

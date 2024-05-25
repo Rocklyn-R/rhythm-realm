@@ -44,14 +44,16 @@ export const Products = () => {
     return (
         <div className="flex flex-col items-center">
             <h2 className="text-center text-xl">{formattedSubcategoryName}:</h2>
-            <div className="flex flex-wrap justify-center sm:w-full md:w-full lg:w-5/6">
+            <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:w-full md:w-full lg:w-5/6 gap-4 px-8">
                 {allProducts.map(product => (
-                    <div className="mx-8 w-32 sm:w-36 md:w-40 lg:w-48 mt-8 bg-white">
-                        <button className="hover:border border-black" onClick={() => dispatch(setSelectedProduct(product))}>
-                            <Link to={`/${categoryName}/${subcategoryName}/${product.name}/${product.variant_name}`}>
-                                <img src={product.image1} />
-                                <p className="p-1">{product.name} {product.variant_name}</p>
-                                <p className="pt-1">${product.price}</p>
+                    <div key={product.name} className="flex hover:border border-black w-40 sm:w-40 md:w-46 lg:w-48 mt-8 bg-white mx-auto">
+                        <button onClick={() => dispatch(setSelectedProduct(product))} className="h-full flex justify-between">
+                            <Link to={`/${categoryName}/${subcategoryName}/${product.name}/${product.variant_name}`} className="h-full flex flex-col">
+                                <img src={product.image1} alt={`${product.name} ${product.variant_name}`} />
+                                <div className="h-1/2 flex flex-col justify-between">
+                                    <p className="p-1">{product.name} {product.variant_name}</p>
+                                    <p className="pt-1">${product.price}</p>
+                                </div>
                             </Link>
                         </button>
                     </div>
