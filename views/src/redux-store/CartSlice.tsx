@@ -7,24 +7,28 @@ export const CartSlice = createSlice({
     name: "cart",
     initialState: {
         cart: [] as Cart[],
-        total: 0,
+        total: '0',
         total_items: 0
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
             const foundItemIndex = state.cart.findIndex(item => item.id === action.payload.id);
             if (foundItemIndex !== -1) {
-              state.cart[foundItemIndex].quantity += action.payload.quantity;
-              console.log(action.payload);
+                const sameVariantAlreadyInCart = state.cart[foundItemIndex].variant_name === action.payload.variant_name;
+                if (sameVariantAlreadyInCart) {
+                     state.cart[foundItemIndex].quantity += action.payload.quantity;
+                } else {
+                    state.cart.unshift(action.payload);
+                }
             } else {
-                state.cart.unshift(action.payload); 
+                state.cart.unshift(action.payload);
             }
             const price = parseFloat(action.payload.price);
             const totalPrice = price * action.payload.quantity;
-            state.total = state.total + totalPrice;
+            const newTotal = parseFloat(state.total) + totalPrice
+            state.total = newTotal.toFixed(2);
             state.total_items = state.total_items + action.payload.quantity;
         },
-
     }
 });
 

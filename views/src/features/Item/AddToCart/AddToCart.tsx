@@ -11,6 +11,7 @@ export const AddToCart = () => {
     const [quantity, setQuantity] = useState<number>(1);
     const dispatch = useDispatch();
     const selectedProduct = useSelector(selectSelectedProduct);
+    const [addedToCart, setAddedToCart] = useState(false);
 
     const handleChange = (event: SelectChangeEvent<number>) => {
         const selectedQuantity = typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
@@ -23,7 +24,13 @@ export const AddToCart = () => {
             quantity: quantity
         }
         dispatch(addItemToCart(productWithQuantity))
+        setAddedToCart(true);
+        setTimeout(() => {
+            setAddedToCart(false)
+        }, 900);
     }
+
+  
 
     return (
         <div className="border-gray-400 border-b pb-4 mb-4 w-full flex">
@@ -40,9 +47,10 @@ export const AddToCart = () => {
                 ))}
             </Select>
             <button
-                className="flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl"
+                className={`${addedToCart ? "bg-red-800" : "bg-black"} hover:bg-red-800 transition-colors duration-300 ease flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl`}
                 onClick={() => handleAddToCart()}
-            >Add to cart</button>
+                disabled={addedToCart}
+            >{addedToCart ? "Added to cart!" : "Add to cart"}</button>
         </div>
     )
 }
