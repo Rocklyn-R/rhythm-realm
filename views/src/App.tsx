@@ -12,6 +12,7 @@ import { getCategories } from './api/categories';
 import { Item } from './features/Item/Item';
 import { Breadcrumbs } from './features/Breadcrumbs/Breadcrumb';
 import { Layout } from './Layout';
+import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
 
 
 function App() {
@@ -19,29 +20,33 @@ function App() {
   return (
 
     <BrowserRouter>
-        <Routes>
-          <Route 
-            path="/"
-            element={<Layout />}
-          >
-            <Route 
-              index
-              element={<Home />}
-            />  
-          <Route 
+      <Routes>
+        <Route
+          path="/"
+          element={<Layout />}
+        >
+          <Route
+            index
+            element={<Home />}
+          />
+          <Route
+            path="/Cart"
+            element={<ShoppingCart />}
+          />
+          <Route
             path="/:categoryName"
             element={<Subcategories />}
           />
-          <Route 
+          <Route
             path="/:categoryName/:subcategoryName"
             element={<Products />}
           />
-          <Route 
+          <Route
             path="/:categoryName/:subcategoryName/:productName/:variantName"
             element={<Item />}
           />
-          </Route>
-        </Routes>
+        </Route>
+      </Routes>
     </BrowserRouter>
 
   );

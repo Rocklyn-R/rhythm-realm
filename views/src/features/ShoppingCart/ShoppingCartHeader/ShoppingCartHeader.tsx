@@ -1,32 +1,52 @@
 import { useState } from "react";
 import { PiShoppingCartFill } from "react-icons/pi";
+import { useSelector } from "react-redux";
+import { selectTotal, selectTotalItems } from "../../../redux-store/CartSlice";
 import { SlidingCart } from "../SlidingCart/SlidingCart";
 
 export const ShoppingCartHeader = () => {
     const [cartIsOpen, setCartIsOpen] = useState(false);
+    const total = useSelector(selectTotal);
+    const totalItems = useSelector(selectTotalItems);
+
     const toggleCart = () => {
         setCartIsOpen(!cartIsOpen)
     }
 
-    return (
-        <>
-            <button 
-            className="flex flex-col items-center px-3"
-            onClick={() => toggleCart()}
-            >
-                <PiShoppingCartFill className="text-3xl" />
-                <p>0 items</p>
-                <p>$0.00</p>
-            </button>
-            <div className={`fixed top-0 right-0 h-full w-1/3 bg-white shadow-lg transform transition-transform z-50 ${cartIsOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-                <SlidingCart 
-                    toggleCart={toggleCart}
-                />
-            </div>
-            {/* Optional: Add an overlay */}
-            {cartIsOpen && (
-                <div onClick={toggleCart} className="fixed inset-0 bg-black opacity-50 z-40"></div>
-            )}
-        </>
-    )
+return (
+  <>
+    <button
+      className="flex flex-col items-center px-3"
+      onClick={() => toggleCart()}
+    >
+      <PiShoppingCartFill className="text-3xl" />
+      <p>{totalItems} items</p>
+      <p>${total}</p>
+    </button>
+    <div
+      className={`fixed top-0 right-0 h-full w-1/3 bg-white shadow-lg transform transition-transform z-50 ${
+        cartIsOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}
+    >
+      <SlidingCart toggleCart={toggleCart} isOpen={cartIsOpen} />
+    </div>
+    {/* Optional: Add an overlay */}
+    {cartIsOpen && (
+      <>
+        <div
+          onClick={toggleCart}
+          className="fixed inset-0 bg-black opacity-50 z-40"
+        ></div>
+        <style>
+          {`
+            body {
+              overflow: hidden;
+              margin-right: 16px;
+            }
+          `}
+        </style>
+      </>
+    )}
+  </>
+);
 }
