@@ -19,59 +19,65 @@ export const Breadcrumbs = () => {
 
     return (
         <div className="flex m-4 self-start space-x-2">
-         {location.pathname !== "/" && (
+            {location.pathname !== "/" && (
                 <>
                     <Link to="/" className="underline hover:no-underline">Home</Link>
                 </>
             )}
-        {categoryName && (
-            <>
-                <span>/</span>
-                {isLastSegment(categoryName) ? (
-                    <span>{categoryName}</span>
-                ) : (
-                    <Link to={`/${categoryName}`} className="underline hover:no-underline">
-                        {categoryName}
-                    </Link>
-                )}
-            </>
-        )}
-        {subcategoryName && (
-            <>
-                <span>/</span>
-                {isLastSegment(subcategoryName) ? (
-                    <span>{subcategoryName}</span>
-                ) : (
-                    <Link to={`/${categoryName}/${subcategoryName}`} className="whitespace-nowrap underline hover:no-underline">
-                        {subcategoryName}
-                    </Link>
-                )}
-            </>
-        )}
-        {productName && !variantName && (
-            <>
-                 <span>/</span>
-                {isLastSegment(productName) ? (
-                    <span>{productName}</span>
-                ) : (
-                    <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
-                       {productName} {variantName}
-                    </Link>
-                )}
-            </>
-        )}
-        {productName && variantName && (
-            <>
-                <span>/</span>
-                {isLastSegment(variantName) ? (
-                    <span>{productName} {variantName}</span>
-                ) : (
-                    <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
-                       {productName} {variantName}
-                    </Link>
-                )}
-            </>
-        )}
-    </div>
+            {isLastSegment("Cart") ? (
+                <>
+                    <span>/</span>
+                    <span>Shopping cart</span>
+                </>
+            ) : ""}
+            {categoryName && (
+                <>
+                    <span>/</span>
+                    {isLastSegment(categoryName) ? (
+                        <span>{categoryName}</span>
+                    ) : (
+                        <Link to={`/${categoryName}`} className="underline hover:no-underline">
+                            {categoryName}
+                        </Link>
+                    )}
+                </>
+            )}
+            {subcategoryName && (
+                <>
+                    <span>/</span>
+                    {isLastSegment(subcategoryName) ? (
+                        <span>{subcategoryName}</span>
+                    ) : (
+                        <Link to={`/${categoryName}/${subcategoryName}`} className="whitespace-nowrap underline hover:no-underline">
+                            {subcategoryName}
+                        </Link>
+                    )}
+                </>
+            )}
+            {productName && !variantName && (
+                <>
+                    <span>/</span>
+                    {isLastSegment(productName) ? (
+                        <span>{productName}</span>
+                    ) : (
+                        <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
+                            {productName} {variantName}
+                        </Link>
+                    )}
+                </>
+            )}
+            {productName && variantName && (
+                <>
+                    <span>/</span>
+                    {isLastSegment(variantName) ? (
+                        <span>{productName} {variantName}</span>
+                    ) : (
+                        <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
+                            {productName} {variantName}
+                        </Link>
+                    )}
+                </>
+            )}
+        </div>
     )
 }
