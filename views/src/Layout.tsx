@@ -5,7 +5,7 @@ import { NavBar } from "./features/NavBar/NavBar"
 
 export const Layout = () => {
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 montserrat">
             <Header />
             <NavBar />
             <Breadcrumbs />

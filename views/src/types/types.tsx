@@ -13,8 +13,6 @@ export interface Subcategory {
 
 export interface Product {
     id: number;
-    //category_id: number;
-    //subcategory_id: number;
     name: string;
     price: string;
     description: string;
@@ -25,10 +23,14 @@ export interface Product {
     category_name: string;
     subcategory_name: string;
     variant_name: string;
+    variant_id: number;
 }
 
 export interface Cart extends Product {
     quantity: number;
 }
 
-
+export interface Coupon {
+    code: string;
+    discount: number;
+}

@@ -2,9 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+.montserrat {
+    @apply font-montserrat;
+}
+
+.montserrat-light {
+    @apply font-montserrat font-light;
+}
+
+.montserrat-bold {
+    @apply font-montserrat font-bold;
+}
+
 * {
     box-sizing: border-box;
-    font-family: 'Lato';
 }
 
 .arrow-btn>* {
@@ -44,16 +55,7 @@
 
 
 
-.cart-open {
-    margin-right: 16px; /* Adjust this value based on your scrollbar width */
-  }
-  
-  /* This style ensures the main content has its own scrollbar */
-  .main-content-container {
-    width: calc(100% - 16px); /* Adjust this value based on your scrollbar width */
-    overflow-y: auto;
-  }
-  
+
 button:disabled {
     opacity: 0.7;
 }

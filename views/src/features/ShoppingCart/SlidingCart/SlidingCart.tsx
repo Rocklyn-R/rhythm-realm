@@ -86,7 +86,7 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
                 <div className="w-2/3 mt-6">
                     <div className="w-full flex justify-between">
                         <p>Total:</p>
-                        <p>{total}</p>
+                        <p>${total}</p>
                     </div>
 
                     <Link to="/Cart">
@@ -99,9 +99,6 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
                     </Link>
                 </div>
             )}
-
-
-
 
         </div>
     )

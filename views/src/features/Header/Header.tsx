@@ -2,6 +2,7 @@ import logo from "../../images/logo/rhythm-realm-nobg.png";
 import { SearchBar } from "../Search/SearchBar";
 import { ShoppingCartHeader } from "../ShoppingCart/ShoppingCartHeader/ShoppingCartHeader";
 
+
 export const Header = () => {
     return (
         <div className="flex flex-col items-end justify-between bg-red-800 pt-2 pb-5 w-full">
