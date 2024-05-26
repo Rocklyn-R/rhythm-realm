@@ -19,7 +19,7 @@ export const CartSlice = createSlice({
                 code: 'NICK15',
                 discount: .15
             }] as Coupon[],
-        coupon_applied: {} as Coupon,
+        coupon_applied: null as Coupon | null,
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
@@ -39,8 +39,7 @@ export const CartSlice = createSlice({
             const newTotal = parseFloat(state.total) + totalPriceToAdd;
             state.total = newTotal.toFixed(2);
             state.total_items = state.total_items + action.payload.quantity;
-            const couponIsApplied = Object.keys(state.coupon_applied).length !== 0;
-            if (couponIsApplied) {
+            if (state.coupon_applied) {
                 state.total_with_coupon = (newTotal - (newTotal * state.coupon_applied.discount)).toFixed(2);
             }
         },
@@ -52,8 +51,7 @@ export const CartSlice = createSlice({
                 const newTotal = parseFloat(state.total) + price;
                 state.total = newTotal.toFixed(2);
                 state.total_items = state.total_items + 1;
-                const couponIsApplied = Object.keys(state.coupon_applied).length !== 0;
-                if (couponIsApplied) {
+                if (state.coupon_applied) {
                     state.total_with_coupon = (newTotal - (newTotal * state.coupon_applied.discount)).toFixed(2);
                 }
             }
@@ -70,8 +68,7 @@ export const CartSlice = createSlice({
                 const newTotal = parseFloat(state.total) - price;
                 state.total = newTotal.toFixed(2);
                 state.total_items = state.total_items - 1;
-                const couponIsApplied = Object.keys(state.coupon_applied).length !== 0;
-                if (couponIsApplied) {
+                if (state.coupon_applied) {
                     state.total_with_coupon = (newTotal - (newTotal * state.coupon_applied.discount)).toFixed(2);
                 }
             }
@@ -84,6 +81,10 @@ export const CartSlice = createSlice({
                 state.total_with_coupon = newTotal.toFixed(2);
                 state.coupon_applied = foundCoupon;
             }
+        },
+        removeCoupon: (state) => {
+            state.coupon_applied = null;
+            state.total_with_coupon = "0";
         }
     }
 });
@@ -92,14 +93,15 @@ export const {
     addItemToCart,
     addToQuantity,
     subtractFromQuantity,
-    applyCoupon
+    applyCoupon,
+    removeCoupon
 } = CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart.cart;
 export const selectTotal = (state: RootState) => state.cart.total;
 export const selectTotalItems = (state: RootState) => state.cart.total_items;
 export const selectActiveCoupons = (state: RootState) => state.cart.active_coupons;
-export const selectAppliedCoupons = (state: RootState) => state.cart.coupon_applied;
+export const selectAppliedCoupon = (state: RootState) => state.cart.coupon_applied;
 export const selectTotalWithCoupon = (state: RootState) => state.cart.total_with_coupon;
 
 export default CartSlice.reducer;

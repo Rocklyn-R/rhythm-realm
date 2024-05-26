@@ -19,6 +19,9 @@ module.exports = {
       width: {
         '9/20': '45%',
       },
+      spacing: {
+        '23': '5.75rem', // This adds a custom spacing value
+      },
     },
   },
   plugins: [],
