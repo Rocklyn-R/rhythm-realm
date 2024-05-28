@@ -20,6 +20,10 @@ export const CartSlice = createSlice({
                 discount: .15
             }] as Coupon[],
         coupon_applied: null as Coupon | null,
+        selected_state: "",
+        zip_code: "",
+        sales_tax: "",
+        total_with_tax: ""
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
@@ -85,6 +89,18 @@ export const CartSlice = createSlice({
         removeCoupon: (state) => {
             state.coupon_applied = null;
             state.total_with_coupon = "0";
+        },
+        setSelectedState: (state, action) => {
+            state.selected_state = action.payload;
+        },
+        setSelectedZipCode: (state, action) => {
+            state.zip_code = action.payload;
+        },
+        setSalesTax: (state, action) => {
+            state.sales_tax = action.payload
+        },
+        setTotalWithTax: (state, action) => {
+            state.total_with_tax = action.payload
         }
     }
 });
@@ -94,7 +110,11 @@ export const {
     addToQuantity,
     subtractFromQuantity,
     applyCoupon,
-    removeCoupon
+    removeCoupon,
+    setSelectedState,
+    setSelectedZipCode,
+    setSalesTax,
+    setTotalWithTax
 } = CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart.cart;
@@ -103,5 +123,8 @@ export const selectTotalItems = (state: RootState) => state.cart.total_items;
 export const selectActiveCoupons = (state: RootState) => state.cart.active_coupons;
 export const selectAppliedCoupon = (state: RootState) => state.cart.coupon_applied;
 export const selectTotalWithCoupon = (state: RootState) => state.cart.total_with_coupon;
+export const selectTotalWithTax = (state: RootState) => state.cart.total_with_tax;
+export const selectSalesTax = (state: RootState) => state.cart.sales_tax;
+export const selectZipCode = (state: RootState) => state.cart.zip_code;
 
 export default CartSlice.reducer;
