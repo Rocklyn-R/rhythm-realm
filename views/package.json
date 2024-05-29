@@ -20,6 +20,7 @@
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
     "antd": "^5.17.3",
+    "axios": "^1.7.2",
     "https-browserify": "^1.0.0",
     "lucide-react": "^0.378.0",
     "react": "^18.3.1",

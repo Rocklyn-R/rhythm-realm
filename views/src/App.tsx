@@ -13,6 +13,7 @@ import { Item } from './features/Item/Item';
 import { Breadcrumbs } from './features/Breadcrumbs/Breadcrumb';
 import { Layout } from './Layout';
 import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
+import { Checkout } from './features/Checkout/Checkout';
 
 
 function App() {
@@ -32,6 +33,10 @@ function App() {
           <Route
             path="/Cart"
             element={<ShoppingCart />}
+          />
+          <Route 
+            path="/Checkout"
+            element={<Checkout />}
           />
           <Route
             path="/:categoryName"

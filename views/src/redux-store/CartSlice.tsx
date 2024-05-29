@@ -126,5 +126,6 @@ export const selectTotalWithCoupon = (state: RootState) => state.cart.total_with
 export const selectTotalWithTax = (state: RootState) => state.cart.total_with_tax;
 export const selectSalesTax = (state: RootState) => state.cart.sales_tax;
 export const selectZipCode = (state: RootState) => state.cart.zip_code;
+export const selectSelectedState = (state: RootState) => state.cart.selected_state;
 
 export default CartSlice.reducer;

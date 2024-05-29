@@ -92,7 +92,9 @@ export const ShoppingCart = () => {
                     ))}
                 </div>
             </div>
-            <OrderSummary />
+            <OrderSummary 
+                page="Cart"
+            />
         </div>
     )
 }
