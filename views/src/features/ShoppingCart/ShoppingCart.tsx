@@ -8,7 +8,7 @@ import { addToQuantity, subtractFromQuantity } from "../../redux-store/CartSlice
 import { useDispatch } from "react-redux";
 import { Cart } from "../../types/types";
 import { formatPrice } from "../../utilities/utilities";
-import { OrderSummary } from "./OrderSummary/OrderSummary";
+import { OrderSummary } from "../OrderSummary/OrderSummary";
 
 
 export const ShoppingCart = () => {
@@ -92,7 +92,7 @@ export const ShoppingCart = () => {
                     ))}
                 </div>
             </div>
-            <OrderSummary 
+            <OrderSummary
                 page="Cart"
             />
         </div>

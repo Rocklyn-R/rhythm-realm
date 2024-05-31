@@ -20,14 +20,12 @@ export const CartSlice = createSlice({
                 discount: .15
             }] as Coupon[],
         coupon_applied: null as Coupon | null,
-        selected_state: "",
-        zip_code: "",
         sales_tax: "",
-        total_with_tax: ""
+        total_with_tax: "",
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
-            const foundItemIndex = state.cart.findIndex(item => item.id === action.payload.id);
+            const foundItemIndex = state.cart.findIndex(item => item.variant_id === action.payload.variant_id);
             if (foundItemIndex !== -1) {
                 const sameVariantAlreadyInCart = state.cart[foundItemIndex].variant_name === action.payload.variant_name;
                 if (sameVariantAlreadyInCart) {
@@ -90,12 +88,6 @@ export const CartSlice = createSlice({
             state.coupon_applied = null;
             state.total_with_coupon = "0";
         },
-        setSelectedState: (state, action) => {
-            state.selected_state = action.payload;
-        },
-        setSelectedZipCode: (state, action) => {
-            state.zip_code = action.payload;
-        },
         setSalesTax: (state, action) => {
             state.sales_tax = action.payload
         },
@@ -111,8 +103,6 @@ export const {
     subtractFromQuantity,
     applyCoupon,
     removeCoupon,
-    setSelectedState,
-    setSelectedZipCode,
     setSalesTax,
     setTotalWithTax
 } = CartSlice.actions;
@@ -125,7 +115,6 @@ export const selectAppliedCoupon = (state: RootState) => state.cart.coupon_appli
 export const selectTotalWithCoupon = (state: RootState) => state.cart.total_with_coupon;
 export const selectTotalWithTax = (state: RootState) => state.cart.total_with_tax;
 export const selectSalesTax = (state: RootState) => state.cart.sales_tax;
-export const selectZipCode = (state: RootState) => state.cart.zip_code;
-export const selectSelectedState = (state: RootState) => state.cart.selected_state;
+
 
 export default CartSlice.reducer;
