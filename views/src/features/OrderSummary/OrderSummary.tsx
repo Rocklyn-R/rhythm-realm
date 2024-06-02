@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectTotalWithTax, setSalesTax, setTotalWithTax } from "../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectTotalWithTax, setSalesTax, setTotalWithTax, selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
 import { MdInfoOutline } from "react-icons/md";
 import { Shipping } from "./Shipping/Shipping";
 import { CheckoutOrPaypal } from "./CheckoutOrPaypal/CheckoutOrPaypal";
 import { CouponCode } from "./CouponCode/CouponCode";
-import { selectSelectedState, selectShippingCost, selectShippingType } from "../../redux-store/ShippingSlice";
+import { selectSelectedState } from "../../redux-store/ShippingSlice";
 import { FiftyStates } from "./Shipping/50states";
 import { CartSummary } from "./CartSummary/CartSummary";
 
@@ -20,22 +20,35 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
     const discountedTotal = useSelector(selectTotalWithCoupon);
     const total = useSelector(selectTotal);
     const [showTaxInfo, setShowTaxInfo] = useState(false);
-    const overlayRef = useRef(null);
+    const overlayRef = useRef<any>(null);
     const estimated_tax = useSelector(selectSalesTax);
     const [sales_tax, setSales_Tax] = useState("")
     const [total_with_tax, setTotal_With_Tax] = useState("");
     const total_to_render = appliedCoupon ? discountedTotal : total;
     const dispatch = useDispatch();
-    const totalWithCoupon = useSelector(selectTotalWithCoupon);
-    const selectedState = useSelector(selectSelectedState);
-    const shippingType = useSelector(selectShippingType);
     const shippingCost = useSelector(selectShippingCost);
-
-
 
     const handleShowTaxInfo = () => {
         setShowTaxInfo(true);
     }
+
+    const handleClickOutside = (event: any) => {
+        if (overlayRef.current && !overlayRef.current.contains(event.target)) {
+          setShowTaxInfo(false);
+        }
+      };
+    
+      useEffect(() => {
+        if (showTaxInfo) {
+          document.addEventListener('mousedown', handleClickOutside);
+        } else {
+          document.removeEventListener('mousedown', handleClickOutside);
+        }
+    
+        return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+        };
+      }, [showTaxInfo]);
 
     useEffect(() => {
         if (page === "Checkout" && estimated_tax) {
@@ -47,7 +60,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
                 setTotal_With_Tax(newTotalWithShipping);
             }
         }
-    }, [dispatch, estimated_tax, shippingCost])
+    }, [dispatch, estimated_tax, shippingCost]);
 
 
     return (
@@ -58,7 +71,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
 
                 <div className="flex justify-between py-4">
                     <p>Subtotal:</p>
-                    <p className="font-semibold">${formatPrice(total_to_render)}</p>
+                    <p className="font-semibold">${formatPrice(total)}</p>
                 </div>
                 {appliedCoupon ? (
                     <div className="flex justify-between py-4">
@@ -81,7 +94,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
                         </button>
                         {showTaxInfo && (
                             <div
-                                className="flex absolute -top-23 left-15 w-80 bg-white border border-gray-300 shadow-xl z-50 mt-2"
+                                ref={overlayRef}
+                                className="flex absolute -top-23 left-15 w-80 text-white bg-black bg-opacity-70 border border-gray-300 shadow-xl z-50 mt-2"
                             >
                                 <p className="text-sm p-2">The sales tax for your order is based on state and local tax rates, as well as the shipping and/or service location of your order.</p>
                                 <button

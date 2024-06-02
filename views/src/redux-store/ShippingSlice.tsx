@@ -6,12 +6,12 @@ export const ShippingSlice = createSlice({
     initialState: {
         full_name: "",
         address: "",
+        apartment: "",
         city: "",
         state: "",
         zip_code: "",
-        shipping_type: "Standard Ground",
-        shipping_cost: "",
-        total_to_pay: ""
+        email: "",
+        phone: "",
     },
     reducers: {
         setSelectedState: (state, action) => {
@@ -20,26 +20,45 @@ export const ShippingSlice = createSlice({
         setSelectedZipCode: (state, action) => {
             state.zip_code = action.payload;
         },
-        setShipping: (state, action) => {
-            state.shipping_type = action.payload.type;
-            state.shipping_cost = action.payload.cost;
+        setFullName: (state, action) => {
+            state.full_name = action.payload;
         },
-        setTotalToPay: (state, action) => {
-            state.total_to_pay = action.payload;
+        setAddress: (state, action) => {
+            state.address = action.payload;
+        },
+        setApartment: (state, action) => {
+            state.apartment = action.payload;
+        },
+        setCity: (state, action) => {
+            state.city = action.payload;
+        },
+        setEmail: (state, action) => {
+            state.email = action.payload;
+        },
+        setPhone: (state, action) => {
+            state.phone = action.payload;
         }
 }})
 
 export const {
     setSelectedState,
     setSelectedZipCode,
-    setShipping,
-    setTotalToPay
+    setFullName,
+    setAddress,
+    setApartment,
+    setCity,
+    setEmail,
+    setPhone
 } = ShippingSlice.actions;
 
 export const selectZipCode = (state: RootState) => state.shipping.zip_code;
 export const selectSelectedState = (state: RootState) => state.shipping.state;
-export const selectShippingType = (state: RootState) => state.shipping.shipping_type;
-export const selectShippingCost = (state: RootState) => state.shipping.shipping_cost;
-export const selectTotalToPay = (state: RootState) => state.shipping.total_to_pay;
+export const selectFullName = (state: RootState) => state.shipping.full_name;
+export const selectAddress = (state: RootState) => state.shipping.address;
+export const selectApartment = (state: RootState) => state.shipping.apartment;
+export const selectCity = (state: RootState) => state.shipping.city;
+export const selectEmail = (state: RootState) => state.shipping.email;
+export const selectPhone = (state: RootState) => state.shipping.phone;
+
 
 export default ShippingSlice.reducer;

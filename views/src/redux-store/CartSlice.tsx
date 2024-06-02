@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Cart, Coupon } from "../types/types";
+import { selectSelectedState } from "./ShippingSlice";
+import { useSelector } from "react-redux";
+import { FiftyStates } from "../features/OrderSummary/Shipping/50states";
+
 
 
 export const CartSlice = createSlice({
@@ -22,6 +26,9 @@ export const CartSlice = createSlice({
         coupon_applied: null as Coupon | null,
         sales_tax: "",
         total_with_tax: "",
+        shipping_type: "Standard Ground",
+        shipping_cost: "",
+        total_to_pay: ""
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
@@ -93,7 +100,14 @@ export const CartSlice = createSlice({
         },
         setTotalWithTax: (state, action) => {
             state.total_with_tax = action.payload
-        }
+        },
+        setShipping: (state, action) => {
+            state.shipping_type = action.payload.type;
+            state.shipping_cost = action.payload.cost;
+        },
+        setTotalToPay: (state, action) => {
+            state.total_to_pay = action.payload;
+        },
     }
 });
 
@@ -104,7 +118,8 @@ export const {
     applyCoupon,
     removeCoupon,
     setSalesTax,
-    setTotalWithTax
+    setTotalWithTax,
+    setShipping
 } = CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart.cart;
@@ -115,6 +130,9 @@ export const selectAppliedCoupon = (state: RootState) => state.cart.coupon_appli
 export const selectTotalWithCoupon = (state: RootState) => state.cart.total_with_coupon;
 export const selectTotalWithTax = (state: RootState) => state.cart.total_with_tax;
 export const selectSalesTax = (state: RootState) => state.cart.sales_tax;
+export const selectShippingType = (state: RootState) => state.cart.shipping_type;
+export const selectShippingCost = (state: RootState) => state.cart.shipping_cost;
+export const selectTotalToPay = (state: RootState) => state.cart.total_to_pay;
 
 
 export default CartSlice.reducer;

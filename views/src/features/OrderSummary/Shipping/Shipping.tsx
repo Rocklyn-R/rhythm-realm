@@ -4,12 +4,12 @@ import { FiftyStates } from "./50states";
 import { Select, Input } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectTotalWithTax, selectSalesTax, setSalesTax } from "../../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectShippingCost, selectTotalWithTax, selectSalesTax, setSalesTax } from "../../../redux-store/CartSlice";
 import { useDispatch } from "react-redux";
 import { formatPrice } from "../../../utilities/utilities";
 import { fetchStateByZipCode } from "../../../api/cart";
 import { SelectState } from "./SelectState";
-import { setSelectedState, setSelectedZipCode, selectZipCode, selectShippingCost, selectSelectedState } from "../../../redux-store/ShippingSlice";
+import { setSelectedState, setSelectedZipCode, selectZipCode, selectSelectedState } from "../../../redux-store/ShippingSlice";
 
 interface ShippingProps {
     page: "Cart" | "Checkout";
@@ -49,10 +49,10 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
             let totalTax;
             let totalWithTax;
             if (appliedCoupon) {
-                totalTax = parseFloat(totalWithCoupon) * taxRate;
+                totalTax = shippingCost ? (parseFloat(totalWithCoupon) + parseFloat(shippingCost)) * taxRate : parseFloat(totalWithCoupon) * taxRate;
                 totalWithTax = parseFloat(totalWithCoupon) + totalTax;
             } else {
-                totalTax = parseFloat(total) * taxRate;
+                totalTax = shippingCost ? (parseFloat(total) + parseFloat(shippingCost) * taxRate) : parseFloat(total) * taxRate;
                 totalWithTax = parseFloat(total) + totalTax;
             }
             if (page === "Cart") {
@@ -94,7 +94,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
         }
     }
 
-    useEffect(() => {
+   useEffect(() => {
         if (page === "Cart" && zipCode || page === "Checkout" && selectedState) {
             calculateTaxRate(US_state)
         }
@@ -109,12 +109,9 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
         if (page === "Cart") {
             calculateTaxRate(US_state);
         } else {
-            console.log("RUNNIN");
-            console.log(selectedState);
             calculateTaxRate(selectedState);
         }
     }, [appliedCoupon])
-
 
     return (
         <div className="flex flex-col pt-4 w-full">

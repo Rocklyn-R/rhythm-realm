@@ -11,7 +11,7 @@ export const FiftyStates = [
     { name: "Washington DC", abbreviation: "DC", tax_rate: 0.06 },
     { name: 'Florida', abbreviation: 'FL', tax_rate: 0.06 },
     { name: 'Georgia', abbreviation: 'GA', tax_rate: 0.04 },
-    { name: "Guam", abbreviation: "GU",mtax_rate: 0.04 },
+    { name: "Guam", abbreviation: "GU", tax_rate: 0.04 },
     { name: 'Hawaii', abbreviation: 'HI', tax_rate: 0.04 },
     { name: 'Idaho', abbreviation: 'ID', tax_rate: 0.06 },
     { name: 'Illinois', abbreviation: 'IL', tax_rate: 0.0625 },

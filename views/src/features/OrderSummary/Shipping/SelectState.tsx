@@ -9,10 +9,13 @@ interface SelectStateProps {
     missingStateMessage: string;
     page: "Checkout" | "Cart";
     US_state: string;
+    editMode?: boolean;
 }
 
-export const SelectState: React.FC<SelectStateProps> = ({handleSelectState, missingStateMessage, page, US_state}) => {
+export const SelectState: React.FC<SelectStateProps> = ({handleSelectState, missingStateMessage, page, US_state, editMode}) => {
     const selectedState = useSelector(selectSelectedState);
+
+    
 
     return (
         <div className={page === "Cart" ? "w-1/4" : "flex w-1/3"}>
@@ -27,7 +30,7 @@ export const SelectState: React.FC<SelectStateProps> = ({handleSelectState, miss
                     fontSize: "2rem",
                     
                 }}
-                className={`${page === "Cart" ? "mr-4" : `mt-4 ${US_state ? "custom-select" : ""}`}`}
+                className={`${page === "Cart" ? "mr-4" : `mt-4`}`}
                 popupClassName="custom-popup"
                 options={[
                     ...FiftyStates.map(state => ({ 

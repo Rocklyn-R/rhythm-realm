@@ -1,11 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux"
-import { selectTotalItems, selectCart, addToQuantity, subtractFromQuantity } from "../../../redux-store/CartSlice"
+import { selectTotalItems, selectCart, addToQuantity, subtractFromQuantity, selectShippingType, selectTotal, setShipping, selectAppliedCoupon, setSalesTax, setTotalWithTax } from "../../../redux-store/CartSlice"
+import { setSelectedState } from "../../../redux-store/ShippingSlice";
 import { formatPrice } from "../../../utilities/utilities";
 import { Cart } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
+import { FiftyStates } from "../Shipping/50states";
 
 
 export const CartSummary = () => {
@@ -15,6 +17,42 @@ export const CartSummary = () => {
     const [showEditQuantity, setShowEditQuantity] = useState(Array(cart.length).fill(false));
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const selectedShipping = useSelector(selectShippingType);
+    const totalPrice = useSelector(selectTotal);
+    const expressPrice = 0.018 * parseFloat(totalPrice);
+    const nextDayPrice = 0.033 * parseFloat(totalPrice);
+    const appliedCoupon = useSelector(selectAppliedCoupon);
+    const isInitialRender = useRef(true);
+
+    const calculateTaxFromState = (value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
+        const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
+        if (taxRate) {
+            let totalTax;
+            let totalWithTax;
+            if (appliedCoupon) {
+                totalTax = shippingCost ? ((parseFloat(totalWithCoupon) + parseFloat(shippingCost)) * taxRate) : parseFloat(totalWithCoupon) * taxRate;
+                console.log(totalTax);
+                console.log(shippingCost);
+                console.log(totalWithCoupon);
+                totalWithTax = parseFloat(totalWithCoupon) + totalTax;
+            } else {
+                console.log("This FUNC")
+                totalTax = parseFloat(total) * taxRate;
+                totalWithTax = parseFloat(total) + totalTax;
+            }
+            dispatch(setSelectedState(value));
+            dispatch(setSalesTax(totalTax.toFixed(2)));
+            dispatch(setTotalWithTax(totalWithTax.toFixed(2)));
+        }
+    }
+
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+            return;
+        }
+
+    }, [])
 
     const handleAddQuantity = (cartItem: Cart) => {
         dispatch(addToQuantity(cartItem))
@@ -52,7 +90,7 @@ export const CartSummary = () => {
                     onClick={() => handleShowFullCart()}
                 >{showFullCart ? <FiMinus className="text-2xl" /> : <FiPlus className="text-2xl" />}</button>
             </div>
-                    <div className={`cart-content ${showFullCart ? 'cart-content-visible' : 'cart-content-hidden'}`} >
+                    <div className={`sliding-content ${showFullCart ? 'sliding-content-visible' : 'sliding-content-hidden'}`} >
                         {cart.map((item, index) => (
                             <div className={`flex flex-col ${index !== cart.length - 1 ? "border-b-2 border-gray-300 pb-2" : ""}`}>
                                 <div key={index} className="flex justify-between">

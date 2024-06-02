@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
 import { selectTotal, selectTotalWithCoupon } from "../../../../redux-store/CartSlice";
-import { setShipping } from "../../../../redux-store/ShippingSlice";
+import { setShipping, selectShippingType } from "../../../../redux-store/CartSlice";
 
 interface ShippingTypeProps {
     US_state: string;
-    calculateTaxFromState: (arg0: string, arg1: string, arg2: string) => void;
+    calculateTaxFromState: (arg0: string, arg1: string, arg2: string, arg3: string) => void;
 }
 
 export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateTaxFromState }) => {
-    const [selectedShipping, setSelectedShipping] = useState('Standard Ground');
+    const shippingType = useSelector(selectShippingType);
+    const [selectedShipping, setSelectedShipping] = useState(shippingType);
     const [expressShippingPrice, setExpressShippingPrice] = useState("");
     const [nextDayShippingPrice, setNextDayShippingPrice] = useState("");
     const totalPrice = useSelector(selectTotal);
@@ -22,41 +23,42 @@ export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateT
         const nextDayPrice = 0.033 * parseFloat(totalPrice);
         setExpressShippingPrice(expressPrice.toFixed(2));
         setNextDayShippingPrice(nextDayPrice.toFixed(2));
+        let shippingCost;
         if (selectedShipping === "Standard Ground") {
+            shippingCost = "";
             dispatch(setShipping({
                 type: "Standard Ground",
                 cost: ""
             }))
-            calculateTaxFromState(US_state, totalWithCoupon, totalPrice);
+            calculateTaxFromState(US_state, totalWithCoupon, totalPrice, shippingCost);
         } else if (selectedShipping === "2 Day Express") {
+            shippingCost = expressPrice.toFixed(2);
             dispatch(setShipping({
                 type: "2 Day Express",
-                cost: expressPrice.toFixed(2)
+                cost: shippingCost
             }))
-            const newTotalWithCoupon = (parseFloat(totalWithCoupon) + expressPrice).toFixed(2);
-            const newTotal = (parseFloat(totalPrice) + expressPrice).toFixed(2);
-            calculateTaxFromState(US_state, newTotalWithCoupon, newTotal)
+            console.log("THIS RAN BITCH");
+            
+            calculateTaxFromState(US_state, totalWithCoupon, totalPrice, shippingCost);
         } else if (selectedShipping === 'Next-Day') {
+            shippingCost = nextDayPrice.toFixed(2);
             dispatch(setShipping({
                 type: "Next-Day",
-                cost: nextDayPrice.toFixed(2)
+                cost: shippingCost
             }))
-            const newTotalWithCoupon = (parseFloat(totalWithCoupon) + nextDayPrice).toFixed(2);
-            const newTotal = (parseFloat(totalPrice) + nextDayPrice).toFixed(2);
-            calculateTaxFromState(US_state, newTotalWithCoupon, newTotal);
+            calculateTaxFromState(US_state, totalWithCoupon, totalPrice, shippingCost);
         }
-    }, [dispatch, totalPrice, selectedShipping]);
+    }, [dispatch, totalPrice, selectedShipping, totalWithCoupon]);
 
     const handleSelectShipping = (shippingType: string) => {
         setSelectedShipping(shippingType);
     }
 
 
-
     return (
         <div className="my-4 w-full">
             <div className="flex justify-between items-center border-b-2 border-gray-300 py-4">
-                <div className="flex items-center">
+                <div className="flex items-center cursor-pointer" onClick={() => handleSelectShipping('Standard Ground')}>
                     <input
                         type="radio"
                         name="shipping"
@@ -73,7 +75,7 @@ export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateT
                 <p className="font-semibold text-green-600">Free</p>
             </div>
             <div className="flex justify-between items-center border-b-2 border-gray-300 py-4">
-                <div className="flex items-center">
+                <div className="flex items-center cursor-pointer" onClick={() => handleSelectShipping('2 Day Express')}>
                     <input
                         type="radio"
                         name="shipping"
@@ -90,7 +92,7 @@ export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateT
                 <p className="font-semibold">${expressShippingPrice}</p>
             </div>
             <div className="flex justify-between items-center py-4">
-                <div className="flex items-center">
+                <div className="flex items-center cursor-pointer" onClick={() => handleSelectShipping('Next-Day')}>
                     <input
                         type="radio"
                         name="shipping"
