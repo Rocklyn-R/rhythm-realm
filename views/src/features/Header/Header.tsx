@@ -1,7 +1,7 @@
 import logo from "../../images/logo/rhythm-realm-nobg.png";
 import { SearchBar } from "../Search/SearchBar";
 import { ShoppingCartHeader } from "../ShoppingCart/ShoppingCartHeader/ShoppingCartHeader";
-
+import { LoginHeader } from "../LoginHeader/LoginHeader";
 
 export const Header = () => {
     return (
@@ -14,10 +14,16 @@ export const Header = () => {
                 <div className="w-full justify-center hidden sm:flex">
                     <SearchBar />
                 </div>
+                <div className="flex items-center h-fit mb-2 w-1/4 justify-center">
+                    <div className="w-1/4">
+                        <LoginHeader />
+                    </div>
 
-                <div className="w-48 flex justify-center">
-                    <ShoppingCartHeader />
+                    <div className="w-1/4 flex justify-center">
+                        <ShoppingCartHeader />
+                    </div>
                 </div>
+
             </div>
 
             <div className="sm:hidden justify-center w-full flex pt-5">

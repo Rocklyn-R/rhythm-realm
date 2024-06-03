@@ -19,12 +19,11 @@ export const ShoppingCartHeader = () => {
     return (
         <>
             <button
-                className="flex flex-col items-center px-3"
+                className="flex flex-col items-center px-3 relative"
                 onClick={() => toggleCart()}
             >
-                <PiShoppingCartFill className="text-3xl" />
-                <p>{totalItems} items</p>
-                <p className="montserrat-bold text-lg">${appliedCoupon ? formatPrice(totalWithCoupon) : formatPrice(total)}</p>
+                <PiShoppingCartFill className="text-4xl" />
+                <p className="flex justify-center items-center absolute text-red-800 font-bold bg-white w-6 border-2 border-black rounded-full h-6 text-sm -top-2 right-1">{totalItems}</p>
             </button>
             <div
                 className={`fixed top-0 right-0 h-full w-1/3 bg-white shadow-lg transform transition-transform z-50 ${cartIsOpen ? 'translate-x-0' : 'translate-x-full'

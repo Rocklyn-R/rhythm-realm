@@ -174,3 +174,32 @@ select:-webkit-autofill {
     background-size: 75%;
   }
   
+  .ant-input-affix-wrapper.css-dev-only-do-not-override-17seli4 {
+    padding: 0 11px !important; /* Remove padding */
+}
+
+.slide-in-left {
+    animation: slideLeft 0.35s ease-in-out forwards;
+}
+
+.slide-in-right {
+    animation: slideRight 0.35s ease-in-out forwards;
+}
+
+@keyframes slideLeft {
+    from {
+        transform: translateX(-100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideRight {
+    from {
+        transform: translateX(100%);
+    }
+    to {
+        transform: translateX(0);
+    }
+}

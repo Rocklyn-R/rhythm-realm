@@ -65,13 +65,9 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             let totalWithTax;
             if (appliedCoupon) {
                 totalTax = shippingCost ? ((parseFloat(totalWithCoupon) + parseFloat(shippingCost)) * taxRate) : parseFloat(totalWithCoupon) * taxRate;
-                console.log(totalTax);
-                console.log(shippingCost);
-                console.log(totalWithCoupon);
                 totalWithTax = parseFloat(totalWithCoupon) + totalTax;
             } else {
-                console.log("This FUNC")
-                totalTax = parseFloat(total) * taxRate;
+                totalTax = shippingCost ? ((parseFloat(total) + parseFloat(shippingCost)) * taxRate) : (parseFloat(total) * taxRate);
                 totalWithTax = parseFloat(total) + totalTax;
             }
             dispatch(setSelectedState(value));

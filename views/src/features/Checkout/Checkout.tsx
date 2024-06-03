@@ -7,6 +7,7 @@ import { TbTruck } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
 import { ReviewAndPayment } from "./Review & Payment/ReviewAndPayment";
 import { selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
+import { formatPrice } from "../../utilities/utilities";
 
 export const Checkout = () => {
     const name = useSelector(selectFullName);
@@ -47,7 +48,7 @@ export const Checkout = () => {
                                     <TbTruck className="text-xl" />
                                     <p className="px-2 font-semibold text-md">{shippingType}</p>
                                 </div>
-                                <p className="font-medium text-green-700">{shippingCost ? shippingCost : "Free"}</p>
+                                <p className={`font-medium ${shippingCost ? "" : "text-green-700"}`}>{shippingCost ? `$${formatPrice(shippingCost)}` : "Free"}</p>
                             </div>
                             <div className="ml-7">
                                 <p>{name}</p>
