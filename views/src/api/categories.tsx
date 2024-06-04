@@ -13,7 +13,7 @@ export const getCategories = async () => {
 
 export const getSubcategories = async (id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/Subcategories?id=${id}`);
+        const response = await fetch(`http://localhost:4000/categories/subcategories?id=${id}`);
         const data = await response.json();
         if (response.ok) {
             return data.subcategories;

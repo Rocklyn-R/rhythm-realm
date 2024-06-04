@@ -27,7 +27,6 @@ const getSelectedProduct = async (req, res) => {
 const getAllVariants = async (req, res) => {
     const { id } = req.query;
     try {
-        console.log(id);
         const result = await variantsGetAll(id);
         if (result) {
             res.status(200).json({ variants: result })

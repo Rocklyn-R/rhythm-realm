@@ -33,7 +33,9 @@ export const SlidingLogin: React.FC<SlidingLoginProps> = ({ isOpen, toggleLogin 
                     <>
                         <h4 className="text-center font-bold text-xl">Sign in or create a new account in order to save items or add to your wish list.</h4>
                         <div className="w-full flex justify-center">
-                            <Login />
+                            <Login 
+                                toggleLogin={toggleLogin}
+                            />
                         </div>
                         <div className="flex flex-col justify-center items-center w-full py-8">
                             <h2 className="font-semibold">Don't have an account?</h2>
@@ -49,7 +51,9 @@ export const SlidingLogin: React.FC<SlidingLoginProps> = ({ isOpen, toggleLogin 
                     <>
                         <h4 className="text-center font-bold text-xl">Create a Rhythm Realm Account</h4>
                         <div className="w-full flex justify-center">
-                            <Signup />
+                            <Signup 
+                                toggleLogin={toggleLogin}
+                            />
                         </div>
                         <div className="flex flex-col justify-center items-center w-full py-8">
                             <h2 className="font-semibold">Already have an account?</h2>

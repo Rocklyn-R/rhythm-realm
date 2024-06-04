@@ -14,9 +14,10 @@ import { Breadcrumbs } from './features/Breadcrumbs/Breadcrumb';
 import { Layout } from './Layout';
 import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
 import { Checkout } from './features/Checkout/Checkout';
+import { useUserFetch } from './hooks/useUserFetch';
 
-
-function App() {
+export const App = () => {
+  useUserFetch();
 
   return (
 

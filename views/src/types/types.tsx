@@ -1,3 +1,5 @@
+
+
 export interface Category {
     id: number;
     name: string;
@@ -33,4 +35,11 @@ export interface Cart extends Product {
 export interface Coupon {
     code: string;
     discount: number;
+}
+
+export interface User {
+    isAuthenticated: boolean,
+    firstName: string,
+    lastName: string,
+    email: string;
 }

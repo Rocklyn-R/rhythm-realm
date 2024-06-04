@@ -21,7 +21,6 @@ const productsGet = async (name) => {
     ORDER BY products.id`;
     try {
         const result = await db.query(query, [name]);
-        console.log(result.rows);
         return result.rows
     } catch (error) {
         throw error;
@@ -61,7 +60,6 @@ const variantsGetAll = async (id) => {
     WHERE products.id = $1`
     try {
         const result = await db.query(query, [id]);
-        console.log(result.rows);
         return result.rows;
     } catch (error) {
         throw error;
