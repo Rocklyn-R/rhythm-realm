@@ -82,6 +82,11 @@ export const CartSlice = createSlice({
                 }
             }
         },
+        setCartFromLocalStorage: (state, action) => {
+            state.cart = action.payload.cart;
+            state.total_items = action.payload.total_items;
+            state.total = action.payload.total;
+        },
         applyCoupon: (state, action: PayloadAction<string>) => {
             const foundCoupon = state.active_coupons.find(coupon => coupon.code === action.payload);
             if (foundCoupon) {
@@ -115,6 +120,7 @@ export const {
     addItemToCart,
     addToQuantity,
     subtractFromQuantity,
+    setCartFromLocalStorage,
     applyCoupon,
     removeCoupon,
     setSalesTax,

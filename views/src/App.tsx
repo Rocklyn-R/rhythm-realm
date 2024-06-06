@@ -15,9 +15,11 @@ import { Layout } from './Layout';
 import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
 import { Checkout } from './features/Checkout/Checkout';
 import { useUserFetch } from './hooks/useUserFetch';
+import { useInitializeCart } from './hooks/useInitializeCart';
 
 export const App = () => {
   useUserFetch();
+  useInitializeCart();
 
   return (
 

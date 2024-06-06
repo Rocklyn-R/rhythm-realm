@@ -3,6 +3,8 @@ import productsReducer from "./ProductsSlice";
 import cartReducer from "./CartSlice";
 import shippingReducer from "./ShippingSlice";
 import userReducer from "./UserSlice";
+import { buildGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
+import { localStorageMiddleWare } from "./middleware";
 
 export interface RootState {
     products: ReturnType<typeof productsReducer>;
@@ -17,7 +19,8 @@ const store = configureStore({
         cart: cartReducer,
         shipping: shippingReducer,
         user: userReducer
-    })
+    }),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageMiddleWare)
 });
 
 
