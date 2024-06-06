@@ -16,6 +16,9 @@ export const UserSlice = createSlice({
         },
         unauthenticateUser: (state) => {
             state.isAuthenticated = false;
+            state.firstName = "";
+            state.lastName = "";
+            state.email = "";
         },
         setUserFirstName: (state, action) => {
             state.firstName = action.payload;

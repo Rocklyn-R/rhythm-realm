@@ -73,3 +73,19 @@ export const checkAuthentication = async () => {
        return { error: 'User not signed in '}
     }
 }
+
+export const logoutUser = async () => {
+    try {
+        const response = await fetch('http://localhost:4000/user/logout', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        });
+       return response.status;
+       
+    } catch (error: any) {
+       return { error: error }
+    }
+}

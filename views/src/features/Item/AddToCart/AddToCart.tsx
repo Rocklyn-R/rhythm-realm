@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { selectSelectedProduct } from '../../../redux-store/ProductsSlice';
 import { addItemToCart } from '../../../redux-store/CartSlice';
+import { selectIsAuthenticated } from '../../../redux-store/UserSlice';
+import { addToCart } from '../../../api/cart';
 
 export const AddToCart = () => {
 
@@ -12,18 +14,23 @@ export const AddToCart = () => {
     const dispatch = useDispatch();
     const selectedProduct = useSelector(selectSelectedProduct);
     const [addedToCart, setAddedToCart] = useState(false);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
 
     const handleChange = (event: SelectChangeEvent<number>) => {
         const selectedQuantity = typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
         setQuantity(selectedQuantity);
     }
 
-    const handleAddToCart = () => {
+    const handleAddToCart = async () => {
         const productWithQuantity = {
             ...selectedProduct,
             quantity: quantity
         }
-        dispatch(addItemToCart(productWithQuantity))
+        dispatch(addItemToCart(productWithQuantity));
+        if (isAuthenticated) {
+            await addToCart(selectedProduct.id, selectedProduct.variant_id, quantity);
+    
+        }
         setAddedToCart(true);
         setTimeout(() => {
             setAddedToCart(false)

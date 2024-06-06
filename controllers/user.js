@@ -22,7 +22,7 @@ const createUser = async (req, res, next) => {
 
 const checkAuthenticated = (req, res, next) => {
     if (req.isAuthenticated()) {
-        return res.status(200).json({ user: req.user });
+        return next();
     }
     res.status(200).json({ message: "User not signed in" });
 }

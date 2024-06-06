@@ -26,7 +26,7 @@ export const SlidingLogin: React.FC<SlidingLoginProps> = ({ isOpen, toggleLogin 
                 <h2 className="text-xl font-bold">{showLogin ? "Sign In" : "Create New Account"}</h2>
                 <button
                     onClick={() => toggleLogin()}
-                >X</button>
+                ><X /></button>
             </div>
             <div className={`mx-4 py-8 px-4 ${animationClass}`}>
                 {showLogin ? (

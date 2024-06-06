@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { Cart } from "../../types/types";
 import { formatPrice } from "../../utilities/utilities";
 import { OrderSummary } from "../OrderSummary/OrderSummary";
-
+import { addToCart, removeFromCart } from "../../api/cart";
 
 export const ShoppingCart = () => {
     const total = useSelector(selectTotal);
@@ -25,12 +25,14 @@ export const ShoppingCart = () => {
         )
     }
 
-    const handleAddQuantity = (cartItem: Cart) => {
-        dispatch(addToQuantity(cartItem))
+    const handleAddQuantity = async (cartItem: Cart) => {
+        dispatch(addToQuantity(cartItem));
+        await addToCart(cartItem.id, cartItem.variant_id, 1);
     }
 
-    const handleSubtractQuantity = (cartItem: Cart) => {
-        dispatch(subtractFromQuantity(cartItem))
+    const handleSubtractQuantity = async (cartItem: Cart) => {
+        dispatch(subtractFromQuantity(cartItem));
+        await removeFromCart(cartItem.id, cartItem.variant_id);
     }
 
     return (

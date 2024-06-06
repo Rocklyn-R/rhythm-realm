@@ -36,11 +36,12 @@ initializePassport(passport);
 const productsRouter = require('./routes/products');
 const categoriesRouter = require('./routes/categories');
 const userRouter = require('./routes/user');
+const cartRouter = require('./routes/cart');
 
 app.use('/categories', categoriesRouter)
 app.use('/products', productsRouter);
 app.use('/user', userRouter);
-
+app.use('/cart', cartRouter);
 
 
 app.listen(PORT, () => {

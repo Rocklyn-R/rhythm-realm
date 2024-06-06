@@ -28,6 +28,7 @@ export const Subcategories: React.FC = () => {
         : '';
 
     useEffect(() => {
+        dispatch(setSubcategories([]));
         const fetchSubcategories = async () => {
                 const subcategoryData = await getSubcategories(id);
                 if (subcategoryData) {

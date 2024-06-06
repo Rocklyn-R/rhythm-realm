@@ -15,6 +15,7 @@ export const Item = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
+        dispatch(setVariants([]));
         const fetchSelectedProduct = async () => {
             const selectedProductData = await getSelectedProduct(productName!, variantName!);
             if (selectedProductData) {

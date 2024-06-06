@@ -30,10 +30,10 @@ export const Products = () => {
     }, [dispatch]);
 
     useEffect(() => {
+        dispatch(setProducts([]));
         const fetchProducts = async () => {
             const productsData = await getProducts(formattedSubcategoryName);
             if (productsData) {
-                console.log(productsData);
                 dispatch(setProducts(productsData))
             }
         }
