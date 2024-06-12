@@ -203,3 +203,7 @@ select:-webkit-autofill {
         transform: translateX(0);
     }
 }
+
+.custom-slider {
+    transition: transform 0.3s ease-in-out;
+}

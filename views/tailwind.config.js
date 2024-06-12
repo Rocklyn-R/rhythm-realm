@@ -21,6 +21,7 @@ module.exports = {
       },
       spacing: {
         '23': '5.75rem', // This adds a custom spacing value
+        '1/2': '2px'
       },
     },
   },

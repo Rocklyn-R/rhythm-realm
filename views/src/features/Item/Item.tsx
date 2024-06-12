@@ -1,6 +1,6 @@
 import { useEffect } from "react"
 import { useSelector } from "react-redux"
-import { selectSelectedProduct, setSelectedProduct, setVariants } from "../../redux-store/ProductsSlice"
+import { selectSelectedProduct, selectVariants, setSelectedProduct, setVariants } from "../../redux-store/ProductsSlice"
 import { useParams } from "react-router-dom";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
 import { getAllVariants, getSelectedProduct } from "../../api/products";
@@ -11,8 +11,9 @@ import { Variants } from "./Variants/Variants";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
-    const { categoryName, subcategoryName, productName, variantName } = useParams<{ categoryName: string, subcategoryName: string, productName: string, variantName: string }>();
+    const { productName, variantName } = useParams<{ categoryName: string, subcategoryName: string, productName: string, variantName: string }>();
     const dispatch = useDispatch();
+    const variants = useSelector(selectVariants);
 
     useEffect(() => {
         dispatch(setVariants([]));
@@ -28,7 +29,7 @@ export const Item = () => {
         }
 
         fetchSelectedProduct();
-    }, [dispatch, variantName])
+    }, [dispatch, variantName, productName])
 
     return (
         <div className="flex justify-center lg:flex-row xxs:flex-col xxs:items-center lg:items-start">
@@ -39,8 +40,8 @@ export const Item = () => {
                     <h2 className="text-3xl my-8">${selectedProduct.price}</h2>
                     <p>{selectedProduct.description}</p>
                 </div>
-                <Variants />
-                <AddToCart />
+                {variants.length > 1 ? <Variants /> : ""}
+                  <AddToCart />  
                 <div className="flex">
                     <div className="flex flex-col items-center p-4">
                         <Truck />

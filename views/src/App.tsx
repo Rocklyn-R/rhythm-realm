@@ -4,7 +4,7 @@ import { Home } from './features/Home/Home';
 import { NavBar } from './features/NavBar/NavBar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Subcategories } from './features/Subcategories/Subcategories';
-import { Products } from './features/Products/Products';
+import { ProductsPage } from "./features/ProductsPage/ProductsPage";
 import { useEffect } from 'react';
 import { setCategories } from './redux-store/ProductsSlice';
 import { useDispatch } from 'react-redux';
@@ -47,7 +47,7 @@ export const App = () => {
           />
           <Route
             path="/:categoryName/:subcategoryName"
-            element={<Products />}
+            element={<ProductsPage />}
           />
           <Route
             path="/:categoryName/:subcategoryName/:productName/:variantName"
