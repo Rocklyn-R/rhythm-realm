@@ -9,3 +9,4 @@ export const formatPrice = (price: string) => {
       maximumFractionDigits: 2
     }).format(parseFloat(price));
   };
+

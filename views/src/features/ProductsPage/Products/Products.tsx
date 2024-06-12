@@ -1,6 +1,6 @@
 import { Product } from "../../../types/types"
 import { formatPrice } from "../../../utilities/utilities"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { setSelectedProduct } from "../../../redux-store/ProductsSlice"
@@ -16,10 +16,10 @@ interface ProductsProps {
 export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProducts, productVariantsMap }) => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
     const [currentSlide, setCurrentSlide] = useState<Record<string, number>>({});
-    const [productsForSelection, setProductsForSelection] = useState<Product[]>(uniqueProducts || []);
+    const [productsForSelection, setProductsForSelection] = useState<Product[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    console.log(uniqueProducts);
 
     const handleThumbnailClick = (product: Product, variant: Product, index: number, event: React.MouseEvent) => {
         event.stopPropagation();
@@ -50,13 +50,17 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
     };
 
-
-    const handleClickProduct = (product: Product) => {
+    useEffect(() => {
         if (productsForSelection.length === 0) {
             setProductsForSelection(uniqueProducts);
         }
+    }, [dispatch, uniqueProducts])
+
+
+    const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
         const variant = productsForSelection.find(item => item.id === product.id)?.variant_name;
+        console.log(variant);
         navigate(`/${categoryName}/${subcategoryName}/${product.name}/${variant}`)
     }
 

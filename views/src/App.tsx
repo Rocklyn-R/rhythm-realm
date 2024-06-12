@@ -1,16 +1,9 @@
 import './App.css';
-import { Header } from './features/Header/Header';
 import { Home } from './features/Home/Home';
-import { NavBar } from './features/NavBar/NavBar';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Subcategories } from './features/Subcategories/Subcategories';
 import { ProductsPage } from "./features/ProductsPage/ProductsPage";
-import { useEffect } from 'react';
-import { setCategories } from './redux-store/ProductsSlice';
-import { useDispatch } from 'react-redux';
-import { getCategories } from './api/categories';
 import { Item } from './features/Item/Item';
-import { Breadcrumbs } from './features/Breadcrumbs/Breadcrumb';
 import { Layout } from './Layout';
 import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
 import { Checkout } from './features/Checkout/Checkout';

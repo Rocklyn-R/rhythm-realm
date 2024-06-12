@@ -7,22 +7,19 @@ import { getProducts } from "../../../api/products";
 import { Product } from "../../../types/types";
 
 interface SortByProps {
-    subcategory: string;
     uniqueProducts: Product[]
     setSorting: (arg0: string) => void;
     sorting: string;
 }
 
-export const SortBy: React.FC<SortByProps> = ({subcategory, sorting, setSorting}) => {
-    const totalProducts = useSelector(selectProducts).length;
+export const SortBy: React.FC<SortByProps> = ({uniqueProducts, sorting, setSorting}) => {
+    const totalProducts = uniqueProducts.length;
     const options = ["Best match", "Price - Low to High", "Price - High to Low", "Brand Name A-Z"]
 
-    const dispatch = useDispatch();
 
 
 
     const handleSelectSorting: SelectProps['onChange'] = (value) => {
-        setSorting(value);
         setSorting(value);
     }
 

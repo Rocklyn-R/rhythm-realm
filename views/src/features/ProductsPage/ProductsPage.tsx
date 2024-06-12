@@ -28,7 +28,7 @@ export const ProductsPage = () => {
     }, {});
    
     let uniqueProducts = Object.values(productVariantsMap).map(variants => variants[0]);
-  
+
    
     const formattedSubcategoryName = subcategoryName ? formatCategoryNameForDisplay(subcategoryName) : "";
     const [sorting, setSorting] = useState("Best Match");
@@ -87,7 +87,6 @@ export const ProductsPage = () => {
                 <RefineSearch />
                 <div className="flex flex-col w-3/4">
                     <SortBy 
-                        subcategory={formattedSubcategoryName}
                         uniqueProducts={uniqueProducts}
                         sorting={sorting}
                         setSorting={setSorting}
