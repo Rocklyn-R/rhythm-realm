@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { selectSelectedProduct } from '../../../redux-store/ProductsSlice';
+import { selectSelectedProduct, selectVariants } from '../../../redux-store/ProductsSlice';
 import { addItemToCart } from '../../../redux-store/CartSlice';
 import { selectIsAuthenticated } from '../../../redux-store/UserSlice';
 import { addToCart } from '../../../api/cart';
@@ -15,6 +15,7 @@ export const AddToCart = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
     const [addedToCart, setAddedToCart] = useState(false);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const variants = useSelector(selectVariants);
 
     const handleChange = (event: SelectChangeEvent<number>) => {
         const selectedQuantity = typeof event.target.value === 'string' ? parseInt(event.target.value) : event.target.value;
@@ -40,7 +41,7 @@ export const AddToCart = () => {
   
 
     return (
-        <div className="border-gray-400 border-b pb-4 mb-4 w-full flex">
+        <div className={`${variants.length === 1 ? "pt-4 pb-8" : "pb-4"} border-gray-400 border-b mb-4 w-full flex`}>
             <Select
                 value={quantity}
                 onChange={handleChange}

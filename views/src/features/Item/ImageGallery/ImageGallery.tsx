@@ -7,7 +7,7 @@ export const ImageGallery = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
     const [imageIndex, setImageIndex] = useState(0);
 
-    const galleryImages = [selectedProduct.image1, selectedProduct.image2, selectedProduct.image3];
+    const galleryImages = [selectedProduct.image1, selectedProduct.image2, selectedProduct.image3].filter(image => image !== null);
 
 
     const showPrevImage = () => {

@@ -8,6 +8,8 @@ import { formatPrice } from "../../../utilities/utilities";
 import { Cart } from "../../../types/types";
 import { useNavigate } from "react-router-dom";
 import { FiftyStates } from "../Shipping/50states";
+import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
+import { addToCart, removeFromCart } from "../../../api/cart";
 
 
 export const CartSummary = () => {
@@ -26,6 +28,7 @@ export const CartSummary = () => {
     const selectedState = useSelector(selectSelectedState);
     const totalWithCoupon = useSelector(selectTotalWithCoupon);
     const address = useSelector(selectAddress);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
 
     const calculateTaxFromState = (value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
@@ -82,12 +85,18 @@ export const CartSummary = () => {
         }
     }, [dispatch, totalPrice])
 
-    const handleAddQuantity = (cartItem: Cart) => {
-        dispatch(addToQuantity(cartItem))
+    const handleAddQuantity = async (cartItem: Cart) => {
+        dispatch(addToQuantity(cartItem));
+        if (isAuthenticated) {
+            await addToCart(cartItem.id, cartItem.variant_id, 1);
+        }
     }
 
-    const handleSubtractQuantity = (cartItem: Cart) => {
-        dispatch(subtractFromQuantity(cartItem))
+    const handleSubtractQuantity = async (cartItem: Cart) => {
+        dispatch(subtractFromQuantity(cartItem));
+        if (isAuthenticated) {
+            await removeFromCart(cartItem.id, cartItem.variant_id);
+        }
     }
 
     useEffect(() => {
