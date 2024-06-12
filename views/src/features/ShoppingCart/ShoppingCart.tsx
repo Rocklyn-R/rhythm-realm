@@ -10,12 +10,14 @@ import { Cart } from "../../types/types";
 import { formatPrice } from "../../utilities/utilities";
 import { OrderSummary } from "../OrderSummary/OrderSummary";
 import { addToCart, removeFromCart } from "../../api/cart";
+import { selectIsAuthenticated } from "../../redux-store/UserSlice";
 
 export const ShoppingCart = () => {
     const total = useSelector(selectTotal);
     const cart = useSelector(selectCart);
     const totalItems = useSelector(selectTotalItems);
     const dispatch = useDispatch();
+    const isAuthenticated = useSelector(selectIsAuthenticated);
 
     if (cart.length === 0) {
         return (
@@ -27,12 +29,16 @@ export const ShoppingCart = () => {
 
     const handleAddQuantity = async (cartItem: Cart) => {
         dispatch(addToQuantity(cartItem));
-        await addToCart(cartItem.id, cartItem.variant_id, 1);
+        if (isAuthenticated) {
+            await addToCart(cartItem.id, cartItem.variant_id, 1);
+        }
     }
 
     const handleSubtractQuantity = async (cartItem: Cart) => {
         dispatch(subtractFromQuantity(cartItem));
-        await removeFromCart(cartItem.id, cartItem.variant_id);
+        if (isAuthenticated) {
+            await removeFromCart(cartItem.id, cartItem.variant_id);
+        }
     }
 
     return (
