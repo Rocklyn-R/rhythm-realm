@@ -72,6 +72,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                 <div key={product.id} className="flex flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-48 sm:w-48 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
                         <div className="w-full h-full flex flex-col justify-between">
+                            
                             <div className="relative w-full overflow-hidden">
                                 <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                     {productVariantsMap[product.id].map((variant, index) => (
@@ -81,7 +82,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                     ))}
                                 </div>
                             </div>
-                            {productVariantsMap[product.id].length > 1 && (
+                            {productVariantsMap[product.id].length > 1 ? (
                                 <div className="flex overflow-hidden mt-2 py-4 justify-center">
                                     <div className="flex">
                                         {productVariantsMap[product.id].length <= 4 ? (
@@ -122,11 +123,16 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                         )}
                                     </div>
                                 </div>
-                            )}
+                            ) : ""}
 
-                            <div className="flex flex-col flex-grow justify-between mt-2">
+                            <div className="flex flex-col flex-grow justify-end mt-2">
                                 <p className="p-1 text-gray-700">{product.name}</p>
-                                <p className="pt-2 font-bold">${formatPrice(product.price)}</p>
+                                {product.sale_price ? (
+                                    <div>
+                                        <p className="pt-2 font-bold line-through">${formatPrice(product.price)}</p>
+                                        <p className="pt-2 font-bold text-red-800">${formatPrice(product.sale_price)}</p>
+                                    </div>
+                                ) : <p className="pt-2 font-bold">${formatPrice(product.price)}</p>}
                             </div>
                         </div>
                     </button>

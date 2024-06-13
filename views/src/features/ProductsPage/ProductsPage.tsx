@@ -36,19 +36,22 @@ export const ProductsPage = () => {
 
     const sortProducts = (products: Product[], sortingType = "Best match") => {
         return products.slice().sort((a, b) => {
+          
+            const getEffectivePrice = (product: Product) => product.sale_price ? parseFloat(product.sale_price) : parseFloat(product.price);
+    
             switch (sortingType) {
                 case "Best match":
-                    return a.id - b.id; // Sort by ID ascending
+                    return a.id - b.id; 
                 case "Price - Low to High":
-                    return parseFloat(a.price) - parseFloat(b.price); // Sort by price ascending
+                    return getEffectivePrice(a) - getEffectivePrice(b); 
                 case "Price - High to Low":
-                    return parseFloat(b.price) - parseFloat(a.price); // Sort by price descending
+                    return getEffectivePrice(b) - getEffectivePrice(a);
                 case "Brand Name A-Z":
-                    if (a.manufacturer < b.manufacturer) return -1; // Sort by manufacturer name ascending
+                    if (a.manufacturer < b.manufacturer) return -1;
                     if (a.manufacturer > b.manufacturer) return 1;
-                    return 0; // Treat as equal if manufacturer names are the same
+                    return 0; 
                 default:
-                    return 0; // No sorting
+                    return 0; 
             }
         });
     };

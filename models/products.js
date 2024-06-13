@@ -12,7 +12,8 @@ const productsGet = async (subcategoryName) => {
         v.variant_name, 
         v.image1, 
         v.image2, 
-        v.image3, 
+        v.image3,
+        v.sale_price AS sale_price, 
         c.name AS category_name, 
         s.name AS subcategory_name
     FROM 
@@ -47,7 +48,8 @@ const selectedProductGet = async (name, variant) => {
     variants.variant_name, 
     variants.image1, 
     variants.image2, 
-    variants.image3, 
+    variants.image3,
+    variants.sale_price, 
     categories.name AS category_name, 
     subcategories.name AS subcategory_name 
     FROM products

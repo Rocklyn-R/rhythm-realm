@@ -22,6 +22,7 @@ export interface Product {
     image1: string;
     image2: string;
     image3: string;
+    sale_price: string;
     category_name: string;
     subcategory_name: string;
     variant_name: string;

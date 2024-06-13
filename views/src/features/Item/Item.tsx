@@ -37,7 +37,12 @@ export const Item = () => {
             <div className="xxs:mt-4 lg:pt-0 xxs:pt-4 lg:ml-10 xxs:m-6 lg:w-1/2 flex flex-col items-start border-gray-400 xxs:border-t lg:border-none">
                 <h2 className="text-3xl font-bold">{productName} {variantName}</h2>
                 <div className="border-gray-400 border-b pb-4 mb-4 w-full">
-                    <h2 className="text-3xl my-8">${selectedProduct.price}</h2>
+                   {selectedProduct.sale_price ? (
+                    <div>
+                        <h2 className="text-3xl mt-8 mb-2 line-through">${selectedProduct.price}</h2>
+                        <h2 className="text-3xl mb-8 text-red-800 font-semibold">${selectedProduct.sale_price}</h2>
+                    </div>
+                   ) : <h2 className="text-3xl my-8">${selectedProduct.price}</h2>}
                     <p>{selectedProduct.description}</p>
                 </div>
                 {variants.length > 1 ? <Variants /> : ""}
