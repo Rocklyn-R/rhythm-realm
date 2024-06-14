@@ -1,19 +1,25 @@
 import { Input } from "antd"
 import { useState } from "react";
+import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { getItemsFromCart } from "../../../api/cart";
 import { signInUser } from "../../../api/user";
-import { authenticateUser, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
+import { selectCart } from "../../../redux-store/CartSlice";
+import { authenticateUser, selectCartQuestion, setCartMode, setCartQuestion, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
+import _ from 'lodash';
 
 interface LoginProps {
     toggleLogin: () => void;
 }
 
 
-export const Login: React.FC<LoginProps> = ({toggleLogin}) => {
+export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const dispatch = useDispatch();
+    const cart = useSelector(selectCart);
+
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -31,14 +37,28 @@ export const Login: React.FC<LoginProps> = ({toggleLogin}) => {
                 dispatch(setUserFirstName(response.user.first_name));
                 dispatch(setUserLastName(response.user.last_name));
                 dispatch(setUserEmail(response.user.email));
-                toggleLogin();
-            }
+                if (cart.length === 0) {
+                    dispatch(setCartMode("previous"));
+                    toggleLogin();
+                } else {
+                    const previousCart = await getItemsFromCart();
+                    if (previousCart.cart.length === 0) {
+                        console.log("RANNN")
+                        dispatch(setCartMode("current"));
+                        toggleLogin();
+                    } else if (_.isEqual(previousCart.cart, cart)) {
+                        dispatch(setCartMode("previous"));
+                        toggleLogin();
+                    } else {
+                        dispatch(setCartMode(""));
+                        dispatch(setCartQuestion(true));
+                    }
+                }
 
-            // Redirect to '/tasks' route after successful signup
+            }
 
         } catch (error: any) {
             console.error('Error signing up:', error.message);
-            // Handle error (e.g., display error message to user)
         }
     }
 

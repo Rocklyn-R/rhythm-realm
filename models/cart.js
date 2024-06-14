@@ -41,6 +41,7 @@ const itemsGetFromCart = async (user_id) => {
     SELECT
     p.name AS name,
     p.price AS price,
+    p.id AS id,
     ct.quantity,
     p.description AS description,
     p.manufacturer AS manufacturer,
@@ -73,8 +74,37 @@ WHERE
     }
 }
 
+
+const cartDelete = async (user_id) => {
+    const deletionQuery = `
+    DELETE FROM cart WHERE user_id = $1`;
+    try {
+        const deletionResult = await db.query(deletionQuery, [user_id]);
+        return deletionResult;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const cartInsert = async (user_id, product_id, variant_id, quantity) => {
+    const insertQuery = `
+    INSERT INTO cart (user_id, product_id, variant_id, quantity) 
+    VALUES ($1, $2, $3, $4) RETURNING *
+    `
+    try {
+        const insertResult = await db.query(insertQuery, [user_id, product_id, variant_id, quantity]);
+        console.log('Inserted item:', insertResult.rows[0]);
+        return insertResult;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     itemAddToCart,
     itemRemoveFromCart,
-    itemsGetFromCart
+    itemsGetFromCart,
+    cartDelete,
+    cartInsert
 }

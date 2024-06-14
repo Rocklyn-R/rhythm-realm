@@ -1,4 +1,4 @@
-const { itemAddToCart, itemRemoveFromCart, itemsGetFromCart } = require('../models/cart');
+const { itemAddToCart, itemRemoveFromCart, itemsGetFromCart, cartDelete, cartInsert } = require('../models/cart');
 
 const addItemToCart = async (req, res) => {
     const { id } = req.user;
@@ -38,10 +38,41 @@ const getItemsFromCart = async (req, res) => {
     }
 }
 
+const replaceCart = async (req, res) => {
+    const user_id = req.user.id;
+    const { cart } = req.body;
+    try {
+        const deletion = await cartDelete(user_id);
+        if (deletion) {
+            for (const item of cart) {
+                await cartInsert(user_id, item.id, item.variant_id, item.quantity);
+            }
+            res.status(200).json({ message: "Cart replaced" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+const insertMultipleIntoCart = async (req, res) => {
+    const user_id = req.user.id;
+    const { cart } = req.body;
+    try {
+        for (const item of cart) {
+            await itemAddToCart(user_id, item.id, item.variant_id, item.quantity);
+        }
+        res.status(200).json({ message: "Inserted into cart" });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
 
 
 module.exports = {
     addItemToCart,
     removeItemFromCart,
-    getItemsFromCart
+    getItemsFromCart,
+    replaceCart,
+    insertMultipleIntoCart
 }

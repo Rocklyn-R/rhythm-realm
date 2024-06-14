@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Cart } from '../types/types';
 
 export const fetchStateByZipCode = async (zipCode: string) => {
     try {
@@ -57,6 +58,38 @@ export const getItemsFromCart = async () => {
         if (response.ok) {
             return data;
         }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const replaceCart = async (cart: Cart[]) => {
+    try {
+        const response = await fetch(`http://localhost:4000/cart/replace-cart`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ cart })
+        });
+        return response.ok;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const insertMultipleIntoCart = async (cart: Cart[]) => {
+    try {
+        const response = await fetch(`http://localhost:4000/cart/insert-multiple`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ cart })
+        });
+        return response.ok;
     } catch (error) {
         throw error;
     }

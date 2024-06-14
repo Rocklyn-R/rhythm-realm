@@ -44,5 +44,7 @@ export interface User {
     lastName: string,
     email: string;
     headerIsOpen: boolean;
-    wish_list: Product[] 
+    wish_list: Product[];
+    cartMode: "current" | "previous" | "combine" | "";
+    cartQuestion: boolean;
 }

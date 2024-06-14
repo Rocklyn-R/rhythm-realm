@@ -1,6 +1,6 @@
 export const localStorageMiddleWare = (store: any) => (next: any) => (action: any) => {
     const result = next(action);
-    if (action.type.startsWith('cart/')) {
+    if (action.type.startsWith('cart/') || action.type === 'user/unauthenticateUser') {
         const state = store.getState();
         if (!state.user.isAuthenticated) {
             const cartState = {

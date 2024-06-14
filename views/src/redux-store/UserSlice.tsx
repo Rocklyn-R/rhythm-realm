@@ -10,7 +10,9 @@ export const UserSlice = createSlice({
         lastName: '',
         email: '',
         headerIsOpen: false,
-        wish_list: []
+        wish_list: [],
+        cartMode: "",
+        cartQuestion: false,
     } as User,
     reducers: {
         authenticateUser: (state) => {
@@ -42,6 +44,12 @@ export const UserSlice = createSlice({
         },
         setWishList: (state, action) => {
             state.wish_list = action.payload;
+        },
+        setCartMode: (state, action) => {
+            state.cartMode = action.payload;
+        },
+        setCartQuestion: (state, action) => {
+            state.cartQuestion = action.payload
         }
     }
 })
@@ -55,7 +63,9 @@ export const {
     setHeaderIsOpen,
     addToWishList,
     removeFromWishList,
-    setWishList
+    setWishList,
+    setCartMode,
+    setCartQuestion
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
@@ -64,5 +74,7 @@ export const selectLastName = (state: RootState) => state.user.lastName;
 export const selectEmail = (state: RootState) => state.user.email;
 export const selectHeaderIsOpen = (state: RootState) => state.user.headerIsOpen
 export const selectWishList = (state: RootState) => state.user.wish_list;
+export const selectCartMode = (state: RootState) => state.user.cartMode;
+export const selectCartQuestion = (state: RootState) => state.user.cartQuestion;
 
 export default UserSlice.reducer;
