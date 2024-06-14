@@ -82,7 +82,7 @@ export const CartSlice = createSlice({
                 }
             }
         },
-        setCartFromLocalStorage: (state, action) => {
+        setCart: (state, action) => {
             state.cart = action.payload.cart;
             state.total_items = action.payload.total_items;
             state.total = action.payload.total;
@@ -120,7 +120,7 @@ export const {
     addItemToCart,
     addToQuantity,
     subtractFromQuantity,
-    setCartFromLocalStorage,
+    setCart,
     applyCoupon,
     removeCoupon,
     setSalesTax,

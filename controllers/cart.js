@@ -1,4 +1,4 @@
-const { itemAddToCart, itemRemoveFromCart } = require('../models/cart');
+const { itemAddToCart, itemRemoveFromCart, itemsGetFromCart } = require('../models/cart');
 
 const addItemToCart = async (req, res) => {
     const { id } = req.user;
@@ -16,8 +16,6 @@ const addItemToCart = async (req, res) => {
 const removeItemFromCart = async (req, res) => {
     const { id } = req.user;
     const { product_id, variant_id } = req.body;
-    console.log(req.user);
-    console.log(req.body);
     try {
         const result = await itemRemoveFromCart(id, product_id, variant_id);
         if (result) {
@@ -28,9 +26,22 @@ const removeItemFromCart = async (req, res) => {
     }
 }
 
+const getItemsFromCart = async (req, res) => {
+    const { id } = req.user;
+    try {
+        const result = await itemsGetFromCart(id);
+        if (result) {
+            res.status(200).json({ cart: result })
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
 
 
 module.exports = {
     addItemToCart,
-    removeItemFromCart
+    removeItemFromCart,
+    getItemsFromCart
 }
