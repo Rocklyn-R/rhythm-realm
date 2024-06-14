@@ -4,6 +4,10 @@ import { selectFirstName, selectLastName, selectEmail, setUserFirstName, setUser
 import { X } from "lucide-react";
 import { logoutUser } from "../../../api/user";
 import { useDispatch } from "react-redux";
+import { FaHeart, FaHistory, FaRegAddressBook, FaTruck } from "react-icons/fa";
+import { IoSettingsSharp } from "react-icons/io5";
+import { BsArrowReturnLeft } from "react-icons/bs";
+
 
 interface UserAccountProps {
     isOpen: boolean;
@@ -37,13 +41,27 @@ export const UserAccount: React.FC<UserAccountProps> = ({ isOpen, toggleUserAcco
             </div>
 
             <div className="mx-4 py-8 px-4 border border-black mt-8 w-5/6">
-                <h4 className="text-center font-bold text-xl">Account Details</h4>
-                <div className="w-full flex items-start flex-col pt-4">
-                    <p>Name: {userFirstName} {userLastName}</p>
-                    <p>Email: {userEmail}</p>
+                <h4 className="text-center font-bold text-xl">My Account</h4>
+                <div className="flex items-center hover:underline cursor-pointer mt-4 mb-2 text-lg">
+                   <FaTruck className="mr-2"/> <p>Track Order</p> 
                 </div>
+                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
+                    <IoSettingsSharp className="mr-2"/><p>Profile Settings</p>
+                </div>
+                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
+                    <FaHeart className="mr-2 text-red-800" /><p>Wish List</p>
+                </div>
+                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
+                    <FaRegAddressBook className="mr-2"/><p>Address Book</p>
+                </div>
+                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
+                    <BsArrowReturnLeft className="mr-2"/> <p>Returns & Exchanges</p>
+                </div>
+                <div className="flex items-center hover:underline cursor-pointer text-lg">
+                   <FaHistory className="mr-2"/><p>Order History</p>
+                </div>
+                
             </div>
-            <button>My Wish List</button>
             <button
                 onClick={() => handleLogout()}
                 className="mt-10 underline font-bold"

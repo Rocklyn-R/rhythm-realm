@@ -87,7 +87,10 @@ export const ProductsPage = () => {
         <div className="flex flex-col">
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
             <div className="flex space-between">
-                <RefineSearch />
+                <RefineSearch 
+                    products={sortedProducts}
+                    subcategoryName={formattedSubcategoryName}
+                />
                 <div className="flex flex-col w-3/4">
                     <SortBy 
                         uniqueProducts={uniqueProducts}
