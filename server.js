@@ -38,11 +38,13 @@ const productsRouter = require('./routes/products');
 const categoriesRouter = require('./routes/categories');
 const userRouter = require('./routes/user');
 const cartRouter = require('./routes/cart');
+const wishListRouter = require('./routes/wishList');
 
 app.use('/categories', categoriesRouter)
 app.use('/products', productsRouter);
 app.use('/user', userRouter);
 app.use('/cart', cartRouter);
+app.use('/wish-list', wishListRouter);
 
 
 app.listen(PORT, () => {

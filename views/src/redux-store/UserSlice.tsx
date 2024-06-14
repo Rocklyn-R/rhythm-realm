@@ -9,6 +9,8 @@ export const UserSlice = createSlice({
         firstName: '',
         lastName: '',
         email: '',
+        headerIsOpen: false,
+        wish_list: []
     } as User,
     reducers: {
         authenticateUser: (state) => {
@@ -29,6 +31,18 @@ export const UserSlice = createSlice({
         setUserEmail: (state, action) => {
             state.email = action.payload;
         }, 
+        setHeaderIsOpen: (state) => {
+            state.headerIsOpen = !state.headerIsOpen
+        },
+        addToWishList: (state, action) => {
+            state.wish_list.unshift(action.payload);
+        },
+        removeFromWishList: (state, action) => {
+            state.wish_list = state.wish_list.filter(item => item.variant_id !== action.payload.variant_id);
+        },
+        setWishList: (state, action) => {
+            state.wish_list = action.payload;
+        }
     }
 })
 
@@ -37,13 +51,18 @@ export const {
     unauthenticateUser,
     setUserFirstName,
     setUserLastName,
-    setUserEmail
+    setUserEmail,
+    setHeaderIsOpen,
+    addToWishList,
+    removeFromWishList,
+    setWishList
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
 export const selectFirstName = (state: RootState) => state.user.firstName;
 export const selectLastName = (state: RootState) => state.user.lastName;
 export const selectEmail = (state: RootState) => state.user.email;
-
+export const selectHeaderIsOpen = (state: RootState) => state.user.headerIsOpen
+export const selectWishList = (state: RootState) => state.user.wish_list;
 
 export default UserSlice.reducer;

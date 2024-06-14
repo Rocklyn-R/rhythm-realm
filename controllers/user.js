@@ -27,6 +27,8 @@ const checkAuthenticated = (req, res, next) => {
     res.status(200).json({ message: "User not signed in" });
 }
 
+
+
 module.exports = {
     createUser,
     checkAuthenticated

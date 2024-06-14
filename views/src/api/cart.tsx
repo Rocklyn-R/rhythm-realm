@@ -38,8 +38,25 @@ export const removeFromCart = async (product_id: number, variant_id: number) => 
             credentials: 'include',
             body: JSON.stringify({ product_id, variant_id })
         });
-        console.log(response.ok);
         return response.ok;
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const getItemsFromCart = async () => {
+    try {
+        const response = await fetch(`http://localhost:4000/cart/`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return data;
+        }
     } catch (error) {
         throw error;
     }

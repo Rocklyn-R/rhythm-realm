@@ -31,7 +31,6 @@ const productsGet = async (subcategoryName) => {
     `;
     try {
         const result = await db.query(query, [subcategoryName]);
-        console.log(result.rows);
         return result.rows
     } catch (error) {
         throw error;

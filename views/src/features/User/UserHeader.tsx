@@ -1,17 +1,18 @@
 import { FaUser } from "react-icons/fa";
 import { useState } from "react";
 import { SlidingLogin } from "./SlidingLogin/SlidingLogin";
-import { selectFirstName, selectIsAuthenticated } from "../../redux-store/UserSlice";
-import { useSelector } from "react-redux";
+import { selectFirstName, selectIsAuthenticated, selectHeaderIsOpen, setHeaderIsOpen } from "../../redux-store/UserSlice";
+import { useSelector, useDispatch } from "react-redux";
 import { UserAccount } from "./UserAccount/UserAccount";
 
 export const UserHeader = () => {
-    const [userHeaderIsOpen, setUserHeaderIsOpen] = useState(false);
+    const userHeaderIsOpen = useSelector(selectHeaderIsOpen)
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const userFirstName = useSelector(selectFirstName);
+    const dispatch = useDispatch()
 
     const toggleUserHeader = () => {
-        setUserHeaderIsOpen(!userHeaderIsOpen)
+        dispatch(setHeaderIsOpen());
     }
 
     return (

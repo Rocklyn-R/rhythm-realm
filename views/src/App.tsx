@@ -9,10 +9,12 @@ import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
 import { Checkout } from './features/Checkout/Checkout';
 import { useUserFetch } from './hooks/useUserFetch';
 import { useInitializeCart } from './hooks/useInitializeCart';
+import { useFetchWishList } from './hooks/useFetchWishList';
 
 export const App = () => {
   useUserFetch();
   useInitializeCart();
+  useFetchWishList();
 
   return (
 

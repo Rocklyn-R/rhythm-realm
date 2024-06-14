@@ -43,4 +43,6 @@ export interface User {
     firstName: string,
     lastName: string,
     email: string;
+    headerIsOpen: boolean;
+    wish_list: Product[] 
 }

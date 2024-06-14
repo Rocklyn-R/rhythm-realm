@@ -4,6 +4,12 @@ import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { setSelectedProduct } from "../../../redux-store/ProductsSlice"
+import { Heart } from "lucide-react"
+import { FaRegHeart } from "react-icons/fa"
+import { IoMdHeartEmpty } from "react-icons/io";
+import { addToWishList, selectIsAuthenticated, setHeaderIsOpen } from "../../../redux-store/UserSlice"
+import { AddToWishList } from "./AddToWishList/AddToWishList"
+
 
 interface ProductsProps {
     uniqueProducts: Product[]
@@ -19,8 +25,8 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const [productsForSelection, setProductsForSelection] = useState<Product[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    console.log(uniqueProducts);
 
+   
     const handleThumbnailClick = (product: Product, variant: Product, index: number, event: React.MouseEvent) => {
         event.stopPropagation();
         setCurrentSlide(prev => ({
@@ -60,11 +66,10 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
         const variant = productsForSelection.find(item => item.id === product.id)?.variant_name;
-        console.log(variant);
         navigate(`/${categoryName}/${subcategoryName}/${product.name}/${variant}`)
     }
 
-
+ 
 
     return (
         <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 w-full">
@@ -76,8 +81,12 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                             <div className="relative w-full overflow-hidden">
                                 <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                     {productVariantsMap[product.id].map((variant, index) => (
-                                        <div className="min-w-full" key={variant.variant_id}>
+                                        <div className="min-w-full relative" key={variant.variant_id}>
                                             <img className="w-full" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
+                                        <AddToWishList 
+                                            variant={variant}
+                                            key={variant.variant_id}
+                                        />
                                         </div>
                                     ))}
                                 </div>

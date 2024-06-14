@@ -20,7 +20,6 @@ export const Login: React.FC<LoginProps> = ({toggleLogin}) => {
         try {
             // Make a POST request to your server's signup endpoint using fetch
             const response = await signInUser(email, password);
-            console.log(response.user);
             if (response.error) {
                 setErrorMessage('Incorrect email or password. Try again.');
                 setEmail('');
