@@ -1,22 +1,31 @@
 const { productsGet, selectedProductGet, variantsGetAll, manufacturersGet } = require('../models/products');
 
 const getProducts = async (req, res) => {
-    const { subcategory, manufacturers } = req.query;
+    const { subcategory, manufacturers, sale, priceMin, priceMax } = req.query;
     let manufacturersArray = [];
 
     // If manufacturers is provided in the query, split it into an array
     if (manufacturers) {
-        // Check if manufacturers is already an array, otherwise split the string by commas
         manufacturersArray = Array.isArray(manufacturers) ? manufacturers : manufacturers.split(',');
     }
-    
+
+    // Convert 'sale' to boolean
+    const isSale = sale === 'true';
+
+    // Parse priceMin and priceMax to numbers, or leave them as undefined if not provided
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
 
     try {
-        const result = await productsGet(subcategory, manufacturersArray);
-        if (result) {
-            res.status(200).json({ products: result });
-        }
+        // Call productsGet function with parsed parameters
+        const result = await productsGet(subcategory, manufacturersArray, isSale, parsedPriceMin, parsedPriceMax);
+        
+        // Check if result is not empty before sending response
+      
+        res.status(200).json({ products: result });
+        
     } catch (error) {
+        console.error("Error fetching products:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 };

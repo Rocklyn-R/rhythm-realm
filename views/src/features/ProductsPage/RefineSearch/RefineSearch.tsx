@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { Input } from "antd";
+import { useEffect, useState, ChangeEvent, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
 import { getManufacturers, getProducts } from "../../../api/products";
 import { setProducts } from "../../../redux-store/ProductsSlice";
-import { Product } from "../../../types/types"
+import { Product } from "../../../types/types";
+import { GoDash } from "react-icons/go";
 
 interface RefineSearchProps {
     products: Product[];
@@ -13,6 +15,12 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
 
     const [manufacturers, setManufacturers] = useState<string[]>([])
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+    const [priceDrop, setPriceDrop] = useState(false);
+    const [priceMin, setPriceMin] = useState<string | undefined>(undefined);
+    const [priceMax, setPriceMax] = useState<string | undefined>(undefined);
+    const [tempPriceMin, setTempPriceMin] = useState<string>('');
+    const [tempPriceMax, setTempPriceMax] = useState<string>('');
+
     const dispatch = useDispatch();
 
     const handleSelectBrand = (brand: string) => {
@@ -35,15 +43,38 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
 
     useEffect(() => {
         const filteredProductsFetch = async () => {
-            const result = await getProducts(subcategoryName, selectedBrands);
+            const result = await getProducts(subcategoryName, selectedBrands, priceDrop, priceMin, priceMax);
             if (result) {
                 dispatch(setProducts(result))
             }
         }
-      
-        filteredProductsFetch(); 
+
+        filteredProductsFetch();
+
+    }, [dispatch, selectedBrands, priceDrop, priceMin, priceMax])
+
+    const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (!isNaN(Number(value))) {
+          setTempPriceMin(value);
+        }
+      };
     
-    }, [dispatch, selectedBrands])
+      const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        if (!isNaN(Number(value))) {
+          setTempPriceMax(value);
+        }
+      };
+    
+      const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if ( e.key === 'Enter') {
+          setPriceMin(tempPriceMin);
+          setPriceMax(tempPriceMax);
+        }
+      };
+
+ 
 
     return (
         <div className="w-1/4 p-4 bg-white rounded-md">
@@ -64,13 +95,38 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
 
                     ))}
                 </div>
-
             </div>
             <div className="border-t-2 border-gray-200 py-4">
                 <h4 className="font-semibold">Savings</h4>
+                <div className="flex items-center mt-4">
+                    <input
+                        type="checkbox"
+                        className="mr-3 w-6 h-6 custom-checkbox"
+                        checked={priceDrop}
+                        onClick={() => setPriceDrop(!priceDrop)}
+                    />
+                    <label>Price drop</label>
+                </div>
             </div>
-            <div className="border-t-2 border-gray-200 py-4">
+            <div className="border-t-2 border-gray-200 py-4 w-full">
                 <h4 className="font-semibold">Price</h4>
+                <div className="flex items-center w-full mt-4">
+                    <Input
+                        placeholder="$ Min"
+                        className="w-1/2"
+                        value={tempPriceMin}
+                        onChange={handleMinChange}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <GoDash className="text-4xl text-gray-400" />
+                    <Input
+                        placeholder="$ Max"
+                        className="w-1/2"
+                        value={tempPriceMax}
+                       onChange={handleMaxChange}
+                       onKeyDown={handleKeyDown}
+                    />
+                </div>
             </div>
         </div>
     )

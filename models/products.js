@@ -1,6 +1,6 @@
 const db = require('../config/db');
 
-const productsGet = async (subcategoryName, manufacturers = []) => {
+const productsGet = async (subcategoryName, manufacturers = [], sale = false, priceMin = undefined, priceMax = undefined) => {
     let query = `
     SELECT 
         p.name AS name, 
@@ -28,23 +28,43 @@ const productsGet = async (subcategoryName, manufacturers = []) => {
         s.name = $1
     `;
 
+    const params = [subcategoryName];
+    let paramIndex = 2;
+
     if (manufacturers.length > 0) {
-        query += `AND p.manufacturer IN (${manufacturers.map((_, index) => `$${index + 2}`).join(',')})`;
+        query += ` AND p.manufacturer IN (${manufacturers.map((_, index) => `$${paramIndex++}`).join(',')})`;
+        params.push(...manufacturers);
+    }
+
+    if (sale) {
+        query += ` AND v.sale_price IS NOT NULL`;
+    }
+    if (priceMin !== undefined && priceMin !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price >= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price >= $${paramIndex}))`;
+        params.push(priceMin);
+        paramIndex++;
+    }
+    
+    if (priceMax !== undefined && priceMax !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price <= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price <= $${paramIndex}))`;
+        params.push(priceMax);
+        paramIndex++;
     }
 
     query += `
     ORDER BY 
-        p.id
+        v.id
     `;
 
     try {
-        const params = [subcategoryName, ...manufacturers];
         const result = await db.query(query, params);
+        console.log(result.rows);
         return result.rows;
     } catch (error) {
         throw error;
     }
 }
+
 
 const selectedProductGet = async (name, variant) => {
     const query = `SELECT products.name AS name, 
@@ -86,42 +106,6 @@ const variantsGetAll = async (id) => {
     }
 }
 
-const productsFilteredGet = async (subcategoryName, manufacturer) => {
-    const query = `
-    SELECT 
-        p.name AS name, 
-        p.price, 
-        p.description, 
-        p.manufacturer, 
-        p.id, 
-        v.id as variant_id,
-        v.variant_name, 
-        v.image1, 
-        v.image2, 
-        v.image3,
-        v.sale_price AS sale_price, 
-        c.name AS category_name, 
-        s.name AS subcategory_name
-    FROM 
-        products p
-    JOIN 
-        categories c ON p.category_id = c.id
-    JOIN 
-        subcategories s ON p.subcategory_id = s.id
-    JOIN 
-        variants v ON p.id = v.product_id
-    WHERE 
-        s.name = $1
-    ORDER BY 
-        p.id
-    `;
-    try {
-        const result = await db.query(query, [subcategoryName]);
-        return result.rows;
-    } catch (error) {
-        throw error;
-    }
-}
 
 const manufacturersGet = async (subcategoryName) => {
     const query = `
