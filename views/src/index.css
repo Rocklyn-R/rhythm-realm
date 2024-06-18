@@ -208,19 +208,3 @@ select:-webkit-autofill {
     transition: transform 0.3s ease-in-out;
 }
 
-.heart-icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-    font-size: 1.875rem; /* text-3xl equivalent */
-}
-
-.heart-icon:hover path {
-    stroke: none; /* Remove the outline */
-    fill: #b91c1c; /* Fill color red */
-}
-
-.heart-icon:hover svg path {
-    stroke: none; /* Remove the outline */
-    fill: #b91c1c; /* Fill color red */
-}

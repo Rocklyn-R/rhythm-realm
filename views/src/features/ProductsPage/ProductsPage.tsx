@@ -30,7 +30,7 @@ export const ProductsPage = () => {
     let uniqueProducts = Object.values(productVariantsMap).map(variants => variants[0]);
 
    
-    const formattedSubcategoryName = subcategoryName ? formatCategoryNameForDisplay(subcategoryName) : "";
+    const formattedSubcategoryName = subcategoryName ? subcategoryName : "";
     const [sorting, setSorting] = useState("Best Match");
    
 
@@ -86,7 +86,7 @@ export const ProductsPage = () => {
     return (
         <div className="flex flex-col">
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
-            <div className="flex space-between">
+            <div className="flex space-between ">
                 <RefineSearch 
                     products={sortedProducts}
                     subcategoryName={formattedSubcategoryName}

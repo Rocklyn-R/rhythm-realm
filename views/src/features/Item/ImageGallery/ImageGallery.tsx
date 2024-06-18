@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
 import { selectSelectedProduct } from "../../../redux-store/ProductsSlice"
-import { ChevronLeftCircle, ChevronRightCircle, CircleDot, Circle } from "lucide-react";
+import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
 
 export const ImageGallery = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
     const [imageIndex, setImageIndex] = useState(0);
-
+    
     const galleryImages = [selectedProduct.image1, selectedProduct.image2, selectedProduct.image3].filter(image => image !== null);
-
+    const singleImageInGallery = galleryImages.length === 1;
 
     const showPrevImage = () => {
         setImageIndex(index => {
@@ -24,17 +24,21 @@ export const ImageGallery = () => {
         })
     }
 
+    useEffect(() => {
+        setImageIndex(0);
+    }, [selectedProduct]);
+
     return (
 
-        <div className='m-4 pb-4 bg-white lg:w-1/2 md:w-4/5 lg:ml-10 h-full flex flex-col items-center relative overflow-hidden'>
-            
+        <div className='m-4 pb-4 bg-white lg:w-2/3 md:w-4/5 lg:ml-10 h-full flex flex-col items-center relative overflow-hidden'>
+
             <div className='lg:w-full md:w-5/6 flex flex-row lg-overflow-hidden pb-8'>
 
                 {galleryImages.map(url => (
                     <img
                         key={url}
                         src={url}
-                        className="w-full h-full flex-shrink-0 flex-grow-0"
+                        className="w-full h-full flex-shrink-0 flex-grow-0 px-12"
                         style={{
                             translate: `${-100 * imageIndex}%`,
                             transition: 'translate 300ms ease-in-out'
@@ -42,22 +46,25 @@ export const ImageGallery = () => {
                     />
                 ))}
             </div>
-            <div className='self-start'>
-                <button
-                    className={`${imageIndex === 0 ? 'gallery-gray-btn' : 'gallery-arrow-btn'} block absolute top-0 bottom-0 cursor-pointer left-0 p-1 bg-transparent`}
-                    onClick={showPrevImage}
-                >
-                    <ChevronLeftCircle
-                    />
-                </button>
-                <button
-                    className={`${imageIndex === galleryImages.length - 1 ? "gallery-gray-btn" : 'gallery-arrow-btn'} block absolute top-0 bottom-0 cursor-pointer right-0 p-1 bg-transparent`}
-                    onClick={showNextImage}
-                >
-                    <ChevronRightCircle
-                    />
-                </button>
-            </div>
+            {!singleImageInGallery && (
+                <div className='self-start'>
+                    <button
+                        className={`${imageIndex === 0 ? 'gallery-gray-btn' : 'gallery-arrow-btn'} block absolute top-0 bottom-0 cursor-pointer left-0 p-1 bg-transparent`}
+                        onClick={showPrevImage}
+                    >
+                        <ChevronLeftCircle
+                        />
+                    </button>
+                    <button
+                        className={`${imageIndex === galleryImages.length - 1 ? "gallery-gray-btn" : 'gallery-arrow-btn'} block absolute top-0 bottom-0 cursor-pointer right-0 p-1 bg-transparent`}
+                        onClick={showNextImage}
+                    >
+                        <ChevronRightCircle
+                        />
+                    </button>
+                </div>
+            )}
+
 
             <div className='flex'>
                 {galleryImages.map((src, index) => (

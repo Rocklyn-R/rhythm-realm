@@ -58,7 +58,6 @@ const productsGet = async (subcategoryName, manufacturers = [], sale = false, pr
 
     try {
         const result = await db.query(query, params);
-        console.log(result.rows);
         return result.rows;
     } catch (error) {
         throw error;

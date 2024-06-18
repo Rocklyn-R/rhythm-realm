@@ -14,7 +14,8 @@ export const Item = () => {
     const { productName, variantName } = useParams<{ categoryName: string, subcategoryName: string, productName: string, variantName: string }>();
     const dispatch = useDispatch();
     const variants = useSelector(selectVariants);
-
+    console.log(variantName);
+    
     useEffect(() => {
         dispatch(setVariants([]));
         const fetchSelectedProduct = async () => {
@@ -35,7 +36,7 @@ export const Item = () => {
         <div className="flex justify-center lg:flex-row xxs:flex-col xxs:items-center lg:items-start">
             <ImageGallery />
             <div className="xxs:mt-4 lg:pt-0 xxs:pt-4 lg:ml-10 xxs:m-6 lg:w-1/2 flex flex-col items-start border-gray-400 xxs:border-t lg:border-none">
-                <h2 className="text-3xl font-bold">{productName} {variantName}</h2>
+                <h2 className="text-3xl font-bold">{productName} {variantName && variantName}</h2>
                 <div className="border-gray-400 border-b pb-4 mb-4 w-full">
                    {selectedProduct.sale_price ? (
                     <div>

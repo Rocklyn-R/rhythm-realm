@@ -41,6 +41,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                     // Modify the product at the correct index
                     return {
                         ...item,
+                        sale_price: variant.sale_price,
                         image1: variant.image1,
                         image2: variant.image2,
                         image3: variant.image3,
@@ -56,23 +57,28 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
     };
 
-    useEffect(() => {
+   /* useEffect(() => {
         if (productsForSelection.length === 0) {
-            setProductsForSelection(uniqueProducts);
+            setProductsForSelection(sortedProducts);
         }
-    }, [dispatch, uniqueProducts])
-
+    }, [dispatch, uniqueProducts])*/
+    
 
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
-        const variant = productsForSelection.find(item => item.id === product.id)?.variant_name;
-        navigate(`/${categoryName}/${subcategoryName}/${product.name}/${variant}`)
+        const variant = productsForSelection.length === 0 ? product.variant_name : productsForSelection.find(item => item.id === product.id)?.variant_name;
+        navigate(`/${categoryName}/${subcategoryName}/${product.name}${variant ? `/${variant}` : ''}`)
     }
 
- 
+    const findProduct = (product: Product) => {
+        const foundProduct = productsForSelection.find(item => item.id === product.id);
+        const productToUse = productsForSelection.length === 0 ? product : foundProduct;
+        return productToUse;
+    }
+
 
     return (
-        <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 w-full">
+        <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 w-full bg-gray">
             {sortedProducts.map(product => (
                 <div key={product.id} className="flex flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-48 sm:w-48 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
@@ -136,7 +142,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
                             <div className="flex flex-col flex-grow justify-end mt-2">
                                 <p className="p-1 text-gray-700">{product.name}</p>
-                                {product.sale_price ? (
+                                {findProduct(product)?.sale_price ? (
                                     <div>
                                         <p className="pt-2 font-bold line-through">${formatPrice(product.price)}</p>
                                         <p className="pt-2 font-bold text-red-800">${formatPrice(product.sale_price)}</p>

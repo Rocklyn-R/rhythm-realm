@@ -53,7 +53,7 @@ export const AddToWishList: React.FC<AddToWishListProps> = ({ variant }) => {
                 />
             ) : (
                 <FaRegHeart
-                    className="absolute right-0 top-0 hover:text-red-800 heart-icon"
+                    className="absolute right-0 top-0 hover:text-red-800 heart-icon text-3xl"
                     onClick={(e) => handleAddToWishList(variant, e)}
                 />
             )}

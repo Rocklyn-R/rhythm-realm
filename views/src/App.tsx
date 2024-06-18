@@ -44,6 +44,10 @@ export const App = () => {
             path="/:categoryName/:subcategoryName"
             element={<ProductsPage />}
           />
+          <Route 
+            path="/:categoryName/:subcategoryName/:productName/"
+            element={<Item />}
+          />
           <Route
             path="/:categoryName/:subcategoryName/:productName/:variantName"
             element={<Item />}
