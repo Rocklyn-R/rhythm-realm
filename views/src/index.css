@@ -151,7 +151,7 @@ select:-webkit-autofill {
     appearance: none;
     width: 1.15rem; /* Adjust size */
     height: 1.15rem; /* Adjust size */
-    background-color: transparent;
+    background-color: white;
     border: 2px solid #b91c1c; /* Tailwind red-700 */
     cursor: pointer;
     border-radius: 0.25rem; /* Optional: for rounded corners */
