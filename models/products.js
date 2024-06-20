@@ -121,9 +121,45 @@ const manufacturersGet = async (subcategoryName) => {
     }
 }
 
+const saleItemsGet = async () => {
+    let query = `
+    SELECT 
+        p.name AS name, 
+        p.price, 
+        p.description, 
+        p.manufacturer, 
+        p.id, 
+        v.id as variant_id,
+        v.variant_name, 
+        v.image1, 
+        v.image2, 
+        v.image3,
+        v.sale_price AS sale_price, 
+        c.name AS category_name, 
+        s.name AS subcategory_name
+    FROM 
+        products p
+    JOIN 
+        categories c ON p.category_id = c.id
+    JOIN 
+        subcategories s ON p.subcategory_id = s.id
+    JOIN 
+        variants v ON p.id = v.product_id
+    WHERE 
+        v.sale_price IS NOT NULL
+    `;
+    try {
+        const result = await db.query(query);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     productsGet,
     selectedProductGet,
     variantsGetAll,
-    manufacturersGet
+    manufacturersGet,
+    saleItemsGet
 }

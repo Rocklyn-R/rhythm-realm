@@ -1,4 +1,4 @@
-const { productsGet, selectedProductGet, variantsGetAll, manufacturersGet } = require('../models/products');
+const { productsGet, selectedProductGet, variantsGetAll, manufacturersGet, saleItemsGet } = require('../models/products');
 
 const getProducts = async (req, res) => {
     const { subcategory, manufacturers, sale, priceMin, priceMax } = req.query;
@@ -66,11 +66,23 @@ const getManufacturers = async (req, res) => {
     }
 }
 
+const getSaleItems = async (req, res) => {
+    try {
+        const result = await saleItemsGet();
+        if (result) {
+            res.status(200).json({ featuredDeals: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
 
 
 module.exports = {
     getProducts,
     getSelectedProduct,
     getAllVariants,
-    getManufacturers
+    getManufacturers,
+    getSaleItems
 }

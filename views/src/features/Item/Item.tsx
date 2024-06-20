@@ -33,7 +33,7 @@ export const Item = () => {
     }, [dispatch, variantName, productName])
 
     return (
-        <div className="flex justify-center lg:flex-row xxs:flex-col xxs:items-center lg:items-start">
+        <div className="flex justify-center lg:flex-row xxs:flex-col xxs:items-center lg:items-start mb-14">
             <ImageGallery />
             <div className="xxs:mt-4 lg:pt-0 xxs:pt-4 lg:ml-10 xxs:m-6 lg:w-1/2 flex flex-col items-start border-gray-400 xxs:border-t lg:border-none">
                 <h2 className="text-3xl font-bold">{productName} {variantName && variantName}</h2>

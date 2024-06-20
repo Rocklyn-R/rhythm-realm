@@ -74,3 +74,15 @@ export const getManufacturers = async (subcategory: string) => {
         throw error;
     }
 }
+
+export const getFeaturedDeals = async () => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/featured-deals`);
+        const data = await response.json();
+        if (response.ok) {
+            return data.featuredDeals;
+        }
+    } catch (error) {
+        throw error;
+    }
+}

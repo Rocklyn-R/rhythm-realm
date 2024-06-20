@@ -40,7 +40,7 @@ export const Subcategories: React.FC = () => {
 
 
     return (
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center mb-14">
     
             <h2 className="text-center text-2xl font-bold">{categoryNameCapitalized}:</h2>
             <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:w-full md:w-full lg:w-5/6 gap-4 px-8">

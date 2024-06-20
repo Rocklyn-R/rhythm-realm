@@ -84,7 +84,7 @@ export const ProductsPage = () => {
 
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col mb-14">
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
             <div className="flex space-between ">
                 <RefineSearch 
