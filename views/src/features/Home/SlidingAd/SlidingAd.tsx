@@ -50,14 +50,14 @@ export const SlidingAd = () => {
     }
 
     return (
-        <div className='w-3/4 h-full flex flex-col items-center relative m-auto mt-8 mb-8'>
+        <div className='w-5/6 h-full flex flex-col items-center relative m-auto mb-8'>
             <div className='w-full h-full flex flex-row overflow-hidden'>
                 {adImages.map(ad => (
                    
                     <img
                         key={ad.url}
                         src={ad.url}
-                        className="w-auto h-full flex-shrink-0 flex-grow-0 cursor-pointer"
+                        className="w-full h-full flex-shrink-0 flex-grow-0 cursor-pointer"
                         style={{
                             translate: `${-100 * imageIndex}%`,
                             transition: 'translate 300ms ease-in-out'

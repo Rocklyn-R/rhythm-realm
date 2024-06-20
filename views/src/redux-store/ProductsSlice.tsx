@@ -19,7 +19,8 @@ export const ProductsSlice = createSlice({
         subcategories: [] as Subcategory[],
         products: [] as Product[],
         selectedProduct: {} as Product,
-        variants: [] as Product[]
+        variants: [] as Product[],
+        featuredDeals: [] as Product[]
     },
     reducers: {
         setCategories: (state, action: PayloadAction<Category[]>) => {
@@ -36,6 +37,9 @@ export const ProductsSlice = createSlice({
         },
         setVariants: (state, action) => {
             state.variants = action.payload;
+        },
+        setFeaturedDeals: (state, action) => {
+            state.featuredDeals = action.payload;
         }
     }
 });
@@ -45,7 +49,8 @@ export const {
     setSubcategories,
     setProducts,
     setSelectedProduct,
-    setVariants
+    setVariants,
+    setFeaturedDeals
 } = ProductsSlice.actions
 
 export const selectCategories = (state: RootState) => state.products.categories;
@@ -53,5 +58,6 @@ export const selectSubcategories = (state: RootState) => state.products.subcateg
 export const selectProducts = (state: RootState) => state.products.products;
 export const selectSelectedProduct = (state: RootState) => state.products.selectedProduct;
 export const selectVariants = (state: RootState) => state.products.variants;
+export const selectFeaturedDeals = (state: RootState) => state.products.featuredDeals;
 
 export default ProductsSlice.reducer;

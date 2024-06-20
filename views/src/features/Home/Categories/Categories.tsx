@@ -30,7 +30,7 @@ export const Categories = () => {
 
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center mb-14">
       <h1 className="mb-8 text-3xl text-center font-bold">Rhythm Realm - Online Shop for Musical Instruments</h1>
       <h2 className="text-center text-xl">Shop by category:</h2>
       <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 sm:w-full md:w-full lg:w-5/6 gap-4 px-8">
