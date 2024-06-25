@@ -14,7 +14,8 @@ export const ProductsSlice = createSlice({
             { id: 5, name: 'Strings', image: 'https://i.imgur.com/W0qKZVu.png' },
             { id: 6, name: 'Winds', image: 'https://i.imgur.com/CTXog7r.png' },
             { id: 7, name: 'Audio', image: 'https://i.imgur.com/YYh1ldS.png' },
-            { id: 8, name: 'Accessories', image: 'https://i.imgur.com/U7JOlym.png' }
+            { id: 8, name: 'Accessories', image: 'https://i.imgur.com/U7JOlym.png' },
+            { id: 9, name: 'Featured', image: ""}
         ] as Category[],
         subcategories: [] as Subcategory[],
         products: [] as Product[],

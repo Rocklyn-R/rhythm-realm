@@ -2,10 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { IoIosArrowForward, IoIosArrowBack } from "react-icons/io";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { getFeaturedDeals } from "../../api/products";
-import { selectFeaturedDeals, setFeaturedDeals } from "../../redux-store/ProductsSlice";
+import { selectFeaturedDeals, setFeaturedDeals, setSelectedProduct } from "../../redux-store/ProductsSlice";
 import { Product } from "../../types/types";
-
+import { shuffleArray } from "../../utilities/utilities";
 
 export const FeaturedDeals = () => {
     const dispatch = useDispatch();
@@ -18,16 +19,11 @@ export const FeaturedDeals = () => {
         return acc;
     }, {});
 
-  const shuffleArray = (array: Product[]) => {
-        for (let i = array.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
+
     const [uniqueProducts, setUniqueProducts] = useState(shuffleArray(Object.values(productVariantsMap).map(variants => variants[0])));
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         if(featuredDeals) {
@@ -90,7 +86,7 @@ export const FeaturedDeals = () => {
 
     useEffect(() => {
         const fetchDeals = async () => {
-            const result = await getFeaturedDeals();
+            const result = await getFeaturedDeals("On Sale");
             if (result) {
                 dispatch(setFeaturedDeals(result));
             }
@@ -98,11 +94,23 @@ export const FeaturedDeals = () => {
         fetchDeals();
     }, [dispatch]);
 
+    const handleViewAll = () => {
+        navigate("/Featured/Sale")
+    }
+
+    const handleClickProduct = (product: Product) => {
+        dispatch(setSelectedProduct(product));
+        navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+    }
+
     return (
         <div className="py-8 w-full relative">
         <div className="flex justify-between px-4">
-            <h2 className="text-xl font-bold">Featured Deals</h2>
-            <button className="text-red-800 flex items-center gap-2">View All<IoIosArrowForward /></button>
+            <h2 className="text-xl font-bold hover:underline">Featured Deals</h2>
+            <button 
+            className="text-red-800 flex items-center gap-2"
+            onClick={() => handleViewAll()}
+            ><p className="hover:underline">View All</p><IoIosArrowForward /></button>
         </div>
         <div className="relative"
                  onMouseDown={handleMouseDown}
@@ -118,7 +126,11 @@ export const FeaturedDeals = () => {
             </button>
             <div ref={scrollContainerRef} className="flex overflow-x-auto w-full space-x-4 p-4">
                 {uniqueProducts.map(product => (
-                    <div key={product.id} className="flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black w-60 mt-8 bg-white rounded-md flex-none p-2">
+                    <div 
+                    onClick={() => handleClickProduct(product)}
+                    key={product.id} 
+                    className="flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black w-60 mt-8 bg-white rounded-md flex-none p-2"
+                    >
                         <img src={product.image1} className="w-full h-auto" alt={product.name} draggable="false" />
                         <div className="p-4 flex flex-col items-center">
                             <h3 className="text-lg font-semibold text-center">{product.name}</h3>

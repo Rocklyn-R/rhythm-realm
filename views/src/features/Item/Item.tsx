@@ -14,7 +14,6 @@ export const Item = () => {
     const { productName, variantName } = useParams<{ categoryName: string, subcategoryName: string, productName: string, variantName: string }>();
     const dispatch = useDispatch();
     const variants = useSelector(selectVariants);
-    console.log(variantName);
     
     useEffect(() => {
         dispatch(setVariants([]));

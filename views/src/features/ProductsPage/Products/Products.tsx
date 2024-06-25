@@ -25,8 +25,6 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const [productsForSelection, setProductsForSelection] = useState<Product[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
-   
     const handleThumbnailClick = (product: Product, variant: Product, index: number, event: React.MouseEvent) => {
         event.stopPropagation();
         setCurrentSlide(prev => ({
@@ -79,7 +77,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
     return (
         <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 w-full bg-gray">
-            {sortedProducts.map(product => (
+            {uniqueProducts && uniqueProducts.map(product => (
                 <div key={product.id} className="flex flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-48 sm:w-48 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
                         <div className="w-full h-full flex flex-col justify-between">
@@ -116,7 +114,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                             ))
                                         ) : (
                                             <>
-                                                {productVariantsMap[product.id].slice(0, 3).map((variant, index) => (
+                                                {productVariantsMap && productVariantsMap[product.id].slice(0, 3).map((variant, index) => (
                                                     <button
                                                         className="w-10 h-12 mx-1/2 cursor-pointer border border-gray-300 rounded-lg"
                                                         key={variant.variant_id}

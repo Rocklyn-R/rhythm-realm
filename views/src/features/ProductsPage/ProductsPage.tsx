@@ -1,6 +1,6 @@
 import { Link, useLocation, useParams } from "react-router-dom";
 import { formatCategoryNameForDisplay, formatPrice } from "../../utilities/utilities";
-import { selectCategories, selectProducts, selectSubcategories, setProducts, setSelectedProduct, setSubcategories } from "../../redux-store/ProductsSlice";
+import { selectCategories, selectFeaturedDeals, selectProducts, selectSubcategories, setProducts, setSelectedProduct, setSubcategories } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { getSubcategories } from "../../api/categories";
@@ -10,7 +10,8 @@ import { Product } from "../../types/types";
 import { Products } from "./Products/Products";
 import { RefineSearch } from "./RefineSearch/RefineSearch";
 import { SortBy } from "./SortBy/SortBy";
-
+import { getFeaturedDeals } from "../../api/products";
+import { shuffleArray } from "../../utilities/utilities";
 
 export const ProductsPage = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
@@ -19,19 +20,27 @@ export const ProductsPage = () => {
     const allSubcategories = useSelector(selectSubcategories);
     const dispatch = useDispatch();
     const allProducts = useSelector(selectProducts);
-    const productVariantsMap = allProducts.reduce((acc: Record<string, Product[]>, product: Product) => {
-        if (!acc[product.id]) {
-            acc[product.id] = [];
-        }
-        acc[product.id].push(product);
-        return acc;
-    }, {});
-   
-    let uniqueProducts = Object.values(productVariantsMap).map(variants => variants[0]);
+    const [productVariantsMap, setProductVariantsMap] = useState<Record<string, Product[]>>({});
+    const featuredDeals = useSelector(selectFeaturedDeals);
+    const [uniqueProducts, setUniqueProducts] = useState(Object.values(productVariantsMap).map(variants => variants[0]))
 
    
     const formattedSubcategoryName = subcategoryName ? subcategoryName : "";
     const [sorting, setSorting] = useState("Best Match");
+
+    useEffect(() => {
+        if(allProducts) {
+            const newProductVariantsMap = allProducts.reduce((acc: Record<string, Product[]>, product: Product) => {
+                if (!acc[product.id]) {
+                    acc[product.id] = [];
+                }
+                acc[product.id].push(product);
+                return acc;
+            }, {});
+            setProductVariantsMap(newProductVariantsMap);
+            setUniqueProducts(sortProducts(Object.values(newProductVariantsMap).map(variants => variants[0]), sorting));
+        }
+    }, [allProducts, sorting]);
    
 
     const sortProducts = (products: Product[], sortingType = "Best match") => {
@@ -55,8 +64,7 @@ export const ProductsPage = () => {
             }
         });
     };
-
-    let sortedProducts = sortProducts(uniqueProducts, sorting);
+   
 
     useEffect(() => {
         const fetchSubcategories = async () => {
@@ -79,7 +87,21 @@ export const ProductsPage = () => {
                 dispatch(setProducts(productsData));
             }
         };
-        fetchProducts();
+
+        const fetchDeals = async () => {
+            const result = await getFeaturedDeals("On Sale");
+            if (result) {
+                dispatch(setProducts(result));
+            }
+        }
+        if (categoryName === 'Featured') {
+             fetchDeals();
+        } else {
+             fetchProducts();   
+        }
+       
+        
+        
     }, [dispatch, formattedSubcategoryName]);
 
 
@@ -88,7 +110,7 @@ export const ProductsPage = () => {
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
             <div className="flex space-between ">
                 <RefineSearch 
-                    products={sortedProducts}
+                    products={uniqueProducts}
                     subcategoryName={formattedSubcategoryName}
                 />
                 <div className="flex flex-col w-3/4">
@@ -100,7 +122,7 @@ export const ProductsPage = () => {
                     <Products
                         uniqueProducts={uniqueProducts}
                         productVariantsMap={productVariantsMap}
-                        sortedProducts={sortedProducts}
+                        sortedProducts={uniqueProducts}
                     />
                 </div>
 

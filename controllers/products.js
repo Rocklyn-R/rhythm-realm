@@ -1,4 +1,4 @@
-const { productsGet, selectedProductGet, variantsGetAll, manufacturersGet, saleItemsGet } = require('../models/products');
+const { productsGet, selectedProductGet, variantsGetAll, manufacturersGet, saleItemsGet, featuredProductsGet, featuredManufacturersGet } = require('../models/products');
 
 const getProducts = async (req, res) => {
     const { subcategory, manufacturers, sale, priceMin, priceMax } = req.query;
@@ -77,6 +77,66 @@ const getSaleItems = async (req, res) => {
     }
 }
 
+const getFeaturedProducts = async (req, res) => {
+    const {marketingLabel, categories, subcategories, manufacturers, sale, priceMin, priceMax} = req.query;
+
+    let categoriesArray = [];
+    let subcategoriesArray = [];
+    let manufacturersArray = [];
+
+      // If categories is provided in the query, split it into an array
+    if (categories) {
+        categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
+    }
+
+    // If subcategories is provided in the query, split it into an array
+    if (subcategories) {
+        subcategoriesArray = Array.isArray(subcategories) ? subcategories : subcategories.split(',');
+    }
+
+    // If manufacturers is provided in the query, split it into an array
+    if (manufacturers) {
+        manufacturersArray = Array.isArray(manufacturers) ? manufacturers : manufacturers.split(',');
+    }
+
+    // Convert 'sale' to boolean
+    const isSale = sale === 'true';
+
+    // Parse priceMin and priceMax to numbers, or leave them as undefined if not provided
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
+    
+    try {
+        const result = await featuredProductsGet(
+            marketingLabel,
+            categoriesArray,
+            subcategoriesArray, 
+            manufacturersArray, 
+            isSale, 
+            parsedPriceMin, 
+            parsedPriceMax
+            );
+        if (result) {
+            res.status(200).json({ featuredProducts: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+const getFeaturedManufacturers = async (req, res) => {
+    const { marketingLabel } = req.query;
+    try {
+        const result = await featuredManufacturersGet(marketingLabel);
+        if (result) {
+            res.status(200).json({ manufacturers: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+
 
 
 module.exports = {
@@ -84,5 +144,7 @@ module.exports = {
     getSelectedProduct,
     getAllVariants,
     getManufacturers,
-    getSaleItems
+    getSaleItems,
+    getFeaturedProducts,
+    getFeaturedManufacturers
 }

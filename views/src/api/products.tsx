@@ -1,8 +1,8 @@
 export const getProducts = async (
-    subcategory: string, 
-    manufacturers?: string[], 
-    sale?: boolean, 
-    priceMin?: string, 
+    subcategory: string,
+    manufacturers?: string[],
+    sale?: boolean,
+    priceMin?: string,
     priceMax?: string
 ) => {
     try {
@@ -33,7 +33,7 @@ export const getProducts = async (
 
         if (response.ok) {
             return data.products;
-        } 
+        }
     } catch (error) {
         throw error;
     }
@@ -75,14 +75,69 @@ export const getManufacturers = async (subcategory: string) => {
     }
 }
 
-export const getFeaturedDeals = async () => {
+export const getFeaturedDeals = async (
+    marketingLabel: string,
+    categories?: string[],
+    subcategories?: string[],
+    manufacturers?: string[],
+    sale?: boolean,
+    priceMin?: string,
+    priceMax?: string
+) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/featured-deals`);
+        let url = `http://localhost:4000/products/featured-products?marketingLabel=${marketingLabel}`;
+        // Append categories to the URL if provided
+        if (categories && categories.length > 0) {
+            const categoriesParam = categories.join(',');
+            url += `&categories=${categoriesParam}`;
+        }
+
+        // Append subcategories to the URL if provided
+        if (subcategories && subcategories.length > 0) {
+            const subcategoriesParam = subcategories.join(',');
+            url += `&subcategories=${subcategoriesParam}`;
+        }
+        // Append manufacturers to the URL if it's provided
+        //console.log(manufacturers);
+        if (manufacturers && manufacturers.length > 0) {
+            const manufacturersParam = manufacturers.join(',');
+            url += `&manufacturers=${manufacturersParam}`;
+        }
+        // Append sale to the URL if it's provided
+        if (sale) {
+            url += `&sale=${sale}`;
+        }
+
+        // Append priceMin to the URL if it's provided
+        if (priceMin !== undefined) {
+            url += `&priceMin=${priceMin}`;
+        }
+
+        // Append priceMax to the URL if it's provided
+        if (priceMax !== undefined) {
+            url += `&priceMax=${priceMax}`;
+        }
+        //console.log(url);
+        const response = await fetch(url);
         const data = await response.json();
+
         if (response.ok) {
-            return data.featuredDeals;
+            return data.featuredProducts;
         }
     } catch (error) {
         throw error;
     }
 }
+
+export const getFeaturedItemManufacturers = async (marketingLabel: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
+        const data = await response.json();
+        if (response.ok) {
+            return data.manufacturers;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+

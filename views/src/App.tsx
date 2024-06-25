@@ -10,6 +10,8 @@ import { Checkout } from './features/Checkout/Checkout';
 import { useUserFetch } from './hooks/useUserFetch';
 import { useInitializeCart } from './hooks/useInitializeCart';
 import { useFetchWishList } from './hooks/useFetchWishList';
+import { ScrollTop } from './utilities/ScrollTop';
+
 
 export const App = () => {
   useUserFetch();
@@ -19,6 +21,7 @@ export const App = () => {
   return (
 
     <BrowserRouter>
+      <ScrollTop />
       <Routes>
         <Route
           path="/"
@@ -32,9 +35,13 @@ export const App = () => {
             path="/Cart"
             element={<ShoppingCart />}
           />
-          <Route 
+          <Route
             path="/Checkout"
             element={<Checkout />}
+          />
+          <Route
+            path="/FeaturedDeals"
+            element={<ProductsPage />}
           />
           <Route
             path="/:categoryName"
@@ -44,7 +51,7 @@ export const App = () => {
             path="/:categoryName/:subcategoryName"
             element={<ProductsPage />}
           />
-          <Route 
+          <Route
             path="/:categoryName/:subcategoryName/:productName/"
             element={<Item />}
           />
