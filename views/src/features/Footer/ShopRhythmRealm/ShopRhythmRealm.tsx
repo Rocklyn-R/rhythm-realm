@@ -14,19 +14,19 @@ export const ShopRhythmRealm = () => {
             </div>
             <div className='flex w-4/5 justify-center mt-10'>
                 <div className='flex flex-col items-center px-8 w-1/5'>
-                    <img src={World} width={80} />
+                    <img alt="World" src={World} width={80} />
                     <p className='text-center mt-2 font-medium'>World's Largest Selection</p>
                 </div>
                 <div className='flex flex-col items-center px-8 w-1/5'>
-                    <img src={GuitarPlay} width={80} />
+                    <img alt="Guitar Playing" src={GuitarPlay} width={80} />
                     <p className='text-center mt-2 font-medium'>Try Before You Buy</p>
                 </div>
                 <div className='flex flex-col items-center px-8 w-1/5'>
-                    <img src={ShoppingBag} width={80} />
+                    <img alt="Shopping bag" src={ShoppingBag} width={80} />
                     <p className='text-center mt-2 font-medium'>Shop With Ease</p>
                 </div>
                 <div className='flex flex-col items-center px-8 w-1/5'>
-                    <img src={Rock} width={80} />
+                    <img alt="Rock" src={Rock} width={80} />
                     <p className='text-center mt-2 font-medium'>Play With Confidence</p>
                 </div>
             </div>

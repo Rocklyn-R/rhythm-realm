@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { getItemsFromCart } from "../../../api/cart";
 import { signInUser } from "../../../api/user";
 import { selectCart } from "../../../redux-store/CartSlice";
-import { authenticateUser, selectCartQuestion, setCartMode, setCartQuestion, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
+import { authenticateUser, setCartMode, setCartQuestion, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
 import _ from 'lodash';
 
 interface LoginProps {

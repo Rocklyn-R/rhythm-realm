@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { Input, Form, message } from "antd"
+import { useState, useEffect, useCallback } from "react";
+import { Input } from "antd"
 import { SelectState } from "../../OrderSummary/Shipping/SelectState"
 import { FiPlus } from "react-icons/fi";
 import { ShippingType } from "./ShippingType/ShippingType";
@@ -58,7 +58,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const [errors, setErrors] = useState<any>({});
     const shipping_cost = useSelector(selectShippingCost);
 
-    const calculateTaxFromState = (value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
+    const calculateTaxFromState = useCallback((value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
         if (taxRate) {
             let totalTax;
@@ -74,7 +74,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             dispatch(setSalesTax(totalTax.toFixed(2)));
             dispatch(setTotalWithTax(totalWithTax.toFixed(2)));
         }
-    }
+    }, [appliedCoupon, dispatch]);
 
     const handleSelectState: SelectProps['onChange'] = (value) => {
         setUS_state(value as string);
@@ -97,7 +97,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             dispatch(setSalesTax(""));
             dispatch(setTotalWithTax(""));
         }
-    }, [dispatch]);
+    }, [dispatch, editMode]);
 
     const validateFields = () => {
         let newErrors: any = {};
@@ -144,7 +144,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             }
         }
         getState();
-    }, [dispatch, zipCodeInput])
+    }, [dispatch, zipCodeInput, calculateTaxFromState, shipping_cost, totalWithCoupon, total])
 
     return (
         <div>

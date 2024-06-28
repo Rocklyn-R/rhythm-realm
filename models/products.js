@@ -14,6 +14,7 @@ const productsGet = async (subcategoryName, manufacturers = [], sale = false, pr
         v.image2, 
         v.image3,
         v.sale_price AS sale_price, 
+        v.marketing_label,
         c.name AS category_name, 
         s.name AS subcategory_name
     FROM 
@@ -77,6 +78,7 @@ const selectedProductGet = async (name, variant) => {
     variants.image2, 
     variants.image3,
     variants.sale_price, 
+    variants.marketing_label,
     categories.name AS category_name, 
     subcategories.name AS subcategory_name 
     FROM products
@@ -106,17 +108,40 @@ const variantsGetAll = async (id) => {
 }
 
 
-const manufacturersGet = async (subcategoryName) => {
-    const query = `
+const manufacturersGet = async (subcategoryName, sale = false, priceMin = undefined, priceMax = undefined) => {
+    let query = `
     SELECT DISTINCT p.manufacturer
     FROM products p
     JOIN subcategories s ON p.subcategory_id = s.id
+    JOIN variants v ON p.id = v.product_id
     WHERE s.name = $1
     `;
+
+    const params = [subcategoryName];
+    let paramIndex = 2;
+
+    if (sale) {
+        query += ` AND v.sale_price IS NOT NULL`;
+    }
+
+    if (priceMin !== undefined && priceMin !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price >= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price >= $${paramIndex}))`;
+        params.push(priceMin);
+        paramIndex++;
+    }
+
+    if (priceMax !== undefined && priceMax !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price <= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price <= $${paramIndex}))`;
+        params.push(priceMax);
+        paramIndex++;
+    }
+
     try {
-        const result = await db.query(query, [subcategoryName]);
+        const result = await db.query(query, params);
+        console.log(result);
         return result.rows.map(row => row.manufacturer);
     } catch (error) {
+        console.log(error);
         throw error;
     }
 }
@@ -135,6 +160,7 @@ const saleItemsGet = async () => {
         v.image2, 
         v.image3,
         v.sale_price AS sale_price, 
+        v.marketing_label,
         c.name AS category_name, 
         s.name AS subcategory_name
     FROM 
@@ -177,6 +203,7 @@ const featuredProductsGet = async (
         v.image2, 
         v.image3,
         v.sale_price AS sale_price, 
+        v.marketing_label,
         c.name AS category_name, 
         s.name AS subcategory_name
     FROM 
@@ -237,16 +264,43 @@ const featuredProductsGet = async (
     }
 }
 
-const featuredManufacturersGet = async (marketingLabel) => {
-    const query = `
+const featuredManufacturersGet = async (marketingLabel, categories = [], subcategories = [], priceMin = undefined, priceMax = undefined) => {
+    let query = `
     SELECT DISTINCT p.manufacturer
     FROM products p
+    JOIN categories c ON p.category_id = c.id
     JOIN subcategories s ON p.subcategory_id = s.id
     JOIN variants v on p.id = v.product_id
     WHERE v.marketing_label = $1
     `;
+
+    const params = [marketingLabel];
+    let paramIndex = 2;
+
+    if (categories.length > 0) {
+        query += ` AND c.name IN (${categories.map((_, index) => `$${paramIndex++}`).join(',')})`;
+        params.push(...categories);
+    }
+
+    if (subcategories.length > 0) {
+        query += ` AND s.name IN (${subcategories.map((_, index) => `$${paramIndex++}`).join(',')})`;
+        params.push(...subcategories);
+    }
+
+    if (priceMin !== undefined && priceMin !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price >= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price >= $${paramIndex}))`;
+        params.push(priceMin);
+        paramIndex++;
+    }
+
+    if (priceMax !== undefined && priceMax !== null) {
+        query += ` AND ((v.sale_price IS NULL AND p.price <= $${paramIndex}) OR (v.sale_price IS NOT NULL AND v.sale_price <= $${paramIndex}))`;
+        params.push(priceMax);
+        paramIndex++;
+    }
+
     try {
-        const result = await db.query(query, [marketingLabel]);
+        const result = await db.query(query, params);
         return result.rows.map(row => row.manufacturer);
     } catch (error) {
         throw error;

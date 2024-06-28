@@ -3,7 +3,7 @@ import FenderAd from "../../../images/ad/FenderAd.png"
 import GibsonAd from '../../../images/ad/GibsonAd.png';
 import TaylorAd from '../../../images/ad/TaylorAd.png';
 import { ArrowBigLeft, ArrowBigRight, Circle, CircleDot } from 'lucide-react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const adImages = [
     {
@@ -55,6 +55,7 @@ export const SlidingAd = () => {
                 {adImages.map(ad => (
                    
                     <img
+                        alt="Ad"
                         key={ad.url}
                         src={ad.url}
                         className="w-full h-full flex-shrink-0 flex-grow-0 cursor-pointer"
@@ -89,6 +90,7 @@ export const SlidingAd = () => {
             <div className='absolute bottom-2 left-1/2 -translate-x-2/4 flex gap-1'>
                 {adImages.map((_, index) => (
                     <button
+                        key={index}
                         className='circle-btn cursor-pointer block w-4 h-4 hover:scale-125 focus-visible:scale-125 transition duration-100 ease-in-out'
                         onClick={() => setImageIndex(index)}
                     >

@@ -1,5 +1,4 @@
 import { FaUser } from "react-icons/fa";
-import { useState } from "react";
 import { SlidingLogin } from "./SlidingLogin/SlidingLogin";
 import { selectFirstName, selectIsAuthenticated, selectHeaderIsOpen, setHeaderIsOpen, selectCartQuestion } from "../../redux-store/UserSlice";
 import { useSelector, useDispatch } from "react-redux";

@@ -50,7 +50,7 @@ export const ReviewAndPayment = () => {
         } else {
             setCreditContentHeight('0px');
         }
-    }, [showCreditOrDebit, billingSameAsShipping]);
+    }, [showCreditOrDebit, billingSameAsShipping, showPaypal]);
 
     useEffect(() => {
         if (showPaypal) {
@@ -58,7 +58,7 @@ export const ReviewAndPayment = () => {
         } else {
             setPayPalContentHeight('0px');
         }
-    })
+    }, [showPaypal])
 
     return (
         <div className="mt-6 flex flex-col">
@@ -160,7 +160,7 @@ export const ReviewAndPayment = () => {
                     <div className="w-full flex items-center justify-between gap-4">
                         <p className="p-4 bg-gray-200 border-l-4 border-blue-900 flex-grow">Apply coupon codes before paying with PayPal</p>
                         <div className="w-1/5 py-4 rounded-md bg-yellow-400 text-white text-xl flex justify-center items-center">
-                            <img src={PayPalLogo} width="110" />
+                            <img alt="PayPal Logo" src={PayPalLogo} width="110" />
                         </div>
                     </div>
                 </div>

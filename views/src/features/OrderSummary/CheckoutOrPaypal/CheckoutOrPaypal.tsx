@@ -11,7 +11,7 @@ export const CheckoutOrPaypal = () => {
              </Link>    
                 <p className="mt-4">OR</p>
                 <button className="hover:bg-yellow-500 transition-colors duration-300 ease w-full x-36 py-4 rounded-md bg-yellow-400 text-white text-xl mt-4 flex justify-center">
-                    <img src={PayPalLogo} width="110" />
+                    <img alt="PayPal Logo" src={PayPalLogo} width="110" />
                 </button>
            
 

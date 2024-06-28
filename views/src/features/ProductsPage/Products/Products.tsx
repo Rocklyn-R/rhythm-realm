@@ -1,13 +1,9 @@
 import { Product } from "../../../types/types"
 import { formatPrice } from "../../../utilities/utilities"
-import { useEffect, useState } from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useState } from "react"
+import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { setSelectedProduct } from "../../../redux-store/ProductsSlice"
-import { Heart } from "lucide-react"
-import { FaRegHeart } from "react-icons/fa"
-import { IoMdHeartEmpty } from "react-icons/io";
-import { addToWishList, selectIsAuthenticated, setHeaderIsOpen } from "../../../redux-store/UserSlice"
 import { AddToWishList } from "./AddToWishList/AddToWishList"
 
 
@@ -55,12 +51,12 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
     };
 
-   /* useEffect(() => {
-        if (productsForSelection.length === 0) {
-            setProductsForSelection(sortedProducts);
-        }
-    }, [dispatch, uniqueProducts])*/
-    
+    /* useEffect(() => {
+         if (productsForSelection.length === 0) {
+             setProductsForSelection(sortedProducts);
+         }
+     }, [dispatch, uniqueProducts])*/
+
 
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
@@ -78,19 +74,21 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     return (
         <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 w-full bg-gray">
             {uniqueProducts && uniqueProducts.map(product => (
-                <div key={product.id} className="flex flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-48 sm:w-48 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
+                <div key={product.variant_id} className="flex flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-48 sm:w-48 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
                         <div className="w-full h-full flex flex-col justify-between">
-                            
+                            <div className="w-full flex relative mb-1 h-6">
+                                {product.marketing_label ? <p className={`${product.marketing_label === "Top Seller" ? `bg-black`: product.marketing_label === "New Arrival" ? `bg-blue-700` : `bg-red-800` } text-white py-1 px-2 text-xs font-semibold`}>{product.marketing_label}</p> : ""}
+                                <AddToWishList
+                                   variant={product}
+                                   key={product.id}
+                                />
+                            </div>
                             <div className="relative w-full overflow-hidden">
                                 <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                     {productVariantsMap[product.id].map((variant, index) => (
                                         <div className="min-w-full relative" key={variant.variant_id}>
                                             <img className="w-full" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
-                                        <AddToWishList 
-                                            variant={variant}
-                                            key={variant.variant_id}
-                                        />
                                         </div>
                                     ))}
                                 </div>
@@ -100,7 +98,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                     <div className="flex">
                                         {productVariantsMap[product.id].length <= 4 ? (
                                             productVariantsMap[product.id].slice(0, 4).map((variant, index) => (
-                                                <button
+                                                <div
                                                     className="w-10 h-12 mx-1/2 cursor-pointer border border-gray-300 rounded-lg"
                                                     key={variant.variant_id}
                                                     onClick={(event) => handleThumbnailClick(product, variant, index, event)}
@@ -110,12 +108,12 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                                         src={variant.image1}
                                                         alt={`${variant.name} ${variant.variant_name}`}
                                                     />
-                                                </button>
+                                                </div>
                                             ))
                                         ) : (
                                             <>
                                                 {productVariantsMap && productVariantsMap[product.id].slice(0, 3).map((variant, index) => (
-                                                    <button
+                                                    <div
                                                         className="w-10 h-12 mx-1/2 cursor-pointer border border-gray-300 rounded-lg"
                                                         key={variant.variant_id}
                                                         onClick={(event) => handleThumbnailClick(product, variant, index, event)}
@@ -125,13 +123,13 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                                             src={variant.image1}
                                                             alt={`${variant.name} ${variant.variant_name}`}
                                                         />
-                                                    </button>
+                                                    </div>
                                                 ))}
-                                                <button
+                                                <div
                                                     className="w-10 h-12 mx-1/2 cursor-pointer border border-gray-300 rounded-lg flex items-center justify-center"
                                                 >
                                                     +{productVariantsMap[product.id].length - 3}
-                                                </button>
+                                                </div>
                                             </>
                                         )}
                                     </div>

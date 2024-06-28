@@ -55,9 +55,11 @@ const getAllVariants = async (req, res) => {
 }
 
 const getManufacturers = async (req, res) => {
-    const { subcategory } = req.query;
+    const { subcategory, sale, priceMin, priceMax } = req.query;
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
     try {
-        const result = await manufacturersGet(subcategory);
+        const result = await manufacturersGet(subcategory, sale, parsedPriceMin, parsedPriceMax);
         if (result) {
             res.status(200).json({ manufacturers: result });
         }
@@ -125,9 +127,24 @@ const getFeaturedProducts = async (req, res) => {
 }
 
 const getFeaturedManufacturers = async (req, res) => {
-    const { marketingLabel } = req.query;
+    const { marketingLabel, categories, subcategories, priceMin, priceMax } = req.query;
+    let categoriesArray = [];
+    let subcategoriesArray = [];
+  
+      // If categories is provided in the query, split it into an array
+    if (categories) {
+        categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
+    }
+
+    // If subcategories is provided in the query, split it into an array
+    if (subcategories) {
+        subcategoriesArray = Array.isArray(subcategories) ? subcategories : subcategories.split(',');
+    }
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
+
     try {
-        const result = await featuredManufacturersGet(marketingLabel);
+        const result = await featuredManufacturersGet(marketingLabel, categoriesArray, subcategoriesArray, priceMin, priceMax);
         if (result) {
             res.status(200).json({ manufacturers: result });
         }

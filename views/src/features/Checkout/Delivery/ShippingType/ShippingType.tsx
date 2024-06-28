@@ -48,7 +48,7 @@ export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateT
             }))
             calculateTaxFromState(US_state, totalWithCoupon, totalPrice, shippingCost);
         }
-    }, [dispatch, totalPrice, selectedShipping, totalWithCoupon]);
+    }, [dispatch, US_state, calculateTaxFromState, totalPrice, selectedShipping, totalWithCoupon]);
 
     const handleSelectShipping = (shippingType: string) => {
         setSelectedShipping(shippingType);

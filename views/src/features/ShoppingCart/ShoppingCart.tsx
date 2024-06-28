@@ -1,6 +1,5 @@
 import { useSelector } from "react-redux"
-import { selectCart, selectTotal, selectTotalItems } from "../../redux-store/CartSlice"
-import { Truck, Undo2 } from "lucide-react";
+import { selectCart, selectTotalItems } from "../../redux-store/CartSlice"
 import ReturnIcon from '../../images/icons/back-arrow.png';
 import Delivery from "../../images/icons/box.png";
 import { FiMinus, FiPlus } from "react-icons/fi";
@@ -13,7 +12,6 @@ import { addToCart, removeFromCart } from "../../api/cart";
 import { selectIsAuthenticated } from "../../redux-store/UserSlice";
 
 export const ShoppingCart = () => {
-    const total = useSelector(selectTotal);
     const cart = useSelector(selectCart);
     const totalItems = useSelector(selectTotalItems);
     const dispatch = useDispatch();
@@ -53,7 +51,7 @@ export const ShoppingCart = () => {
                         <div key={index} className="flex border-b-2 justify-between border-gray-300">
                             <div className="flex">
                                 <div>
-                                    <img src={item.image1} width="160" className="m-6 border-2 border-gray-300" />
+                                    <img alt="Item" src={item.image1} width="160" className="m-6 border-2 border-gray-300" />
                                 </div>
                                 <div className="flex flex-col ml-6 m-6 w-9/20 items-start">
                                     <span>{item.name} {item.variant_name}</span>
@@ -62,11 +60,11 @@ export const ShoppingCart = () => {
                                     <span className="text-green-600">In Stock</span>
                                     <div className="flex">
                                         <div className="flex flex-col items-center pt-4 pr-4">
-                                            <img src={Delivery} width="25" />
+                                            <img alt="Delivery" src={Delivery} width="25" />
                                             <p>Free shipping</p>
                                         </div>
                                         <div className="flex flex-col items-center p-4">
-                                            <img src={ReturnIcon} width="25" />
+                                            <img alt="Returns" src={ReturnIcon} width="25" />
                                             <p>45 day returns</p>
                                         </div>
                                     </div>

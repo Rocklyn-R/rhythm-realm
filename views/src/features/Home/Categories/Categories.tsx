@@ -1,11 +1,3 @@
-import GuitarsImg from "../../../images/categories/Guitars.png";
-import BassesImg from "../../../images/categories/Bass.png";
-import DrumsImg from "../../../images/categories/Drums.png";
-import KeysImg from "../../../images/categories/Keys.png";
-import StringsImg from "../../../images/categories/Strings.png";
-import WindsImg from "../../../images/categories/Winds.png";
-import AudioImg from "../../../images/categories/Audio.png";
-import AccessoriesImg from "../../../images/categories/Accessories.png";
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCategories } from "../../../api/categories";

@@ -5,6 +5,7 @@ import { NavBar } from "./features/NavBar/NavBar"
 import { Footer } from "./features/Footer/Footer"
 import { FeaturedDeals } from "./features/FeaturedDeals/FeaturedDeals"
 import { SlidingAd } from "./features/Home/SlidingAd/SlidingAd"
+import { NewArrivals } from "./features/NewArrivals/NewArrivals"
 
 export const Layout = () => {
     const location = useLocation();
@@ -17,6 +18,7 @@ export const Layout = () => {
             <Breadcrumbs />
             <Outlet />
             <FeaturedDeals />
+            <NewArrivals />
             {!isHomePage && <SlidingAd />}
             <Footer />
         </div>

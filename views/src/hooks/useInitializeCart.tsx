@@ -69,6 +69,7 @@ export const useInitializeCart = () => {
             } 
             combineCart();
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, isAuthenticated, cartMode]);
 }
 

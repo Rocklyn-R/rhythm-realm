@@ -1,6 +1,6 @@
-import { Link, useLocation, useParams } from "react-router-dom";
-import { formatCategoryNameForDisplay, formatPrice } from "../../utilities/utilities";
-import { selectCategories, selectFeaturedDeals, selectProducts, selectSubcategories, setProducts, setSelectedProduct, setSubcategories } from "../../redux-store/ProductsSlice";
+import { useParams } from "react-router-dom";
+
+import { selectCategories, selectProducts, selectSubcategories, setProducts, setSubcategories } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import { getSubcategories } from "../../api/categories";
@@ -11,22 +11,27 @@ import { Products } from "./Products/Products";
 import { RefineSearch } from "./RefineSearch/RefineSearch";
 import { SortBy } from "./SortBy/SortBy";
 import { getFeaturedDeals } from "../../api/products";
-import { shuffleArray } from "../../utilities/utilities";
+
 
 export const ProductsPage = () => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
     const allCategories = useSelector(selectCategories)
-    const id = allCategories.find(item => item.name === categoryName)!.id;
+    const [id, setId] = useState<number>();
     const allSubcategories = useSelector(selectSubcategories);
     const dispatch = useDispatch();
     const allProducts = useSelector(selectProducts);
     const [productVariantsMap, setProductVariantsMap] = useState<Record<string, Product[]>>({});
-    const featuredDeals = useSelector(selectFeaturedDeals);
     const [uniqueProducts, setUniqueProducts] = useState(Object.values(productVariantsMap).map(variants => variants[0]))
 
    
     const formattedSubcategoryName = subcategoryName ? subcategoryName : "";
     const [sorting, setSorting] = useState("Best Match");
+
+    useEffect(() => {
+        if(allCategories) {
+            setId(allCategories.find(item => item.name === categoryName)!.id)
+        }
+    }, [allCategories, categoryName])
 
     useEffect(() => {
         if(allProducts) {
@@ -68,15 +73,18 @@ export const ProductsPage = () => {
 
     useEffect(() => {
         const fetchSubcategories = async () => {
-            const subcategoryData = await getSubcategories(id);
+            if (id) {
+              const subcategoryData = await getSubcategories(id);
             if (subcategoryData) {
                 dispatch(setSubcategories(subcategoryData))
+            }  
             }
+            
         }
         if (allSubcategories.length === 0) {
             fetchSubcategories();
         }
-    }, [dispatch]);
+    }, [dispatch, id, allSubcategories.length]);
 
 
     useEffect(() => {
@@ -102,7 +110,7 @@ export const ProductsPage = () => {
        
         
         
-    }, [dispatch, formattedSubcategoryName]);
+    }, [dispatch, formattedSubcategoryName, categoryName]);
 
 
     return (
@@ -114,11 +122,14 @@ export const ProductsPage = () => {
                     subcategoryName={formattedSubcategoryName}
                 />
                 <div className="flex flex-col w-3/4">
-                    <SortBy 
+                
+                         <SortBy 
                         uniqueProducts={uniqueProducts}
                         sorting={sorting}
                         setSorting={setSorting}
-                    />
+                    /> 
+                 
+                  
                     <Products
                         uniqueProducts={uniqueProducts}
                         productVariantsMap={productVariantsMap}

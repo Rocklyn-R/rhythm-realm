@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useSelector } from "react-redux";
-import { selectFirstName, selectLastName, selectEmail, setUserFirstName, setUserLastName, setUserEmail, unauthenticateUser } from "../../../redux-store/UserSlice";
+import { selectFirstName, selectLastName, selectEmail, unauthenticateUser } from "../../../redux-store/UserSlice";
 import { X } from "lucide-react";
 import { logoutUser } from "../../../api/user";
 import { useDispatch } from "react-redux";

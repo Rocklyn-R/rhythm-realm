@@ -3,7 +3,6 @@ import productsReducer from "./ProductsSlice";
 import cartReducer from "./CartSlice";
 import shippingReducer from "./ShippingSlice";
 import userReducer from "./UserSlice";
-import { buildGetDefaultMiddleware } from "@reduxjs/toolkit/dist/getDefaultMiddleware";
 import { localStorageMiddleWare } from "./middleware";
 
 export interface RootState {

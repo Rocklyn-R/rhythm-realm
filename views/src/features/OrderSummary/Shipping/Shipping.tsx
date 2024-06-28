@@ -1,15 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { FaCaretDown } from "react-icons/fa";
 import { FiftyStates } from "./50states";
-import { Select, Input } from 'antd';
+import { Input } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectShippingCost, selectTotalWithTax, selectSalesTax, setSalesTax } from "../../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectShippingCost, setSalesTax } from "../../../redux-store/CartSlice";
 import { useDispatch } from "react-redux";
-import { formatPrice } from "../../../utilities/utilities";
 import { fetchStateByZipCode } from "../../../api/cart";
 import { SelectState } from "./SelectState";
-import { setSelectedState, setSelectedZipCode, selectZipCode, selectSelectedState } from "../../../redux-store/ShippingSlice";
+import { selectSelectedState } from "../../../redux-store/ShippingSlice";
 
 interface ShippingProps {
     page: "Cart" | "Checkout";
@@ -43,7 +42,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
     const handleSelectState: SelectProps['onChange'] = (value) => {
         setUS_stateInput(value as string);
     }
-    const calculateTaxRate = (USStateAbbrev: string) => {
+    const calculateTaxRate = useCallback((USStateAbbrev: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === USStateAbbrev)?.tax_rate;
         if (taxRate) {
             let totalTax;
@@ -52,7 +51,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
                 totalTax = shippingCost ? (parseFloat(totalWithCoupon) + parseFloat(shippingCost)) * taxRate : parseFloat(totalWithCoupon) * taxRate;
                 totalWithTax = parseFloat(totalWithCoupon) + totalTax;
             } else {
-                totalTax = shippingCost ? (parseFloat(total) + parseFloat(shippingCost) * taxRate) : parseFloat(total) * taxRate;
+                totalTax = shippingCost ? (parseFloat(total) + parseFloat(shippingCost)) * taxRate : parseFloat(total) * taxRate;
                 totalWithTax = parseFloat(total) + totalTax;
             }
             if (page === "Cart") {
@@ -61,15 +60,13 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
                     setTotal_With_Tax(totalWithTax.toFixed(2));
                 }
             } else {
-                //console.log("RR")
                 dispatch(setSalesTax(totalTax.toFixed(2)));
-                dispatch(setTotalWithTax(totalWithTax.toFixed(2)))
+                dispatch(setTotalWithTax(totalWithTax.toFixed(2)));
             }
-
         }
-    }
+    }, [appliedCoupon, shippingCost, totalWithCoupon, total, page, setSales_Tax, setTotal_With_Tax, dispatch]);
 
-    const calculateSalesTaxAndTotal = async () => {
+    const calculateSalesTaxAndTotal = useCallback(async () => {
         if (US_stateInput && zipCodeInput) {
             setZipCode(zipCodeInput);
             setUS_state(US_stateInput);
@@ -80,25 +77,25 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
                 calculateTaxRate(fetchState);
                 setShowShippingInput(false);
             } else {
-                setMissingZipCodeMessage("Invalid Zip Code")
+                setMissingZipCodeMessage("Invalid Zip Code");
             }
-        } else if (!US_state && zipCodeInput) {
+        } else if (!US_stateInput && zipCodeInput) {
             setMissingStateMessage("Please select a state");
             setMissingZipCodeMessage("");
-        } else if (US_state && !zipCodeInput) {
+        } else if (US_stateInput && !zipCodeInput) {
             setMissingStateMessage("");
-            setMissingZipCodeMessage("Zip Code is required")
+            setMissingZipCodeMessage("Zip Code is required");
         } else {
             setMissingStateMessage("Please select a state");
-            setMissingZipCodeMessage("Zip Code is required")
+            setMissingZipCodeMessage("Zip Code is required");
         }
-    }
+    }, [US_stateInput, zipCodeInput, calculateTaxRate, setShowShippingInput]);
 
    useEffect(() => {
-        if (page === "Cart" && zipCode || page === "Checkout" && selectedState) {
+        if ((page === "Cart" && zipCode) || (page === "Checkout" && selectedState)) {
             calculateTaxRate(US_state)
         }
-    }, [total]);
+    }, [total, US_state, calculateTaxRate, page, selectedState, zipCode]);
 
 
     useEffect(() => {
@@ -111,7 +108,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
         } else {
             calculateTaxRate(selectedState);
         }
-    }, [appliedCoupon])
+    }, [appliedCoupon, calculateTaxRate, US_state, page, selectedState])
 
     return (
         <div className="flex flex-col pt-4 w-full">

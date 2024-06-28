@@ -1,7 +1,4 @@
 import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { replaceCart } from "../../../api/cart"
-import { selectCart } from "../../../redux-store/CartSlice"
 import { setCartMode, setCartQuestion } from "../../../redux-store/UserSlice";
 
 interface HandleCartProps {

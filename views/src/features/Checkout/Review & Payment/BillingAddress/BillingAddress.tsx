@@ -13,7 +13,6 @@ interface BillingAddressProps {
 }
 
 export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShipping, setBillingSameAsShipping}) => {
-    //const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
     const name = useSelector(selectFullName);
     const address = useSelector(selectAddress);
     const apt = useSelector(selectApartment);
@@ -35,7 +34,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
         setUS_state(value as string);
     }
 
-    const validateFields = () => {
+  /*  const validateFields = () => {
         let newErrors: any = {};
 
         if (!phoneInput) newErrors.phone = "Phone number is required";
@@ -49,7 +48,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
 
         // Return true if no errors
         return Object.keys(newErrors).length === 0;
-    };
+    };*/
 
     useEffect(() => {
         const getState = async () => {

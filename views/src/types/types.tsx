@@ -27,6 +27,7 @@ export interface Product {
     subcategory_name: string;
     variant_name: string;
     variant_id: number;
+    marketing_label: string;
 }
 
 export interface Cart extends Product {

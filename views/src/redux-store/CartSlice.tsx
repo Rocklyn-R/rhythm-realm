@@ -1,9 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 import { Cart, Coupon } from "../types/types";
-import { selectSelectedState } from "./ShippingSlice";
-import { useSelector } from "react-redux";
-import { FiftyStates } from "../features/OrderSummary/Shipping/50states";
 
 
 

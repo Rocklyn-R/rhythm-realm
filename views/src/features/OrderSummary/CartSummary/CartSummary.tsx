@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { FiPlus, FiMinus } from "react-icons/fi";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux"
@@ -30,16 +30,13 @@ export const CartSummary = () => {
     const address = useSelector(selectAddress);
     const isAuthenticated = useSelector(selectIsAuthenticated);
 
-    const calculateTaxFromState = (value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
+    const calculateTaxFromState = useCallback((value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
         if (taxRate) {
             let totalTax;
             let totalWithTax;
             if (appliedCoupon) {
                 totalTax = shippingCost ? ((parseFloat(totalWithCoupon) + parseFloat(shippingCost)) * taxRate) : parseFloat(totalWithCoupon) * taxRate;
-                console.log(totalTax);
-                console.log(shippingCost);
-                console.log(totalWithCoupon);
                 totalWithTax = parseFloat(totalWithCoupon) + totalTax;
             } else {
                 totalTax = parseFloat(total) * taxRate;
@@ -49,7 +46,7 @@ export const CartSummary = () => {
             dispatch(setSalesTax(totalTax.toFixed(2)));
             dispatch(setTotalWithTax(totalWithTax.toFixed(2)));
         }
-    }
+    }, [appliedCoupon, dispatch]);
 
     useEffect(() => {
         if (isInitialRender.current) {
@@ -83,7 +80,8 @@ export const CartSummary = () => {
                 calculateTaxFromState(selectedState, totalWithCoupon, totalPrice, shippingCost);
             }
         }
-    }, [dispatch, totalPrice])
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [dispatch, totalPrice, calculateTaxFromState])
 
     const handleAddQuantity = async (cartItem: Cart) => {
         dispatch(addToQuantity(cartItem));
@@ -103,7 +101,7 @@ export const CartSummary = () => {
         if (cart.length === 0) {
             navigate("/Cart");
         }
-    }, [cart]);
+    }, [cart.length, navigate]);
 
     const handleShowEditQuantity = (index: number) => {
         const newShowEditQuantity = [...showEditQuantity];
@@ -129,11 +127,11 @@ export const CartSummary = () => {
             </div>
             <div className={`sliding-content ${showFullCart ? 'sliding-content-visible' : 'sliding-content-hidden'}`} >
                 {cart.map((item, index) => (
-                    <div className={`flex flex-col ${index !== cart.length - 1 ? "border-b-2 border-gray-300 pb-2" : ""}`}>
+                    <div key={index} className={`flex flex-col ${index !== cart.length - 1 ? "border-b-2 border-gray-300 pb-2" : ""}`}>
                         <div key={index} className="flex justify-between">
                             <div className="flex">
                                 <div>
-                                    <img src={item.image1} width="80" className="m-6 border-2 border-gray-300" />
+                                    <img alt="Item" src={item.image1} width="80" className="m-6 border-2 border-gray-300" />
                                 </div>
                                 <div className="flex flex-col ml-2 mt-6 w-1/2 items-start">
                                     <span className="text-sm font-medium">{item.name} {item.variant_name}</span>
@@ -190,7 +188,7 @@ export const CartSummary = () => {
                 {!showFullCart && (
                     <div className="flex justify-start flex-wrap">
                         {cart.map(item => (
-                            <img src={item.image1} key={item.variant_id} width="70" className="mr-2 mt-3 border-2 border-gray-300" />
+                            <img alt="Item" src={item.image1} key={item.variant_id} width="70" className="mr-2 mt-3 border-2 border-gray-300" />
                         ))}
                     </div>
                 )}

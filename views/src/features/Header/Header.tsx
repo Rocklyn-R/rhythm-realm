@@ -8,7 +8,7 @@ export const Header = () => {
         <div className="flex flex-col items-end justify-between bg-red-800 pt-2 pb-5 w-full">
             <div className="flex w-full items-end justify-between">
                 <div className="mx-3">
-                    <img src={logo} width="250" />
+                    <img alt="Rhythm Realm logo" src={logo} width="250" />
                 </div>
 
                 <div className="w-full justify-center hidden sm:flex">

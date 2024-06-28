@@ -1,8 +1,7 @@
-import { removeCoupon, selectActiveCoupons, selectAppliedCoupon, selectTotalWithCoupon, applyCoupon, selectTotal, selectSalesTax, selectTotalWithTax, selectShippingCost, setSalesTax, setTotalWithTax } from "../../../redux-store/CartSlice";
+import { removeCoupon, selectActiveCoupons, selectAppliedCoupon, applyCoupon, selectTotal, selectSalesTax, selectTotalWithTax, selectShippingCost, setSalesTax, setTotalWithTax } from "../../../redux-store/CartSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 import { SlTag } from "react-icons/sl";
-import { formatPrice } from "../../../utilities/utilities";
 import { FiftyStates } from "../Shipping/50states";
 import { selectSelectedState } from "../../../redux-store/ShippingSlice";
 
@@ -12,7 +11,6 @@ export const CouponCode = () => {
     const [couponInput, setCouponInput] = useState("");
     const [couponErrorMessage, setCouponErrorMessage] = useState("");
     const appliedCoupon = useSelector(selectAppliedCoupon);
-    const discountedTotal = useSelector(selectTotalWithCoupon);
     const total = useSelector(selectTotal);
     const salesTax = useSelector(selectSalesTax);
     const totalWithTax = useSelector(selectTotalWithTax);
@@ -20,12 +18,7 @@ export const CouponCode = () => {
     const shippingCost = useSelector(selectShippingCost);
 
     const dispatch = useDispatch();
-    let total_to_render;
-    if (appliedCoupon) {
-        total_to_render = discountedTotal;
-    } else {
-        total_to_render = total;
-    }
+ 
 
 
     const handleApplyCoupon = () => {

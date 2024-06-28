@@ -26,9 +26,18 @@ const getSubcategories = async (req, res) => {
 
 
 const getFeaturedCategories = async (req, res) => {
-    const { marketingLabel } = req.query;
+    const { marketingLabel, manufacturers, priceMin, priceMax } = req.query;
+    let manufacturersArray = []
+     // If manufacturers is provided in the query, split it into an array
+     if (manufacturers) {
+        manufacturersArray = Array.isArray(manufacturers) ? manufacturers : manufacturers.split(',');
+    }
+
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
+
     try {
-        const result = await featuredCategoriesGet(marketingLabel);
+        const result = await featuredCategoriesGet(marketingLabel, manufacturersArray, parsedPriceMin, parsedPriceMax);
         if (result) {
             res.status(200).json({ categories: result });
         }
@@ -38,14 +47,23 @@ const getFeaturedCategories = async (req, res) => {
 }
 
 const getFeaturedSubcategories = async (req, res) => {
-    const { marketingLabel, categories } = req.query;
+    const { marketingLabel, categories, manufacturers, priceMin, priceMax } = req.query;
     let categoriesArray = [];
   
     if (categories) {
         categoriesArray = Array.isArray(categories) ? categories : categories.split(',');
     }
+    let manufacturersArray = []
+     // If manufacturers is provided in the query, split it into an array
+     if (manufacturers) {
+        manufacturersArray = Array.isArray(manufacturers) ? manufacturers : manufacturers.split(',');
+    }
+
+    const parsedPriceMin = priceMin !== undefined ? parseFloat(priceMin) : undefined;
+    const parsedPriceMax = priceMax !== undefined ? parseFloat(priceMax) : undefined;
+
     try {
-        const result = await featuredSubcategoriesGet(marketingLabel, categoriesArray);
+        const result = await featuredSubcategoriesGet(marketingLabel, categoriesArray, manufacturersArray, parsedPriceMin, parsedPriceMax);
         if (result) {
             res.status(200).json({ subcategories: result });
         }

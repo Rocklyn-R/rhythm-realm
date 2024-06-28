@@ -1,9 +1,4 @@
 import { Select, SelectProps } from "antd"
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux"
-import { selectProducts, setProducts } from "../../../redux-store/ProductsSlice";
-import { getProducts } from "../../../api/products";
 import { Product } from "../../../types/types";
 
 interface SortByProps {

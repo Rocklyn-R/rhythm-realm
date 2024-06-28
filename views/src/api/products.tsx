@@ -63,9 +63,29 @@ export const getAllVariants = async (id: number) => {
     }
 }
 
-export const getManufacturers = async (subcategory: string) => {
+export const getManufacturers = async (
+    subcategory: string, 
+    sale?: boolean,
+    priceMin?: string,
+    priceMax?: string
+    ) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/manufacturers?subcategory=${subcategory}`);
+        let url = (`http://localhost:4000/products/manufacturers?subcategory=${subcategory}`);
+
+        if (sale) {
+            url += `&sale=${sale}`;
+        }
+          // Append priceMin to the URL if it's provided
+          if (priceMin !== undefined) {
+            url += `&priceMin=${priceMin}`;
+        }
+
+        // Append priceMax to the URL if it's provided
+        if (priceMax !== undefined) {
+            url += `&priceMax=${priceMax}`;
+        }
+
+        const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
             return data.manufacturers;
@@ -129,9 +149,36 @@ export const getFeaturedDeals = async (
     }
 }
 
-export const getFeaturedItemManufacturers = async (marketingLabel: string) => {
+export const getFeaturedItemManufacturers = async (
+    marketingLabel: string, 
+    categories?: string[], 
+    subcategories?:string [],
+    priceMin?: string,
+    priceMax?: string
+    ) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
+        let url = (`http://localhost:4000/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
+        if (categories && categories.length > 0) {
+            const categoriesParam = categories.join(',');
+            url += `&categories=${categoriesParam}`;
+        }
+
+        // Append subcategories to the URL if provided
+        if (subcategories && subcategories.length > 0) {
+            const subcategoriesParam = subcategories.join(',');
+            url += `&subcategories=${subcategoriesParam}`;
+        }
+
+          // Append priceMin to the URL if it's provided
+          if (priceMin !== undefined) {
+            url += `&priceMin=${priceMin}`;
+        }
+
+        // Append priceMax to the URL if it's provided
+        if (priceMax !== undefined) {
+            url += `&priceMax=${priceMax}`;
+        }
+        const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
             return data.manufacturers;

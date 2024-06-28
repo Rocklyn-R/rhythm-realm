@@ -1,9 +1,8 @@
 export const getCategories = async () => {
     try {
-        const response = await fetch('http://localhost:4000/');
+        const response = await fetch('http://localhost:4000/categories/');
         const data = await response.json();
         if (response.ok) {
-            console.log(data.categories)
             return data.categories;
         } else return []
     } catch (error) {
@@ -23,9 +22,30 @@ export const getSubcategories = async (id: number) => {
     }
 }
 
-export const getFeaturedCategories = async (marketingLabel: string) => {
+export const getFeaturedCategories = async (
+    marketingLabel: string, 
+    manufacturers?: string[],
+    priceMin?: string,
+    priceMax?: string
+    ) => {
     try {
-        const response = await fetch(`http://localhost:4000/categories/featured-categories?marketingLabel=${marketingLabel}`);
+        let url = (`http://localhost:4000/categories/featured-categories?marketingLabel=${marketingLabel}`);
+        if (manufacturers && manufacturers.length > 0) {
+            const manufacturersParam = manufacturers.join(',');
+            url += `&manufacturers=${manufacturersParam}`;
+        }
+
+        // Append priceMin to the URL if it's provided
+        if (priceMin !== undefined) {
+            url += `&priceMin=${priceMin}`;
+        }
+
+        // Append priceMax to the URL if it's provided
+        if (priceMax !== undefined) {
+            url += `&priceMax=${priceMax}`;
+        }
+
+        const response = await fetch(url);
         const data = await response.json();
         if (response.ok) {
             return data.categories;
@@ -35,7 +55,13 @@ export const getFeaturedCategories = async (marketingLabel: string) => {
     }
 }
 
-export const getFeaturedSubcategories = async (marketingLabel: string, categories?: string[]) => {
+export const getFeaturedSubcategories = async (
+    marketingLabel: string, 
+    categories?: string[], 
+    manufacturers?: string[],
+    priceMin?: string,
+    priceMax?: string
+    ) => {
     try {
         let url = `http://localhost:4000/categories/featured-subcategories?marketingLabel=${marketingLabel}`;
 
@@ -43,6 +69,20 @@ export const getFeaturedSubcategories = async (marketingLabel: string, categorie
             const categoriesParam = categories.join(',');
             url += `&categories=${categoriesParam}`;
         }
+        if (manufacturers && manufacturers.length > 0) {
+            const manufacturersParam = manufacturers.join(',');
+            url += `&manufacturers=${manufacturersParam}`;
+        }
+         // Append priceMin to the URL if it's provided
+         if (priceMin !== undefined) {
+            url += `&priceMin=${priceMin}`;
+        }
+
+        // Append priceMax to the URL if it's provided
+        if (priceMax !== undefined) {
+            url += `&priceMax=${priceMax}`;
+        }
+
         const response = await fetch(url);
         const data = await response.json();
 

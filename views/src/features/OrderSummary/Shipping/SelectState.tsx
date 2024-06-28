@@ -1,8 +1,6 @@
 import { Select } from "antd";
 import { FiftyStates } from "./50states";
 import { DefaultOptionType } from "antd/es/select";
-import { useSelector } from "react-redux";
-import { selectSelectedState } from "../../../redux-store/ShippingSlice";
 
 interface SelectStateProps {
     handleSelectState: (value: any, option: DefaultOptionType | DefaultOptionType[]) => void;
@@ -13,7 +11,7 @@ interface SelectStateProps {
 }
 
 export const SelectState: React.FC<SelectStateProps> = ({handleSelectState, missingStateMessage, page, US_state, editMode}) => {
-    const selectedState = useSelector(selectSelectedState);
+
 
     
 

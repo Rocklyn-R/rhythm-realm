@@ -23,6 +23,9 @@ module.exports = {
         '23': '5.75rem', // This adds a custom spacing value
         '1/2': '2px'
       },
+      colors: {
+        darkred: '#8B0000', // Hex code for dark red
+      },
     },
   },
   plugins: [],

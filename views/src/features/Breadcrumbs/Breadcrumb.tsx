@@ -1,10 +1,6 @@
 import { Link, useParams, useLocation } from "react-router-dom";
-import { BreadcrumbPaths } from "../Subcategories/Subcategories";
-import React from "react";
 
-interface BreadcrumbsProps {
-    paths: BreadcrumbPaths[]
-}
+
 
 export const Breadcrumbs = () => {
     const { categoryName, subcategoryName, productName, variantName } = useParams();

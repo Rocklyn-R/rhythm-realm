@@ -36,6 +36,7 @@ export const ImageGallery = () => {
 
                 {galleryImages.map(url => (
                     <img
+                        alt="Product"
                         key={url}
                         src={url}
                         className="w-full h-full flex-shrink-0 flex-grow-0 px-12"
@@ -69,10 +70,12 @@ export const ImageGallery = () => {
             <div className='flex'>
                 {galleryImages.map((src, index) => (
                     <button
+                        key={src}
                         className={`${imageIndex === index ? 'border-red-800 border-2' : 'border-gray-400 border'} w-16 mx-2 rounded-sm cursor-pointer block hover:scale-125 focus-visible:scale-125 transition duration-100 ease-in-out`}
                         onClick={() => setImageIndex(index)}
                     >
                         <img
+                            alt="Product"
                             src={src}
                         />
                     </button>

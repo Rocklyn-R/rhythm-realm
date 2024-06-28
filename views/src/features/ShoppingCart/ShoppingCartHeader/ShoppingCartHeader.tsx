@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { FaShoppingCart } from "react-icons/fa";
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectTotal, selectTotalItems, selectTotalWithCoupon } from "../../../redux-store/CartSlice";
+import { selectTotal, selectTotalItems } from "../../../redux-store/CartSlice";
 import { SlidingCart } from "../SlidingCart/SlidingCart";
 import { formatPrice } from "../../../utilities/utilities";
 
@@ -9,8 +9,7 @@ export const ShoppingCartHeader = () => {
     const [cartIsOpen, setCartIsOpen] = useState(false);
     const total = useSelector(selectTotal);
     const totalItems = useSelector(selectTotalItems);
-    const appliedCoupon = useSelector(selectAppliedCoupon);
-    const totalWithCoupon = useSelector(selectTotalWithCoupon);
+
 
     const toggleCart = () => {
         setCartIsOpen(!cartIsOpen)
