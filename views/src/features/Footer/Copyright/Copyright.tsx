@@ -2,7 +2,7 @@ import { PiCopyrightBold } from "react-icons/pi";
 
 export const Copyright = () => {
     return (
-        <div className="flex bg-black text-white text-xs py-4 justify-evenly">
+        <div className="flex flex-col items-center space-y-4 lg:space-y-0 lg:flex-row bg-black text-white text-xs py-4 justify-evenly">
             <p className="flex items-center font-semibold ">Copyright <PiCopyrightBold className="mx-1" /> Rhythm Realm, Inc. All Rights Reserved.</p>
             <p className="cursor-pointer">Purchase Terms & Conditions</p>
             <p className="cursor-pointer">Your Privacy Rights</p>
