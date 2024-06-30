@@ -35,7 +35,7 @@ export const FeaturedDeals = () => {
             setIsScrolling(true); // Start scrolling
             const buttons = scrollContainerRef.current.querySelectorAll(".featured-product-button");
             if (buttons.length > 0) {
-                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 20;
+                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 16;
                 scrollContainerRef.current.scrollBy({
                     left: -firstButtonWidth,
                     behavior: "smooth"
@@ -50,7 +50,7 @@ export const FeaturedDeals = () => {
             setIsScrolling(true); // Start scrolling
             const buttons = scrollContainerRef.current.querySelectorAll(".featured-product-button");
             if (buttons.length > 0) {
-                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 20;
+                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 16;
                 scrollContainerRef.current.scrollBy({
                     left: firstButtonWidth,
                     behavior: "smooth"
@@ -63,6 +63,7 @@ export const FeaturedDeals = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeftMouse, setScrollLeftMouse] = useState(0);
+    const [dragComplete, setDragComplete] = useState(true);
 
     const disableTextSelection = () => {
         if (document) {
@@ -70,11 +71,6 @@ export const FeaturedDeals = () => {
         }
     };
 
-    const enableTextSelection = () => {
-        if (document) {
-            document.body.style.userSelect = '';
-        }
-    };
 
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -88,36 +84,31 @@ export const FeaturedDeals = () => {
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         if (!isDragging || !scrollContainerRef.current) return;
+        setDragComplete(false);
         const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
         const walk = (x - startX) * 0.8; // Adjust scroll sensitivity
         scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
     };
 
-
-    const handleMouseUp = () => {
-        enableTextSelection();
-        document.removeEventListener('mouseup', handleMouseUp);
-        document.removeEventListener('mouseleave', handleMouseUp);
-
+    const adjustWheel = () => {
         if (scrollContainerRef.current) {
             const containerWidth = scrollContainerRef.current.clientWidth;
             const buttons = scrollContainerRef.current.querySelectorAll(".featured-product-button");
             if (buttons.length > 0) {
-                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 20;
+                const firstButtonWidth = buttons[0].getBoundingClientRect().width + 16;
                 const scrollLeft = scrollContainerRef.current.scrollLeft;
                 const visibleWidth = containerWidth + scrollLeft;
 
                 let targetScroll = scrollLeft;
-
                 // Calculate where to scroll to make sure a full button is visible
                 if (visibleWidth % firstButtonWidth !== 0) {
                     const remainder = visibleWidth % firstButtonWidth;
                     if (remainder >= firstButtonWidth * 0.5) {
-                        targetScroll += firstButtonWidth - remainder;
+                         targetScroll += firstButtonWidth - remainder;
                     } else {
                         targetScroll -= remainder;
                     }
-
+                   
                 }
 
                 // Animate scrolling to the adjusted position
@@ -127,7 +118,15 @@ export const FeaturedDeals = () => {
                 });
             }
         }
-        setTimeout(() => { setIsDragging(false) }, 50)
+    }
+
+
+    const handleMouseUp = () => {
+        document.removeEventListener("mouseup", handleMouseUp);
+        document.removeEventListener("mouseleave", handleMouseUp);
+        setIsDragging(false)
+        adjustWheel();
+        setTimeout(() => { setDragComplete(true) }, 50)
     };
 
 
@@ -146,12 +145,58 @@ export const FeaturedDeals = () => {
     }
 
     const handleClickProduct = (product: Product) => {
-        if (isDragging) {
+        if (!dragComplete) {
             return;
         }
         dispatch(setSelectedProduct(product));
         navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
     }
+    const featuredWheelRef = useRef<HTMLDivElement>(null);
+
+    const [wheelItemWidth, setWheelItemWidth] = useState("");
+    useEffect(() => {
+        const calculateWheelItemWidth = () => {
+            if (featuredWheelRef.current) {
+                const wheelWidth = featuredWheelRef.current.offsetWidth;
+                if (wheelWidth >= 1000) {
+                    const itemWidth = (wheelWidth / 5);
+                    const itemWidthWithoutMargin = itemWidth - 16;
+                    setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
+                } else if (wheelWidth >= 850) {
+                    const itemWidth = (wheelWidth / 4);
+                    const itemWidthWithoutMargin = itemWidth - 16;
+                    setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
+                } else if (wheelWidth >= 650) {
+                    const itemWidth = (wheelWidth / 3);
+                    const itemWidthWithoutMargin = itemWidth - 16;
+                    setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
+                } else if (wheelWidth >= 475) {
+                    const itemWidth = (wheelWidth / 2);
+                    const itemWidthWithoutMargin = itemWidth - 16;
+                    setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
+                } else if (wheelWidth < 475) {
+                    const itemWidth = wheelWidth / 1
+                    const itemWidthWithoutMargin = itemWidth - 16;
+                    setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
+                }
+            }
+         
+                    adjustWheel(); 
+        
+
+        };
+
+        // Log the initial width
+        calculateWheelItemWidth();
+
+        // Add resize event listener
+        window.addEventListener('resize', calculateWheelItemWidth);
+
+        // Clean up event listener on component unmount
+        return () => {
+            window.removeEventListener('resize', calculateWheelItemWidth);
+        };
+    }, []);
 
     return (
         <div className="py-8 w-full">
@@ -162,24 +207,27 @@ export const FeaturedDeals = () => {
                     onClick={() => handleViewAll()}
                 ><p className="hover:underline">View All</p><IoIosArrowForward /></button>
             </div>
-            <div className="relative"
+            <div className="relative featured-deals-wheel"
+                ref={featuredWheelRef}
                 onMouseDown={handleMouseDown}
                 onMouseMove={isDragging ? handleMouseMove : undefined}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
             >
-                <button
-                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
-                    onClick={scrollLeft}
-                >
-                    <IoIosArrowBack className="text-2xl" />
-                </button>
-                <div ref={scrollContainerRef} className="flex overflow-x-hidden w-full space-x-5 p-4">
+                <div ref={scrollContainerRef} className="flex overflow-x-hidden">
+                    <button
+                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
+                        onClick={scrollLeft}
+                    >
+                        <IoIosArrowBack className="text-2xl" />
+                    </button>
+
                     {uniqueProducts.map(product => (
                         <button
+                            style={{ width: `${wheelItemWidth}px` }}
                             onClick={() => handleClickProduct(product)}
                             key={product.id}
-                            className="featured-product-button flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black w-64 mt-8 bg-white rounded-md flex-none p-2"
+                            className="featured-product-button max-h-90 mx-2 flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black mt-8 bg-white rounded-md flex-none p-2"
                         >
                             <img src={product.image1} className="w-full h-auto" alt={product.name} draggable="false" />
                             <div className="p-4 flex flex-col items-center">
