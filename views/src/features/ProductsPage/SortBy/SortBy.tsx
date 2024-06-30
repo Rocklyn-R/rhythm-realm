@@ -5,17 +5,28 @@ interface SortByProps {
     uniqueProducts: Product[]
     setSorting: (arg0: string) => void;
     sorting: string;
+    setDisplayValue: (arg0: number) => void;
+    displayValue: number;
+    setCurrentPage: (arg0: number) => void;
 }
 
-export const SortBy: React.FC<SortByProps> = ({uniqueProducts, sorting, setSorting}) => {
+export const SortBy: React.FC<SortByProps> = ({ setCurrentPage, setDisplayValue, displayValue, uniqueProducts, sorting, setSorting}) => {
     const totalProducts = uniqueProducts.length;
     const options = ["Best match", "Price - Low to High", "Price - High to Low", "Brand Name A-Z"]
-
+    const displayOptions = [24, 48, 96]
 
 
 
     const handleSelectSorting: SelectProps['onChange'] = (value) => {
         setSorting(value);
+    }
+
+    const handleSelectDisplayValue: SelectProps['onChange'] = (value) => {
+        console.log(totalProducts);
+        setDisplayValue(value);
+        if (totalProducts < value) {
+            setCurrentPage(1);
+        }
     }
 
 
@@ -29,7 +40,6 @@ export const SortBy: React.FC<SortByProps> = ({uniqueProducts, sorting, setSorti
                  width: "20%",
                  fontFamily: "Montserrat",
                  fontSize: "2rem",
-                 
              }}
              options={[
                 ...options.map(option => ({ 
@@ -37,8 +47,24 @@ export const SortBy: React.FC<SortByProps> = ({uniqueProducts, sorting, setSorti
                      label: option }))
              ]}
             />
-            <div className="mt-2">
-               <h2 className="font-semibold">{totalProducts} matches found</h2> 
+             <p className="text-center font-semibold">({uniqueProducts.length} matches found)</p>
+            <div className="flex items-center w-fit">
+                <h4 className="font-semibold mr-2">Display:</h4>
+                <Select 
+                    onChange={handleSelectDisplayValue}
+                    value={displayValue}
+                    style={{
+                        height: "50px",
+                        width: "100%",
+                        fontFamily: "Montserrat",
+                        fontSize: "2rem",
+                    }}
+                    options={[
+                        ...displayOptions.map(option => ({ 
+                             value: option, 
+                             label: option }))
+                     ]}
+                />
             </div>
         </div>
     )
