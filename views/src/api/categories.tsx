@@ -1,6 +1,11 @@
 export const getCategories = async () => {
     try {
-        const response = await fetch('http://localhost:4000/categories/');
+        const response = await fetch('http://localhost:4000/categories/', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
         const data = await response.json();
         if (response.ok) {
             return data.categories;

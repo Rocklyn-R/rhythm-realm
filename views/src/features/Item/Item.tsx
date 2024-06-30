@@ -9,6 +9,7 @@ import { Truck, Undo2 } from "lucide-react";
 import { AddToCart } from "./AddToCart/AddToCart";
 import { Variants } from "./Variants/Variants";
 import { FiPlus, FiMinus } from "react-icons/fi";
+import { StarRating } from "./StarRating/StarRating";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -41,6 +42,7 @@ export const Item = () => {
                 <ImageGallery />
                 <div className="xxs:mt-4 lg:pt-0 xxs:pt-4 lg:ml-10 xxs:m-6 lg:w-1/2 flex flex-col items-start border-gray-400 xxs:border-t lg:border-none h-full ">
                     <h2 className="text-3xl font-bold">{productName} {variantName && variantName}</h2>
+                    <StarRating />
                     <div className="border-gray-400 border-b pb-4 mb-4 w-full">
                         {selectedProduct.sale_price ? (
                             <div>
@@ -48,6 +50,10 @@ export const Item = () => {
                                 <h2 className="text-3xl mb-8 text-red-800 font-semibold">${selectedProduct.sale_price}</h2>
                             </div>
                         ) : <h2 className="text-3xl mt-4">${selectedProduct.price}</h2>}
+                    </div>
+                    <div className="flex flex-col border-gray-400 border-b pb-4 mb-4 w-full">
+                        <p>Condition: New</p>
+                        <p className="font-semibold text-green-700">In-stock</p>
                     </div>
                     {variants.length > 1 ? <Variants /> : ""}
                     <AddToCart />

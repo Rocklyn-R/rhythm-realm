@@ -27,7 +27,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
     const [showBrands, setShowBrands] = useState(false);
     const [showSavings, setShowSavings] = useState(false);
     const [showPrice, setShowPrice] = useState(false);
-    const [isSale, setIsSale] = useState(subcategoryName === 'Sale')
+    const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals");
     const [categories, setCategories] = useState<string[]>([]);
     const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const [showCategories, setShowCategories] = useState(false);
@@ -38,6 +38,9 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
     const [isFilterActive, setIsFilterActive] = useState(false);
     const dispatch = useDispatch();
     const [updatingFilters, setUpdatingFilters] = useState(true);
+    const marketingLabel = subcategoryName === "Sale" ? "On Sale" :
+    subcategoryName === "New Arrivals" ? "New Arrival" :
+    "";
 
     const handleClearAll = () => {
         setSelectedBrands([]);
@@ -100,22 +103,22 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
             }
         }
         const featuredManufacturersFetch = async () => {
-            const result: string[] = await getFeaturedItemManufacturers("On Sale", selectedCategories, selectedSubcategories, priceMin, priceMax);
+            const result: string[] = await getFeaturedItemManufacturers(marketingLabel, selectedCategories, selectedSubcategories, priceMin, priceMax);
             if (result) {
                 setManufacturers(result);
             }
         }
-        if (!isSale && updatingFilters) {
+        if (!isFeatured && updatingFilters) {
             manufacturersFetch();
            setUpdatingFilters(false);
-        } else if (isSale && updatingFilters) {
+        } else if (isFeatured && updatingFilters) {
             console.log("RUNS")
             featuredManufacturersFetch();
             setUpdatingFilters(false);
         }
 
 
-    }, [dispatch, updatingFilters, priceDrop, isSale, selectedCategories, selectedSubcategories, subcategoryName, priceMin, priceMax]);
+    }, [dispatch, marketingLabel, updatingFilters, priceDrop, isFeatured, selectedCategories, selectedSubcategories, subcategoryName, priceMin, priceMax]);
 
     useEffect(() => {
 
@@ -127,18 +130,18 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
         }
 
         const filteredSaleProductsFetch = async () => {
-            const result = await getFeaturedDeals("On Sale", selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax);
+            const result = await getFeaturedDeals(marketingLabel, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax);
             if (result) {
                 dispatch(setProducts(result))
             }
         }
-        if (!isSale) {
+        if (!isFeatured) {
             filteredProductsFetch();
         }
-        if (isSale) {
+        if (isFeatured) {
             filteredSaleProductsFetch();
         }
-    }, [dispatch, isSale, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);
+    }, [dispatch, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -184,17 +187,17 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
         }
         const fetchCategories = async () => {
             
-            const result = await getFeaturedCategories("On Sale", selectedBrands, priceMin, priceMax);
+            const result = await getFeaturedCategories(marketingLabel, selectedBrands, priceMin, priceMax);
             console.log(result);
             if (result) {
                 setCategories(result);
             }
         }
-        if (isSale && updatingFilters) {
+        if (isFeatured && updatingFilters) {
             fetchCategories();
               setUpdatingFilters(false);
         }
-    }, [updatingFilters, isSale, selectedBrands, priceMin, priceMax]);
+    }, [updatingFilters, marketingLabel, isFeatured, selectedBrands, priceMin, priceMax]);
 
     const handleSelectCategory = (category: string) => {
         setUpdatingFilters(true);
@@ -221,10 +224,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
         const fetchSubcategories = async () => {
             let result: string[];
             if (selectedCategories.length > 0) {
-                result = await getFeaturedSubcategories("On Sale", selectedCategories, selectedBrands, priceMin, priceMax);
+                result = await getFeaturedSubcategories(marketingLabel, selectedCategories, selectedBrands, priceMin, priceMax);
                 console.log(result);
             } else {
-                result = await getFeaturedSubcategories("On Sale");
+                result = await getFeaturedSubcategories(marketingLabel);
             }
             if (result) {
                 setSubcategories(result);
@@ -236,7 +239,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
             
         }
         console.log("Fetching");
-    }, [selectedCategories, selectedBrands, priceMin, priceMax]);
+    }, [selectedCategories, marketingLabel, selectedBrands, priceMin, priceMax]);
 
     useEffect(() => {
         if (updatingFilters) {
@@ -277,7 +280,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
                 {isFilterActive && <button onClick={() => handleClearAll()} className="ml-1 text-red-800 text-sm hover:underline">(Clear All)</button>}
             </div>
 
-            {isSale && (
+            {isFeatured && (
                 <div className="border-t-2 border-gray-200 py-4">
                     <div className="flex items-center justify-between w-full">
                         <h4 className="font-semibold">Category</h4>
@@ -305,7 +308,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
 
                 </div>
             )}
-            {isSale && selectedCategories.length > 0 && (
+            {isFeatured && selectedCategories.length > 0 && (
                 <div className="border-t-2 border-gray-200 py-4">
                     <div className="flex items-center justify-between w-full">
                         <h4 className="font-semibold">Subcategory</h4>
@@ -365,7 +368,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
                 </div>
             )}
 
-            {!isSale && showPriceDrop && (
+            {!isFeatured && showPriceDrop && (
                 <div className="border-t-2 border-gray-200 py-4">
                     <div className="flex items-center justify-between w-full">
                         <h4 className="font-semibold">Savings</h4>
