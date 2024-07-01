@@ -30,9 +30,9 @@ export const ImageGallery = () => {
 
     return (
 
-        <div className='m-4 pb-4 bg-white lg:w-2/3 md:w-4/5 lg:ml-10 h-full flex flex-col items-center relative overflow-hidden'>
+        <div className='rounded-sm mx-4 pb-4 shadow-md bg-white lg:w-3/5 lg:h-full lg:ml-6 flex flex-col items-center justify-center relative overflow-hidden'>
 
-            <div className='lg:w-full md:w-5/6 flex flex-row lg-overflow-hidden pb-8'>
+            <div className='lg:w-full md:w-5/6 flex flex-row lg:overflow-x-hidden pb-8'>
 
                 {galleryImages.map(url => (
                     <img

@@ -132,6 +132,10 @@ export const ProductsPage = () => {
         setCurrentPage(prevPage => prevPage - 1);
     };
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [currentPage])
+
     const totalPages = Math.ceil(uniqueProducts.length / displayValue);
     const indexOfLastProduct = currentPage * displayValue;
     const indexOfFirstProduct = indexOfLastProduct - displayValue;
@@ -140,7 +144,7 @@ export const ProductsPage = () => {
   
     return (
         <div className="flex flex-col mb-14">
-            <h2 className="text-3xl text-center font-bold">{formattedSubcategoryName}:</h2>
+            <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
             <div className="flex space-between ">
                 <RefineSearch
                     products={uniqueProducts}
@@ -170,7 +174,7 @@ export const ProductsPage = () => {
                         {index + 1}
                     </button>
                 ))}
-                <button className="flex items-center" onClick={handleNextPage} disabled={currentPage === totalPages}>Next<IoCaretForward className="ml-2" /></button>
+                <button className={`flex items-center ${currentPage === totalPages ? 'text-gray-400' : ''}`} onClick={handleNextPage} disabled={currentPage === totalPages}>Next<IoCaretForward className="ml-2" /></button>
             </div>
         </div>
     );

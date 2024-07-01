@@ -9,10 +9,10 @@ import { addItemToWishList, removeItemFromWishList } from "../../../../api/wishL
 
 interface AddToWishListProps {
     variant: Product;
-    key: number;
+    mode: "Products Page" | "Item Page";
 }
 
-export const AddToWishList: React.FC<AddToWishListProps> = ({ variant }) => {
+export const AddToWishList: React.FC<AddToWishListProps> = ({ mode, variant }) => {
     const dispatch = useDispatch();
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const wishList = useSelector(selectWishList);
@@ -48,12 +48,11 @@ export const AddToWishList: React.FC<AddToWishListProps> = ({ variant }) => {
         <div>
             {itemIsInWishList && isAuthenticated ? (
                 <FaHeart
-                    className="absolute right-0 top-0 text-red-700 text-3xl"
+                    className={`${mode === "Products Page" ? "absolute right-0 top-0" : ""} text-red-700 text-3xl cursor-pointer mr-4`}
                     onClick={(e) => handleRemoveFromWishList(variant, e)}
                 />
             ) : (
-                <FaRegHeart
-                    className="absolute right-0 top-0 hover:text-red-800 heart-icon text-3xl"
+                <FaRegHeart className={`${mode === "Products Page" ? "absolute right-0 top-0" : ""} hover:text-red-800 heart-icon text-3xl cursor-pointer mr-4`}
                     onClick={(e) => handleAddToWishList(variant, e)}
                 />
             )}

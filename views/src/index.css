@@ -208,3 +208,28 @@ select:-webkit-autofill {
     transition: transform 0.3s ease-in-out;
 }
 
+.star {
+    font-size: 16px;
+    color: #d4d4d4;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .star::before {
+    content: '★';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    color: #f7bb43;
+    overflow: hidden;
+  }
+  
+  .star.full::before {
+    width: 100%;
+  }
+  
+  .star.partial::before {
+    width: var(--star-fill, 0%);
+  }

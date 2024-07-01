@@ -81,7 +81,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                 {product.marketing_label ? <p className={`${product.marketing_label === "Top Seller" ? `bg-black`: product.marketing_label === "New Arrival" ? `bg-blue-700` : `bg-red-800` } text-white py-1 px-2 text-xs font-semibold`}>{product.marketing_label}</p> : ""}
                                 <AddToWishList
                                    variant={product}
-                                   key={product.id}
+                                   mode="Products Page"
                                 />
                             </div>
                             <div className="relative w-full overflow-hidden">

@@ -41,24 +41,27 @@ export const AddToCart = () => {
   
 
     return (
-        <div className={`${variants.length === 1 ? "pt-4 pb-8" : "pb-4"} border-gray-400 border-b mb-4 w-full flex`}>
-            <Select
-                value={quantity}
-                onChange={handleChange}
-                displayEmpty
-                inputProps={{ 'aria-label': 'Quantity' }}
-            >
-                {Array.from({ length: 10 }, (_, index) => (
-                    <MenuItem key={index + 1} value={index + 1}>
-                        {index + 1}
-                    </MenuItem>
-                ))}
-            </Select>
-            <button
-                className={`${addedToCart ? "bg-red-800" : "bg-black"} hover:bg-red-800 transition-colors duration-300 ease flex-1 x-36 py-4 mx-4 rounded-md bg-black text-white text-xl`}
-                onClick={() => handleAddToCart()}
-                disabled={addedToCart}
-            >{addedToCart ? "Added to cart!" : "Add to cart"}</button>
-        </div>
+  <div className="flex w-full">
+    <Select
+        value={quantity}
+        onChange={handleChange}
+        displayEmpty
+        inputProps={{ 'aria-label': 'Quantity' }}
+        className="mr-4"
+    >
+        {Array.from({ length: 10 }, (_, index) => (
+            <MenuItem key={index + 1} value={index + 1}>
+                {index + 1}
+            </MenuItem>
+        ))}
+    </Select>
+    <button
+        className={`${addedToCart ? "bg-red-800" : "bg-black"} hover:bg-red-800 transition-colors duration-300 ease flex-1 py-4 mr-4 rounded-md text-white text-xl`}
+        onClick={() => handleAddToCart()}
+        disabled={addedToCart}
+    >
+        {addedToCart ? "Added to cart!" : "Add to cart"}
+    </button>
+</div>
     )
 }
