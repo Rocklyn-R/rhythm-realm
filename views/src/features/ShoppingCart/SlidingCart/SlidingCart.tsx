@@ -24,9 +24,9 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
     }, [isOpen])
 
     return (
-        <div 
-        ref={slidingCartRef}
-        className="flex flex-col items-center h-full overflow-y-auto"
+        <div
+            ref={slidingCartRef}
+            className="flex flex-col items-center h-full overflow-y-auto"
         >
             <div className="flex justify-between bg-red-800 p-4 w-full">
                 <h2 className="text-xl font-bold">Shopping Cart</h2>

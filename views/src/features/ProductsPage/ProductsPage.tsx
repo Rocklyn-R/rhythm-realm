@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
-
+import { X } from "lucide-react";
 import { selectCategories, selectProducts, selectSubcategories, setProducts, setSubcategories } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, ReactEventHandler } from "react";
 import { getSubcategories } from "../../api/categories";
 import { useDispatch } from "react-redux";
 import { getProducts } from "../../api/products";
@@ -28,8 +28,14 @@ export const ProductsPage = () => {
     const formattedSubcategoryName = subcategoryName ? subcategoryName : "";
     const [sorting, setSorting] = useState("Best Match");
     const [currentPage, setCurrentPage] = useState(1);
+    const [showFiltersSlider, setShowFiltersSlider] = useState(false);
+    const overlayRef = useRef<HTMLDivElement>(null);
 
-  
+    const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (overlayRef.current && e.target === overlayRef.current) {
+            setShowFiltersSlider(false);
+        }
+    };
 
     useEffect(() => {
         if (allCategories) {
@@ -141,16 +147,31 @@ export const ProductsPage = () => {
     const indexOfFirstProduct = indexOfLastProduct - displayValue;
     const currentProducts = uniqueProducts.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  
+    const toggleBodyScroll = (enableScroll: boolean) => {
+        const body = document.body;
+        if (enableScroll) {
+            body.classList.add('overflow-hidden');
+        } else {
+            body.classList.remove('overflow-hidden');
+        }
+    };
+
+    // Toggle body scroll when the overlay is shown or hidden
+    useEffect(() => {
+        toggleBodyScroll(showFiltersSlider);
+    }, [showFiltersSlider]);
+
     return (
         <div className="flex flex-col mb-14">
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
-            <div className="flex space-between ">
-                <RefineSearch
-                    products={uniqueProducts}
-                    subcategoryName={formattedSubcategoryName}
-                />
-                <div className="flex flex-col w-3/4">
+            <div className="flex space-between justify-center">
+                <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
+                    <RefineSearch
+                        products={uniqueProducts}
+                        subcategoryName={formattedSubcategoryName}
+                    />
+                </div>
+                <div className="flex flex-col w-full md:w-3/4">
                     <SortBy
                         uniqueProducts={uniqueProducts}
                         sorting={sorting}
@@ -158,6 +179,7 @@ export const ProductsPage = () => {
                         setDisplayValue={setDisplayValue}
                         displayValue={displayValue}
                         setCurrentPage={setCurrentPage}
+                        setShowFiltersSlider={setShowFiltersSlider}
                     />
                     <Products
                         uniqueProducts={currentProducts} // Render current page products
@@ -166,7 +188,7 @@ export const ProductsPage = () => {
                     />
                 </div>
             </div>
-            <div className="bg-white flex w-full justify-center space-x-2 py-8 mt-2 border-t border-b border-gray-300">
+            <div className="bg-white flex w-full justify-center space-x-2 py-8 mt-2 shadow-md">
                 <button className={`flex items-center ${currentPage === 1 ? 'text-gray-400' : ''}`} onClick={handlePreviousPage} disabled={currentPage === 1}><IoCaretBack className="mr-2" />Previous</button>
                 {/* Render page number buttons */}
                 {Array.from({ length: totalPages }, (_, index) => (
@@ -175,6 +197,19 @@ export const ProductsPage = () => {
                     </button>
                 ))}
                 <button className={`flex items-center ${currentPage === totalPages ? 'text-gray-400' : ''}`} onClick={handleNextPage} disabled={currentPage === totalPages}>Next<IoCaretForward className="ml-2" /></button>
+            </div>
+            <div ref={overlayRef} className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${showFiltersSlider ? 'block' : 'hidden'}`} onClick={handleOverlayClick}></div>
+            <div className={`fixed bottom-0 left-0 w-full h-3/4 bg-white transform ${showFiltersSlider ? 'translate-y-0' : 'translate-y-full'} transition-transform duration-300 ease-in-out z-50 overflow-scroll`}>
+                <div className="flex justify-between bg-red-800 p-4 w-full">
+                    <h2 className="text-xl font-bold">Filters</h2>
+                    <button onClick={() => setShowFiltersSlider(false)}><X /></button>
+                </div>
+                <div className="p-10">
+                    <RefineSearch
+                        products={uniqueProducts}
+                        subcategoryName={formattedSubcategoryName}
+                    />
+                </div>
             </div>
         </div>
     );

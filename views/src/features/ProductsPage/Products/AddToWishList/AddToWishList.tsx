@@ -48,11 +48,11 @@ export const AddToWishList: React.FC<AddToWishListProps> = ({ mode, variant }) =
         <div>
             {itemIsInWishList && isAuthenticated ? (
                 <FaHeart
-                    className={`${mode === "Products Page" ? "absolute right-0 top-0" : ""} text-red-700 text-3xl cursor-pointer mr-4`}
+                    className={`${mode === "Products Page" ? "flex" : "mr-4"} text-red-700 text-3xl cursor-pointer`}
                     onClick={(e) => handleRemoveFromWishList(variant, e)}
                 />
             ) : (
-                <FaRegHeart className={`${mode === "Products Page" ? "absolute right-0 top-0" : ""} hover:text-red-800 heart-icon text-3xl cursor-pointer mr-4`}
+                <FaRegHeart className={`${mode === "Products Page" ? "flex" : "mr-4"} hover:text-red-800 heart-icon text-3xl cursor-pointer`}
                     onClick={(e) => handleAddToWishList(variant, e)}
                 />
             )}

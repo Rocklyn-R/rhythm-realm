@@ -104,11 +104,11 @@ export const FeaturedDeals = () => {
                 if (visibleWidth % firstButtonWidth !== 0) {
                     const remainder = visibleWidth % firstButtonWidth;
                     if (remainder >= firstButtonWidth * 0.5) {
-                         targetScroll += firstButtonWidth - remainder;
+                        targetScroll += firstButtonWidth - remainder;
                     } else {
                         targetScroll -= remainder;
                     }
-                   
+
                 }
 
                 // Animate scrolling to the adjusted position
@@ -158,6 +158,7 @@ export const FeaturedDeals = () => {
         const calculateWheelItemWidth = () => {
             if (featuredWheelRef.current) {
                 const wheelWidth = featuredWheelRef.current.offsetWidth;
+                console.log(wheelWidth);
                 if (wheelWidth >= 1000) {
                     const itemWidth = (wheelWidth / 5);
                     const itemWidthWithoutMargin = itemWidth - 16;
@@ -179,9 +180,7 @@ export const FeaturedDeals = () => {
                     const itemWidthWithoutMargin = itemWidth - 16;
                     setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
                 }
-            }
-         
-                    adjustWheel(); 
+            }                   
         
 
         };
@@ -198,8 +197,12 @@ export const FeaturedDeals = () => {
         };
     }, []);
 
+    useEffect(() => {
+        adjustWheel(); 
+    }, [wheelItemWidth])
+
     return (
-        <div className="py-8 w-full">
+        <div className="py-8 w-full -z-10">
             <div className="flex justify-between px-4">
                 <h2 className="text-xl font-bold hover:underline">Featured Deals</h2>
                 <button
@@ -214,9 +217,9 @@ export const FeaturedDeals = () => {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
             >
-                <div ref={scrollContainerRef} className="flex overflow-x-hidden">
+                <div ref={scrollContainerRef} className="flex overflow-x-hidden w-full">
                     <button
-                        className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
+                        className="absolute cursor-pointer left-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md"
                         onClick={scrollLeft}
                     >
                         <IoIosArrowBack className="text-2xl" />
@@ -227,7 +230,7 @@ export const FeaturedDeals = () => {
                             style={{ width: `${wheelItemWidth}px` }}
                             onClick={() => handleClickProduct(product)}
                             key={product.id}
-                            className="featured-product-button max-h-90 mx-2 flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black mt-8 bg-white rounded-md flex-none p-2"
+                            className="mx-2 featured-product-button max-h-90 flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black mt-8 bg-white rounded-md flex-none p-2"
                         >
                             <img src={product.image1} className="w-full h-auto" alt={product.name} draggable="false" />
                             <div className="p-4 flex flex-col items-center">
@@ -241,10 +244,10 @@ export const FeaturedDeals = () => {
                     ))}
                 </div>
                 <button
-                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
+                    className="absolute cursor-pointer right-0 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md"
                     onClick={scrollRight}
                 >
-                    <IoIosArrowForward className="text-2xl" />
+                    <IoIosArrowForward className="text-2xl cursor-pointer" />
                 </button>
             </div>
         </div>
