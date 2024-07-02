@@ -49,3 +49,15 @@ export interface User {
     cartMode: "current" | "previous" | "combine" | "";
     cartQuestion: boolean;
 }
+
+export interface FilterState {
+    manufacturers: string[];
+    selectedManufacturers: string[];
+    priceDrop: boolean;
+    priceMin: string | undefined;
+    priceMax: string | undefined;
+    categories: string[];
+    selectedCategories: string[];
+    subcategories: string[];
+    selectedSubcategories: string[];
+}
