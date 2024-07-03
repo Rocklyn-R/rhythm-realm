@@ -26,7 +26,8 @@ import {
     selectSubcategoriesFilter,
     setSubcategories,
     selectSelectedSubcategories,
-    setSelectedSubcategories
+    setSelectedSubcategories,
+    clearFilters
 } from "../../../redux-store/FiltersSlice";
 
 
@@ -35,7 +36,7 @@ interface RefineSearchProps {
     subcategoryName: string;
 }
 
-export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategoryName }) => {
+export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) => {
     //const [manufacturers, setManufacturers] = useState<string[]>([])
     const manufacturers = useSelector(selectManufacturersFilter);
     //const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
@@ -47,12 +48,12 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
     //const [priceMin, setPriceMin] = useState<string | undefined>(undefined);
     //const [priceMax, setPriceMax] = useState<string | undefined>(undefined);
     const priceMax = useSelector(selectPriceMax);
-    const [tempPriceMin, setTempPriceMin] = useState<string>('');
-    const [tempPriceMax, setTempPriceMax] = useState<string>('');
+    const [tempPriceMin, setTempPriceMin] = useState<string>("");
+    const [tempPriceMax, setTempPriceMax] = useState<string>("");
     const [showBrands, setShowBrands] = useState(false);
     const [showSavings, setShowSavings] = useState(false);
     const [showPrice, setShowPrice] = useState(false);
-    const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals");
+    const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals" || subcategoryName === "Top Sellers");
     //const [categories, setCategories] = useState<string[]>([]);
     const categories = useSelector(selectCategoriesFilter);
     //const [selectedCategories, setSelectedCategories] = useState<string[]>([])
@@ -68,19 +69,47 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
     const dispatch = useDispatch();
     const [updatingFilters, setUpdatingFilters] = useState(true);
     const marketingLabel = subcategoryName === "Sale" ? "On Sale" :
-    subcategoryName === "New Arrivals" ? "New Arrival" :
-    "";
+    subcategoryName === "New Arrivals" ? "New Arrival" : subcategoryName === "Top Sellers" ? "Top Seller" : "";
+
+    useEffect(() => {
+        if(priceMin) {
+            setTempPriceMin(priceMin);
+        } else {
+            setTempPriceMin("")
+        }
+        if (priceMax) {
+            setTempPriceMax(priceMax);
+        } else {
+            setTempPriceMax("")
+        }
+    }, [priceMin, priceMax]);
+
+    useEffect(() => {
+        if (selectedCategories.length > 0) {
+            setShowCategories(true)
+        }
+        if (selectedSubcategories.length > 0) {
+            setShowSubcategories(true);
+        }
+        if (selectedBrands.length > 0) {
+            setShowBrands(true);
+        }
+        if (priceMin || priceMax) {
+            setShowPrice(true)
+        }
+        if (priceDrop) {
+            setShowPriceDrop(true)
+        }
+    })
+
 
     const handleClearAll = () => {
-        dispatch(setSelectedManufacturers([]));
-        dispatch(setPriceDrop(false));
-        dispatch(setPriceMin(undefined));
-        dispatch(setPriceMax(undefined));
+        setUpdatingFilters(true);
+        dispatch(clearFilters());
         setTempPriceMin("");
         setTempPriceMax("");
-        dispatch(setSelectedCategories([]));
-        dispatch(setSelectedSubcategories([]));
-    }
+    };
+
     const checkFilters = useCallback(() => {
         const active =
             selectedBrands.length > 0 ||
@@ -141,7 +170,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
             manufacturersFetch();
            setUpdatingFilters(false);
         } else if (isFeatured && updatingFilters) {
-            console.log("RUNS")
             featuredManufacturersFetch();
             setUpdatingFilters(false);
         }
@@ -174,7 +202,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
-        //console.log(value);
         if (!isNaN(Number(value))) {
             setTempPriceMin(value);
         }
@@ -217,7 +244,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
         const fetchCategories = async () => {
             
             const result = await getFeaturedCategories(marketingLabel, selectedBrands, priceMin, priceMax);
-            console.log(result);
             if (result) {
                 dispatch(setCategories(result));
             }
@@ -267,7 +293,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
            setUpdatingFilters(false);
             
         }
-        console.log("Fetching");
     }, [selectedCategories, marketingLabel, selectedBrands, priceMin, priceMax]);
 
     useEffect(() => {
@@ -292,6 +317,16 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
           
       }, [updatingFilters])
 
+      useEffect(() => {
+        if (updatingFilters) {
+            return;
+        }
+        if (!updatingFilters) {
+            const filteredCategories = selectedCategories.filter(category => categories.includes(category));
+            dispatch(setSelectedCategories(filteredCategories))
+        }
+      }, [updatingFilters]);
+
     const handleClearPriceMinMax = () => {
         setTempPriceMin("");
         dispatch(setPriceMin(undefined));
@@ -314,7 +349,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
                     </div>
                     <div
                         className="overflow-hidden transition-max-height duration-500 ease-in-out"
-                        style={{ maxHeight: showCategories ? '180px' : "0px" }}
+                        style={{ maxHeight: showCategories ? `${categories.length * 40}px` : "0px" }}
                     >
                         <div className="flex flex-col items-start">
                             {categories.map(category => (
@@ -342,7 +377,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
                     </div>
                     <div
                         className="overflow-hidden transition-max-height duration-500 ease-in-out"
-                        style={{ maxHeight: showSubcategories ? '600px' : "0px" }}
+                        style={{ maxHeight: showSubcategories ? `${subcategories.length * 40}px` : "0px" }}
                     >
                         <div className="flex flex-col items-start">
                             {subcategories.map(subcategory => (
@@ -370,7 +405,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ products, subcategor
                     </div>
                     <div
                         className="overflow-hidden transition-max-height duration-500 ease-in-out"
-                        style={{ maxHeight: showBrands ? '500px' : "0px" }}
+                        style={{ maxHeight: showBrands ? `${manufacturers.length * 40}px` : "0px" }}
                     >
 
 

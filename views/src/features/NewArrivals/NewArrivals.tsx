@@ -7,6 +7,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Product } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { shuffleArray } from "../../utilities/utilities";
+import { clearFilters } from "../../redux-store/FiltersSlice";
 
 export const NewArrivals = () => {
     const dispatch = useDispatch();
@@ -186,6 +187,7 @@ export const NewArrivals = () => {
     }
 
     const handleViewAll = () => {
+        dispatch(clearFilters());
         navigate("/Featured/New Arrivals")
     }
 

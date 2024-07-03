@@ -43,6 +43,14 @@ export const FiltersSlice = createSlice({
         },
         setSelectedSubcategories: (state, action) => {
             state.selectedSubcategories = action.payload;
+        },
+        clearFilters: (state) => {
+            state.selectedManufacturers = [];
+            state.selectedCategories = [];
+            state.priceMin = undefined;
+            state.priceMax = undefined;
+            state.selectedSubcategories = [];
+            state.priceDrop = false;
         }
     }
 })
@@ -56,7 +64,8 @@ export const {
    setCategories,
    setSelectedCategories,
    setSubcategories,
-   setSelectedSubcategories
+   setSelectedSubcategories,
+   clearFilters
 } = FiltersSlice.actions;
 
 export const selectManufacturersFilter = (state: RootState) => state.filters.manufacturers;

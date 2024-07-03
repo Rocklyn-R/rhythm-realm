@@ -4,22 +4,27 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getFeaturedDeals } from "../../api/products";
-import { selectFeaturedDeals, setFeaturedDeals, setSelectedProduct } from "../../redux-store/ProductsSlice";
+import { clearFilters } from "../../redux-store/FiltersSlice";
+import { selectFeaturedDeals, selectTopSellers, setFeaturedDeals, setSelectedProduct, setTopSellers } from "../../redux-store/ProductsSlice";
 import { Product } from "../../types/types";
 import { shuffleArray } from "../../utilities/utilities";
 
-export const FeaturedDeals = () => {
+interface FeaturedDealsProps {
+    marketingLabel: "On Sale" | "Top Seller";
+}
+
+export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) => {
     const dispatch = useDispatch();
     const featuredDeals = useSelector(selectFeaturedDeals);
     const [isScrolling, setIsScrolling] = useState(false);
-
+    const topSellers = useSelector(selectTopSellers);
     const [uniqueProducts, setUniqueProducts] = useState<Product[]>([]);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (featuredDeals) {
+        if (featuredDeals && marketingLabel === "On Sale") {
             setUniqueProducts(shuffleArray(Object.values(featuredDeals.reduce((acc: Record<string, Product[]>, product: Product) => {
                 if (!acc[product.id]) {
                     acc[product.id] = [];
@@ -28,7 +33,19 @@ export const FeaturedDeals = () => {
                 return acc;
             }, {})).map(variants => variants[0])))
         }
-    }, [featuredDeals]);
+    }, [featuredDeals, marketingLabel]);
+
+    useEffect(() => {
+        if (topSellers && marketingLabel === "Top Seller") {
+            setUniqueProducts(shuffleArray(Object.values(topSellers.reduce((acc: Record<string, Product[]>, product: Product) => {
+                if (!acc[product.id]) {
+                    acc[product.id] = [];
+                }
+                acc[product.id].push(product);
+                return acc;
+            }, {})).map(variants => variants[0])))
+        }
+    }, [topSellers, marketingLabel]);
 
     const scrollLeft = () => {
         if (scrollContainerRef.current && !isScrolling) {
@@ -132,24 +149,32 @@ export const FeaturedDeals = () => {
 
     useEffect(() => {
         const fetchDeals = async () => {
-            const result = await getFeaturedDeals("On Sale");
+            const result = await getFeaturedDeals(marketingLabel);
             if (result) {
-                dispatch(setFeaturedDeals(result));
+                if (marketingLabel === "On Sale") {
+                      dispatch(setFeaturedDeals(result));
+                }
+                if (marketingLabel === "Top Seller") {
+                    dispatch(setTopSellers(result));
+                }
             }
         }
         fetchDeals();
     }, [dispatch]);
 
     const handleViewAll = () => {
-        navigate("/Featured/Sale")
+        dispatch(clearFilters());
+        const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers"
+        navigate(`/Featured/${deal}`)
     }
 
     const handleClickProduct = (product: Product) => {
         if (!dragComplete) {
             return;
         }
+        const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers"
         dispatch(setSelectedProduct(product));
-        navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+        navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
     }
     const featuredWheelRef = useRef<HTMLDivElement>(null);
 
@@ -158,7 +183,6 @@ export const FeaturedDeals = () => {
         const calculateWheelItemWidth = () => {
             if (featuredWheelRef.current) {
                 const wheelWidth = featuredWheelRef.current.offsetWidth;
-                console.log(wheelWidth);
                 if (wheelWidth >= 1000) {
                     const itemWidth = (wheelWidth / 5);
                     const itemWidthWithoutMargin = itemWidth - 16;
@@ -204,7 +228,7 @@ export const FeaturedDeals = () => {
     return (
         <div className="py-8 w-full -z-10">
             <div className="flex justify-between px-4">
-                <h2 className="text-xl font-bold hover:underline">Featured Deals</h2>
+                <h2 className="text-xl font-bold hover:underline">{marketingLabel === "On Sale" ? "Featured Deals" : "Top Sellers"}</h2>
                 <button
                     className="text-red-800 flex items-center gap-2"
                     onClick={() => handleViewAll()}
@@ -236,8 +260,8 @@ export const FeaturedDeals = () => {
                             <div className="p-4 flex flex-col items-center">
                                 <h3 className="text-lg font-semibold text-center">{product.name}</h3>
                                 <div>
-                                    <p className="text-gray-700 line-through">${product.price}</p>
-                                    <p className="text-red-800">${product.sale_price}</p>
+                                    <p className={`text-gray-700 text-xl font-bold ${product.sale_price ? "line-through" : ""}`}>${product.price}</p>
+                                   {product.sale_price &&  <p className="text-red-800 font-bold text-lg">${product.sale_price}</p>}
                                 </div>
                             </div>
                         </button>

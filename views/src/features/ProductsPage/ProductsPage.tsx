@@ -12,6 +12,14 @@ import { RefineSearch } from "./RefineSearch/RefineSearch";
 import { SortBy } from "./SortBy/SortBy";
 import { getFeaturedDeals } from "../../api/products";
 import { IoCaretBack, IoCaretForward } from "react-icons/io5";
+import { 
+    setSelectedManufacturers,
+    setPriceDrop,
+    setPriceMin,
+    setPriceMax,
+    setSelectedCategories,
+    setSelectedSubcategories
+ } from "../../redux-store/FiltersSlice";
 
 
 export const ProductsPage = () => {
@@ -36,6 +44,7 @@ export const ProductsPage = () => {
             setShowFiltersSlider(false);
         }
     };
+
 
     useEffect(() => {
         if (allCategories) {
@@ -107,19 +116,16 @@ export const ProductsPage = () => {
         };
 
         const fetchDeals = async () => {
-            console.log("RUNS")
-            if (subcategoryName === "Sale") {
-                const result = await getFeaturedDeals("On Sale");
-                if (result) {
-                    dispatch(setProducts(result));
-                }
-            } else if (subcategoryName === "New Arrivals") {
-                const result = await getFeaturedDeals("New Arrival");
+            const marketingLabel = subcategoryName === "Sale" ? "On Sale" : subcategoryName === "New Arrivals" ? "New Arrival" : "Top Seller";
+  
+             const result = await getFeaturedDeals(marketingLabel);
+             console.log(marketingLabel);
                 if (result) {
                     dispatch(setProducts(result));
                 }
             }
-        }
+               
+        
         if (categoryName === 'Featured') {
             fetchDeals();
         } else {
