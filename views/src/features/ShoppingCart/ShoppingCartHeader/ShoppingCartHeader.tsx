@@ -28,7 +28,7 @@ export const ShoppingCartHeader = () => {
                 <p>${formatPrice(total)}</p>
             </button>
             <div
-                className={`fixed top-0 right-0 h-full xxs:w-4/5 xs:w-3/4 sm:w-2/3 md:w-1/2 lg:w-1/3 bg-white shadow-lg transform transition-transform z-50 ${cartIsOpen ? 'translate-x-0' : 'translate-x-full'
+                className={`fixed top-0 right-0 h-full w-full xs:w-4/5 sm:w-2/3 md:w-1/2 lg:w-1/3 bg-white shadow-lg transform transition-transform z-50 ${cartIsOpen ? 'translate-x-0' : 'translate-x-full'
                     }`}
             >
                 <SlidingCart toggleCart={toggleCart} isOpen={cartIsOpen} />

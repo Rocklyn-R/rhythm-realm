@@ -12,14 +12,14 @@ import { RefineSearch } from "./RefineSearch/RefineSearch";
 import { SortBy } from "./SortBy/SortBy";
 import { getFeaturedDeals } from "../../api/products";
 import { IoCaretBack, IoCaretForward } from "react-icons/io5";
-import { 
+import {
     setSelectedManufacturers,
     setPriceDrop,
     setPriceMin,
     setPriceMax,
     setSelectedCategories,
     setSelectedSubcategories
- } from "../../redux-store/FiltersSlice";
+} from "../../redux-store/FiltersSlice";
 
 
 export const ProductsPage = () => {
@@ -38,6 +38,7 @@ export const ProductsPage = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [showFiltersSlider, setShowFiltersSlider] = useState(false);
     const overlayRef = useRef<HTMLDivElement>(null);
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (overlayRef.current && e.target === overlayRef.current) {
@@ -117,15 +118,15 @@ export const ProductsPage = () => {
 
         const fetchDeals = async () => {
             const marketingLabel = subcategoryName === "Sale" ? "On Sale" : subcategoryName === "New Arrivals" ? "New Arrival" : "Top Seller";
-  
-             const result = await getFeaturedDeals(marketingLabel);
-             console.log(marketingLabel);
-                if (result) {
-                    dispatch(setProducts(result));
-                }
+
+            const result = await getFeaturedDeals(marketingLabel);
+            console.log(marketingLabel);
+            if (result) {
+                dispatch(setProducts(result));
             }
-               
-        
+        }
+
+
         if (categoryName === 'Featured') {
             fetchDeals();
         } else {
@@ -167,6 +168,12 @@ export const ProductsPage = () => {
         toggleBodyScroll(showFiltersSlider);
     }, [showFiltersSlider]);
 
+    useEffect(() => {
+        if (showFiltersSlider && scrollContainerRef.current) {
+          scrollContainerRef.current.scrollTop = 0;
+        }
+      }, [showFiltersSlider]);
+
     return (
         <div className="flex flex-col mb-14">
             <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
@@ -177,7 +184,7 @@ export const ProductsPage = () => {
                         subcategoryName={formattedSubcategoryName}
                     />
                 </div>
-                <div className="flex flex-col w-full md:w-3/4">
+                <div className="flex flex-col w-full md:w-3/4 h-full">
                     <SortBy
                         uniqueProducts={uniqueProducts}
                         sorting={sorting}
@@ -205,8 +212,8 @@ export const ProductsPage = () => {
                 <button className={`flex items-center ${currentPage === totalPages ? 'text-gray-400' : ''}`} onClick={handleNextPage} disabled={currentPage === totalPages}>Next<IoCaretForward className="ml-2" /></button>
             </div>
             <div ref={overlayRef} className={`fixed inset-0 bg-black bg-opacity-50 z-40 ${showFiltersSlider ? 'block' : 'hidden'}`} onClick={handleOverlayClick}></div>
-            <div className={`fixed bottom-0 left-0 w-full h-3/4 bg-white transform ${showFiltersSlider ? 'translate-y-0' : 'translate-y-full'} transition-transform duration-300 ease-in-out z-50 overflow-scroll`}>
-                <div className="flex justify-between bg-red-800 p-4 w-full">
+            <div ref={scrollContainerRef} className={`fixed bottom-0 left-0 w-full h-3/4 bg-white transform ${showFiltersSlider ? 'translate-y-0' : 'translate-y-full'} transition-transform duration-300 ease-in-out z-50 overflow-scroll`}>
+                <div className="sticky top-0 flex justify-between bg-red-800 p-4 w-full z-10">
                     <h2 className="text-xl font-bold">Filters</h2>
                     <button onClick={() => setShowFiltersSlider(false)}><X /></button>
                 </div>

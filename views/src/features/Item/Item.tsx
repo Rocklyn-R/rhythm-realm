@@ -65,27 +65,27 @@ export const Item = () => {
                         <h2 className="text-2xl font-bold">
                             {productName} {variantName && variantName}
                         </h2>
-                        <div className="flex items-center">
+                        <div className="flex items-center mb-3">
                             <StarRating /> 
                             <p className="ml-2 text-xs text-gray-500">|</p>
                             <p className="ml-2 text-xs text-gray-500">Item #{selectedProduct.variant_id}</p>
                         </div>
                        
-                        <div className=" pb-4 mb-4 w-full">
+                        <div className="mb-3 w-full">
                             {selectedProduct.sale_price ? (
-                                <div>
-                                    <h2 className="text-3xl mb-2 line-through">
+                                <div className="flex items-center space-x-2">
+                                    <h2 className="text-3xl mt-2 mb-2 line-through">
                                         ${selectedProduct.price}
                                     </h2>
-                                    <h2 className="text-3xl mb-8 text-red-800 font-semibold">
+                                    <h2 className="text-3xl text-red-800 font-semibold">
                                         ${selectedProduct.sale_price}
                                     </h2>
                                 </div>
                             ) : (
-                                <h2 className="text-3xl mt-4 font-semibold">${selectedProduct.price}</h2>
+                                <h2 className="text-3xl mt-1 font-semibold">${selectedProduct.price}</h2>
                             )}
                         </div>
-                        <div className="flex flex-col border-gray-400 border-b pb-4 mb-4 w-full space-y-2">
+                        <div className="flex flex-col border-gray-400 border-b pb-6 mb-4 w-full space-y-3">
                             <p>Condition: New</p>
                             <p className="font-semibold text-green-700">In-stock</p>
                             <a onClick={scrollToItemDescription} className="cursor-pointer underline">View Item Description</a>
@@ -128,11 +128,9 @@ export const Item = () => {
                         <div className="flex justify-around">
                             <img alt="Image1" src={selectedProduct.image1} className="w-60" />
                             <img alt="Image2" src={selectedProduct.image2} className="w-60" />
-                            <img alt="Image3" src={selectedProduct.image3} className="w-60" />
+                            {selectedProduct.image3 && <img alt="Image3" src={selectedProduct.image3} className="w-60" />}
                         </div>
                     </div>) : ""}
-
-
             </div>
         </div>
     )

@@ -100,7 +100,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
         if (priceDrop) {
             setShowPriceDrop(true)
         }
-    })
+    }, [])
 
 
     const handleClearAll = () => {

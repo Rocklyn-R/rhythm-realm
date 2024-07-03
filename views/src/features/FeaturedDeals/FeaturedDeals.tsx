@@ -163,6 +163,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     }, [dispatch]);
 
     const handleViewAll = () => {
+        window.scrollTo(0, 0);
         dispatch(clearFilters());
         const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers"
         navigate(`/Featured/${deal}`)

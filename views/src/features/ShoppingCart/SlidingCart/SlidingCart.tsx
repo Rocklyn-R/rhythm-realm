@@ -36,7 +36,7 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
             {cartEmpty ? (
                 <div className="flex flex-col items-center m-6">
                     <GiShoppingCart className="text-5xl" />
-                    <h2 className="text-xl mt-4">Your cart is currently empty!</h2>
+                    <h2 className="text-xl mt-4 text-center">Your cart is currently empty!</h2>
                     <button
                         onClick={() => toggleCart()}
                         className="hover:bg-red-800 transition-colors duration-300 ease mt-6 p-4 w-full bg-black rounded-md text-white"

@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
 import { setSelectedProduct } from "../../../redux-store/ProductsSlice"
 import { AddToWishList } from "./AddToWishList/AddToWishList"
+import { StarRating } from "../../Item/StarRating/StarRating"
 
 
 interface ProductsProps {
@@ -21,6 +22,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const [productsForSelection, setProductsForSelection] = useState<Product[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const handleThumbnailClick = (product: Product, variant: Product, index: number, event: React.MouseEvent) => {
         event.stopPropagation();
         setCurrentSlide(prev => ({
@@ -41,10 +43,12 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                         image3: variant.image3,
                         variant_id: variant.variant_id,
                         variant_name: variant.variant_name,
+                        marketing_label: variant.marketing_label
                     };
                 }
                 return item; // Keep other products unchanged
             });
+            console.log(updatedProductsForSelection);
             setProductsForSelection(updatedProductsForSelection);
 
         }
@@ -74,12 +78,15 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     return (
         <div className="md:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-1 w-full bg-gray">
             {uniqueProducts && uniqueProducts.map(product => (
-                <div key={product.variant_id} className="flex xs:flex-col flex-row md:flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-5/6 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md">
+                <div
+                    key={product.variant_id}
+                    className="flex xs:flex-col flex-row md:flex-col justify-between items-center shadow-sm hover:shadow-xl border-black w-5/6 md:w-50 lg:w-52 mt-8 bg-white mx-auto rounded-md"
+                >
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
                         <div className="w-full h-full xxs:flex-col flex xs:flex-row md:flex-col justify-between">
                             <div className="flex flex-col justify-center xs:w-1/2 sm:w-1/3 md:w-full">
-                                <div className={`${product.marketing_label ? "justify-between": "justify-end"} w-full flex mb-1 h-6 items-center`}>
-                                    {product.marketing_label ? <p className={`${product.marketing_label === "Top Seller" ? `bg-black` : product.marketing_label === "New Arrival" ? `bg-blue-700` : `bg-red-800`} text-white py-1 px-2 text-xs font-semibold`}>{product.marketing_label}</p> : ""}
+                                <div className={`${findProduct(product)?.marketing_label ? "justify-between" : "justify-end"} w-full flex mb-1 h-6 items-center`}>
+                                    {findProduct(product)?.marketing_label ? <p className={`${product.marketing_label === "Top Seller" ? `bg-black` : product.marketing_label === "New Arrival" ? `bg-blue-700` : `bg-red-800`} text-white py-1 px-2 text-xs font-semibold`}>{product.marketing_label}</p> : ""}
                                     <AddToWishList
                                         variant={product}
                                         mode="Products Page"
@@ -141,6 +148,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
                             <div className="flex flex-col flex-grow w-1/2 md:w-full justify-center md:justify-end mt-2">
                                 <p className="p-1 text-gray-700">{product.name}</p>
+                                <StarRating />
                                 {findProduct(product)?.sale_price ? (
                                     <div>
                                         <p className="pt-2 font-bold line-through">${formatPrice(product.price)}</p>

@@ -133,9 +133,9 @@ export const NewArrivals = () => {
         setIsDragging(false);
         adjustWheel();
         setTimeout(() => {
-             setDragComplete(true); 
+            setDragComplete(true);
         }, 50)
-      
+
     };
     const [wheelItemWidth, setWheelItemWidth] = useState("");
     useEffect(() => {
@@ -187,6 +187,7 @@ export const NewArrivals = () => {
     }
 
     const handleViewAll = () => {
+        window.scrollTo(0, 0);
         dispatch(clearFilters());
         navigate("/Featured/New Arrivals")
     }
@@ -245,16 +246,16 @@ export const NewArrivals = () => {
                     ))}
                     <button
                         onClick={scrollRight}
-                        className="absolute -right-6 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
+                        className="absolute -right-4 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full p-2 shadow-md z-10"
                     >
                         <IoIosArrowForward className="text-2xl" />
                     </button>
                 </div>
             </div>
 
-            <button 
-            onClick={() => handleViewAll()}
-            className="text-red-800 p-4 bg-white w-fit self-center font-semibold mt-4"
+            <button
+                onClick={() => handleViewAll()}
+                className="text-red-800 p-4 bg-white w-fit self-center font-semibold mt-4"
             >Shop All New Arrivals</button>
         </div>
     )
