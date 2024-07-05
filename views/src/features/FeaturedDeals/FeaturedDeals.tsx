@@ -8,6 +8,7 @@ import { clearFilters } from "../../redux-store/FiltersSlice";
 import { selectFeaturedDeals, selectTopSellers, setFeaturedDeals, setSelectedProduct, setTopSellers } from "../../redux-store/ProductsSlice";
 import { Product } from "../../types/types";
 import { shuffleArray } from "../../utilities/utilities";
+import { formatPrice } from "../../utilities/utilities";
 
 interface FeaturedDealsProps {
     marketingLabel: "On Sale" | "Top Seller";
@@ -82,11 +83,11 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     const [scrollLeftMouse, setScrollLeftMouse] = useState(0);
     const [dragComplete, setDragComplete] = useState(true);
 
-    const disableTextSelection = () => {
+   /* const disableTextSelection = () => {
         if (document) {
             document.body.style.userSelect = 'none';
         }
-    };
+    };*/
 
 
 
@@ -94,7 +95,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
         setIsDragging(true);
         setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0));
         setScrollLeftMouse(scrollContainerRef.current?.scrollLeft ?? 0);
-        disableTextSelection();
+        //disableTextSelection();
         document.addEventListener('mouseup', handleMouseUp);
         document.addEventListener('mouseleave', handleMouseUp);
     };
@@ -261,8 +262,8 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
                             <div className="p-4 flex flex-col items-center">
                                 <h3 className="text-lg font-semibold text-center">{product.name}</h3>
                                 <div>
-                                    <p className={`text-gray-700 text-xl font-bold ${product.sale_price ? "line-through" : ""}`}>${product.price}</p>
-                                   {product.sale_price &&  <p className="text-red-800 font-bold text-lg">${product.sale_price}</p>}
+                                    <p className={`text-gray-700 text-xl font-bold ${product.sale_price ? "line-through" : ""}`}>${formatPrice(product.price)}</p>
+                                   {product.sale_price &&  <p className="text-red-800 font-bold text-lg">${formatPrice(product.sale_price)}</p>}
                                 </div>
                             </div>
                         </button>

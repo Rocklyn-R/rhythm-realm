@@ -188,3 +188,14 @@ export const getFeaturedItemManufacturers = async (
     }
 }
 
+export const getReviews = async (product_id: number) => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/reviews?product_id=${product_id}`);
+        const data = await response.json();
+        if (response.ok) {
+            return data.reviews;
+        }
+    } catch (error) {
+        throw error;
+    }
+}

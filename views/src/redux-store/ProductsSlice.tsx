@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { Category, Subcategory, Product } from "../types/types";
+import { Category, Subcategory, Product, Review } from "../types/types";
 import { RootState } from "./store";
 
 export const ProductsSlice = createSlice({
@@ -21,6 +21,7 @@ export const ProductsSlice = createSlice({
         products: [] as Product[],
         selectedProduct: {} as Product,
         variants: [] as Product[],
+        reviews: [] as Review[],
         featuredDeals: [] as Product[],
         newArrivals: [] as Product[],
         topSellers: [] as Product[]
@@ -49,6 +50,9 @@ export const ProductsSlice = createSlice({
         },
         setTopSellers: (state, action) => {
             state.topSellers = action.payload
+        },
+        setReviews: (state, action) => {
+            state.reviews = action.payload;
         }
     }
 });
@@ -61,7 +65,8 @@ export const {
     setVariants,
     setFeaturedDeals,
     setNewArrivals,
-    setTopSellers
+    setTopSellers,
+    setReviews
 } = ProductsSlice.actions
 
 export const selectCategories = (state: RootState) => state.products.categories;
@@ -72,5 +77,6 @@ export const selectVariants = (state: RootState) => state.products.variants;
 export const selectFeaturedDeals = (state: RootState) => state.products.featuredDeals;
 export const selectNewArrivals = (state: RootState) => state.products.newArrivals;
 export const selectTopSellers = (state: RootState) => state.products.topSellers;
+export const selectReviews = (state: RootState) => state.products.reviews;
 
 export default ProductsSlice.reducer;

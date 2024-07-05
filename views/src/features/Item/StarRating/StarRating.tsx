@@ -1,5 +1,9 @@
-export const StarRating = () => {
-  const rating = 4.4;
+interface StarRatingProps {
+  rating: number;
+}
+
+export const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
+
   const stars = [];
 
   for (let i = 1; i <= 5; i++) {
@@ -15,5 +19,7 @@ export const StarRating = () => {
     );
   }
 
-  return <div className="star-rating">{stars}</div>;
+  return (
+    <div className="star-rating">{stars}</div>
+  );
 };

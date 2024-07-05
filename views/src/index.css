@@ -71,7 +71,7 @@ button:disabled {
 }
 
 .custom-radio {
-    @apply relative w-5 h-5 border-2 border-gray-400 rounded-full cursor-pointer appearance-none;
+    @apply relative w-5 h-5 border-2 border-gray-400 rounded-full cursor-pointer appearance-none bg-white;
   }
   
   .custom-radio:checked {
@@ -233,3 +233,19 @@ select:-webkit-autofill {
   .star.partial::before {
     width: var(--star-fill, 0%);
   }
+
+  .star-bars {
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.star-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.star-bar span {
+    margin-right: 10px;
+}

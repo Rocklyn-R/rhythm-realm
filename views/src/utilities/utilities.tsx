@@ -1,4 +1,5 @@
 import { Product } from "../types/types";
+import moment from 'moment';
 
 export const formatCategoryNameForDisplay = (name: string) => {
   const words = name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1));
@@ -38,3 +39,22 @@ export const sortCategoriesArray = (arr: string[]) => {
     return order.indexOf(a) - order.indexOf(b);
   });
 }
+
+export const formatDate = (dateString: string) => {
+  const date = moment(dateString);
+  const now = moment();
+
+  if (date.isSame(now, 'day')) {
+    return 'Today';
+  } else if (date.isSame(now.subtract(1, 'day'), 'day')) {
+    return 'Yesterday';
+  } else if (date.isSame(now.subtract(1, 'week'), 'week')) {
+    return date.format('dddd'); // Returns the day of the week (e.g., 'Monday')
+  } else if (date.isSame(now.subtract(1, 'month'), 'month')) {
+    return 'One week ago';
+  } else if (date.isSame(now.subtract(1, 'year'), 'year')) {
+    return date.fromNow(); // e.g., '3 weeks ago' or '2 months ago'
+  } else {
+    return date.fromNow(); // e.g., '1 year ago' or '2 years ago'
+  }
+};

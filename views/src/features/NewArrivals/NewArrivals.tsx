@@ -8,6 +8,7 @@ import { Product } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { shuffleArray } from "../../utilities/utilities";
 import { clearFilters } from "../../redux-store/FiltersSlice";
+import { formatPrice } from "../../utilities/utilities";
 
 export const NewArrivals = () => {
     const dispatch = useDispatch();
@@ -239,7 +240,7 @@ export const NewArrivals = () => {
                             <div className="flex flex-col items-center">
                                 <h3 className="mb-2 text-lg font-semibold text-center">{product.name}</h3>
                                 <div>
-                                    <p className="text-gray-700">${product.price}</p>
+                                    <p className="text-gray-700 font-semibold">${formatPrice(product.price)}</p>
                                 </div>
                             </div>
                         </button>

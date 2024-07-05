@@ -28,6 +28,7 @@ export interface Product {
     variant_name: string;
     variant_id: number;
     marketing_label: string;
+    avg_rating: number;
 }
 
 export interface Cart extends Product {
@@ -60,4 +61,17 @@ export interface FilterState {
     selectedCategories: string[];
     subcategories: string[];
     selectedSubcategories: string[];
+}
+
+export interface Review {
+    id: number;
+    user_id: string;
+    product_id: string;
+    rating: number;
+    title: string;
+    review: string;
+    name: string;
+    recommend: boolean;
+    date_created: string;
+    verified: boolean;
 }

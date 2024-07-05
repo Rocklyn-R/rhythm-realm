@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react"
 import { useSelector } from "react-redux"
-import { selectSelectedProduct, selectVariants, setSelectedProduct, setVariants } from "../../redux-store/ProductsSlice"
+import { selectSelectedProduct, selectVariants, setReviews, setSelectedProduct, setVariants } from "../../redux-store/ProductsSlice"
 import { useParams } from "react-router-dom";
 import { ImageGallery } from "./ImageGallery/ImageGallery";
-import { getAllVariants, getSelectedProduct } from "../../api/products";
+import { getAllVariants, getReviews, getSelectedProduct } from "../../api/products";
 import { useDispatch } from "react-redux";
 import { Truck, Undo2 } from "lucide-react";
 import { AddToCart } from "./AddToCart/AddToCart";
@@ -12,6 +12,7 @@ import { FiPlus, FiMinus } from "react-icons/fi";
 import { StarRating } from "./StarRating/StarRating";
 import { AddToWishList } from "../ProductsPage/Products/AddToWishList/AddToWishList";
 import { LuShieldCheck } from "react-icons/lu";
+import { ReviewsBox } from "./ReviewsBox/ReviewsBox";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -20,6 +21,7 @@ export const Item = () => {
     const variants = useSelector(selectVariants);
     const [showDescription, setShowDescription] = useState(true);
     const itemDescriptionRef = useRef<HTMLDivElement>(null);
+    const [showReviews, setShowReviews] = useState(true);
 
     useEffect(() => {
         dispatch(setVariants([]));
@@ -31,6 +33,12 @@ export const Item = () => {
                 if (variantData) {
                     dispatch(setVariants(variantData));
                 }
+                const reviewData = await getReviews(selectedProductData.id);
+                if (reviewData) {
+                    dispatch(setReviews(reviewData))
+                } else {
+                    dispatch(setReviews([]))
+                }
             }
         }
 
@@ -40,9 +48,12 @@ export const Item = () => {
     const scrollToItemDescription = () => {
         // Scroll to the item description div
         if (itemDescriptionRef.current) {
-              itemDescriptionRef.current.scrollIntoView({ behavior: 'smooth' });
+            itemDescriptionRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+
+
 
     return (
         <div className="flex flex-col w-full">
@@ -66,11 +77,15 @@ export const Item = () => {
                             {productName} {variantName && variantName}
                         </h2>
                         <div className="flex items-center mb-3">
-                            <StarRating /> 
+                            {selectedProduct && (
+                                <StarRating
+                                    rating={selectedProduct.avg_rating}
+                                />
+                            )}
                             <p className="ml-2 text-xs text-gray-500">|</p>
                             <p className="ml-2 text-xs text-gray-500">Item #{selectedProduct.variant_id}</p>
                         </div>
-                       
+
                         <div className="mb-3 w-full">
                             {selectedProduct.sale_price ? (
                                 <div className="flex items-center space-x-2">
@@ -131,6 +146,16 @@ export const Item = () => {
                             {selectedProduct.image3 && <img alt="Image3" src={selectedProduct.image3} className="w-60" />}
                         </div>
                     </div>) : ""}
+            </div>
+            <div className="mx-4 mt-14 shadow-md flex flex-col justify-center py-10 bg-white">
+                <div className="flex items-center px-6">
+                    <button onClick={() => setShowReviews(!showReviews)}>{showReviews ? <FiMinus className="text-3xl mr-4" /> : <FiPlus className="text-3xl mr-4" />}</button>
+                    <h2 className="text-2xl font-bold">Reviews</h2>
+                </div>
+                {showReviews ? (
+                    <ReviewsBox />
+                ) : ""}
+
             </div>
         </div>
     )
