@@ -22,6 +22,7 @@ export const Item = () => {
     const [showDescription, setShowDescription] = useState(true);
     const itemDescriptionRef = useRef<HTMLDivElement>(null);
     const [showReviews, setShowReviews] = useState(true);
+    const reviewsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         dispatch(setVariants([]));
@@ -46,13 +47,16 @@ export const Item = () => {
     }, [dispatch, variantName, productName]);
 
     const scrollToItemDescription = () => {
-        // Scroll to the item description div
         if (itemDescriptionRef.current) {
             itemDescriptionRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
 
-
+    const scrollToReviews = () => {
+        if (reviewsRef.current) {
+            reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
 
 
     return (
@@ -78,9 +82,11 @@ export const Item = () => {
                         </h2>
                         <div className="flex items-center mb-3">
                             {selectedProduct && (
-                                <StarRating
-                                    rating={selectedProduct.avg_rating}
-                                />
+                                <div className="cursor-pointer" onClick={() => scrollToReviews()}>
+                                    <StarRating
+                                        rating={selectedProduct.avg_rating}
+                                    />
+                                </div>
                             )}
                             <p className="ml-2 text-xs text-gray-500">|</p>
                             <p className="ml-2 text-xs text-gray-500">Item #{selectedProduct.variant_id}</p>
@@ -147,7 +153,7 @@ export const Item = () => {
                         </div>
                     </div>) : ""}
             </div>
-            <div className="mx-4 mt-14 shadow-md flex flex-col justify-center py-10 bg-white">
+            <div ref={reviewsRef} className="mx-4 mt-14 shadow-md flex flex-col justify-center py-10 bg-white">
                 <div className="flex items-center px-6">
                     <button onClick={() => setShowReviews(!showReviews)}>{showReviews ? <FiMinus className="text-3xl mr-4" /> : <FiPlus className="text-3xl mr-4" />}</button>
                     <h2 className="text-2xl font-bold">Reviews</h2>
