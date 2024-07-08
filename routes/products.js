@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { getProducts, getSelectedProduct, getAllVariants, getManufacturers, getFeaturedProducts, getFeaturedManufacturers } = require('../controllers/products');
-const { getFeaturedCategoriesSubcategories } = require('../controllers/categories');
-const { getReviews } = require('../controllers/reviews');
+const { getReviews, postReview } = require('../controllers/reviews');
 
 const productsRouter = express.Router();
 
@@ -19,6 +18,8 @@ productsRouter.get('/manufacturers-featured', getFeaturedManufacturers);
 productsRouter.get('/featured-products', getFeaturedProducts);
 
 productsRouter.get('/reviews', getReviews);
+
+productsRouter.post('/review', postReview);
 
 
 module.exports = productsRouter;

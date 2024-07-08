@@ -11,6 +11,12 @@ export interface Subcategory {
     name: string;
     category_id: number;
     image: string;
+    category_name?: string;
+    category_alt_name?: string;
+}
+
+export interface SubcategoryByBrand extends Subcategory {
+    manufacturer: string;
 }
 
 export interface Product {
@@ -75,3 +81,4 @@ export interface Review {
     date_created: string;
     verified: boolean;
 }
+

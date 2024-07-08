@@ -53,6 +53,9 @@ export const ProductsSlice = createSlice({
         },
         setReviews: (state, action) => {
             state.reviews = action.payload;
+        },
+        addReview: (state, action) => {
+            state.reviews.unshift(action.payload);
         }
     }
 });
@@ -66,7 +69,8 @@ export const {
     setFeaturedDeals,
     setNewArrivals,
     setTopSellers,
-    setReviews
+    setReviews,
+    addReview
 } = ProductsSlice.actions
 
 export const selectCategories = (state: RootState) => state.products.categories;

@@ -98,3 +98,4 @@ export const getFeaturedSubcategories = async (
         throw error;
     }
 }
+

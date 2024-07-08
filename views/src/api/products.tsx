@@ -64,19 +64,19 @@ export const getAllVariants = async (id: number) => {
 }
 
 export const getManufacturers = async (
-    subcategory: string, 
+    subcategory: string,
     sale?: boolean,
     priceMin?: string,
     priceMax?: string
-    ) => {
+) => {
     try {
         let url = (`http://localhost:4000/products/manufacturers?subcategory=${subcategory}`);
 
         if (sale) {
             url += `&sale=${sale}`;
         }
-          // Append priceMin to the URL if it's provided
-          if (priceMin !== undefined) {
+        // Append priceMin to the URL if it's provided
+        if (priceMin !== undefined) {
             url += `&priceMin=${priceMin}`;
         }
 
@@ -150,12 +150,12 @@ export const getFeaturedDeals = async (
 }
 
 export const getFeaturedItemManufacturers = async (
-    marketingLabel: string, 
-    categories?: string[], 
-    subcategories?:string [],
+    marketingLabel: string,
+    categories?: string[],
+    subcategories?: string[],
     priceMin?: string,
     priceMax?: string
-    ) => {
+) => {
     try {
         let url = (`http://localhost:4000/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
         if (categories && categories.length > 0) {
@@ -169,8 +169,8 @@ export const getFeaturedItemManufacturers = async (
             url += `&subcategories=${subcategoriesParam}`;
         }
 
-          // Append priceMin to the URL if it's provided
-          if (priceMin !== undefined) {
+        // Append priceMin to the URL if it's provided
+        if (priceMin !== undefined) {
             url += `&priceMin=${priceMin}`;
         }
 
@@ -194,6 +194,33 @@ export const getReviews = async (product_id: number) => {
         const data = await response.json();
         if (response.ok) {
             return data.reviews;
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+export const postReview = async (
+    product_id: number,
+    rating: number,
+    title: string,
+    review: string,
+    name: string,
+    recommend: boolean,
+    order_id: string | null
+) => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/review`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ product_id, rating, title, review, name, recommend, order_id })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return data.review;
         }
     } catch (error) {
         throw error;

@@ -125,9 +125,10 @@ const featuredSubcategoriesGet = async (
     }
 }
 
+
 module.exports = {
     categoriesGet,
     subcategoriesGet,
     featuredCategoriesGet,
-    featuredSubcategoriesGet
+    featuredSubcategoriesGet,
 }

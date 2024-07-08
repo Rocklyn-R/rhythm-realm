@@ -4,6 +4,7 @@ import cartReducer from "./CartSlice";
 import shippingReducer from "./ShippingSlice";
 import userReducer from "./UserSlice";
 import filtersReducer from "./FiltersSlice";
+import searchReducer from "./SearchSlice";
 import { localStorageMiddleWare } from "./middleware";
 
 export interface RootState {
@@ -12,6 +13,7 @@ export interface RootState {
     shipping: ReturnType<typeof shippingReducer>;
     user: ReturnType<typeof userReducer>;
     filters: ReturnType<typeof filtersReducer>;
+    search: ReturnType<typeof searchReducer>;
 }
 
 const store = configureStore({
@@ -20,7 +22,8 @@ const store = configureStore({
         cart: cartReducer,
         shipping: shippingReducer,
         user: userReducer,
-        filters: filtersReducer
+        filters: filtersReducer,
+        search: searchReducer
     }),
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(localStorageMiddleWare)
 });

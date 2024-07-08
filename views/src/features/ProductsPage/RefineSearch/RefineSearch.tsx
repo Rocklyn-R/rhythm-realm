@@ -1,5 +1,5 @@
 import { Input } from "antd";
-import { useEffect,useCallback, useState, ChangeEvent, KeyboardEvent } from "react";
+import { useEffect, useCallback, useState, ChangeEvent, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
 import { getFeaturedDeals, getManufacturers, getProducts, getFeaturedItemManufacturers } from "../../../api/products";
 import { getFeaturedCategories, getFeaturedSubcategories } from "../../../api/categories";
@@ -8,13 +8,13 @@ import { Product } from "../../../types/types";
 import { GoDash } from "react-icons/go";
 import { GoPlus } from "react-icons/go";
 import { useSelector } from "react-redux";
-import { 
-    selectManufacturersFilter, 
-    selectPriceDrop, 
-    selectSelectedManufacturers, 
-    setManufacturers, 
-    setSelectedManufacturers, 
-    setPriceDrop, 
+import {
+    selectManufacturersFilter,
+    selectPriceDrop,
+    selectSelectedManufacturers,
+    setManufacturers,
+    setSelectedManufacturers,
+    setPriceDrop,
     selectPriceMin,
     setPriceMin,
     selectPriceMax,
@@ -29,50 +29,45 @@ import {
     setSelectedSubcategories,
     clearFilters
 } from "../../../redux-store/FiltersSlice";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 
 interface RefineSearchProps {
     products: Product[];
     subcategoryName: string;
+    brand: string;
 }
 
-export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) => {
-    //const [manufacturers, setManufacturers] = useState<string[]>([])
+export const RefineSearch: React.FC<RefineSearchProps> = ({ brand, subcategoryName }) => {
     const manufacturers = useSelector(selectManufacturersFilter);
-    //const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const selectedBrands = useSelector(selectSelectedManufacturers);
-    //const [priceDrop, setPriceDrop] = useState(false);
     const priceDrop = useSelector(selectPriceDrop);
     const [showPriceDrop, setShowPriceDrop] = useState(true);
     const priceMin = useSelector(selectPriceMin);
-    //const [priceMin, setPriceMin] = useState<string | undefined>(undefined);
-    //const [priceMax, setPriceMax] = useState<string | undefined>(undefined);
     const priceMax = useSelector(selectPriceMax);
     const [tempPriceMin, setTempPriceMin] = useState<string>("");
     const [tempPriceMax, setTempPriceMax] = useState<string>("");
-    const [showBrands, setShowBrands] = useState(false);
+    const [showBrands, setShowBrands] = useState(brand ? true : false);
     const [showSavings, setShowSavings] = useState(false);
     const [showPrice, setShowPrice] = useState(false);
     const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals" || subcategoryName === "Top Sellers");
-    //const [categories, setCategories] = useState<string[]>([]);
     const categories = useSelector(selectCategoriesFilter);
-    //const [selectedCategories, setSelectedCategories] = useState<string[]>([])
     const selectedCategories = useSelector(selectSelectedCategories);
     const [showCategories, setShowCategories] = useState(false);
-    //const [subcategories, setSubcategories] = useState<string[]>([]);
     const subcategories = useSelector(selectSubcategoriesFilter);
     const [showSubcategories, setShowSubcategories] = useState(false);
-    //const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
     const selectedSubcategories = useSelector(selectSelectedSubcategories);
     const allProducts = useSelector(selectProducts);
     const [isFilterActive, setIsFilterActive] = useState(false);
     const dispatch = useDispatch();
     const [updatingFilters, setUpdatingFilters] = useState(true);
     const marketingLabel = subcategoryName === "Sale" ? "On Sale" :
-    subcategoryName === "New Arrivals" ? "New Arrival" : subcategoryName === "Top Sellers" ? "Top Seller" : "";
+        subcategoryName === "New Arrivals" ? "New Arrival" : subcategoryName === "Top Sellers" ? "Top Seller" : "";
+    const navigate = useNavigate();
+    const { categoryName } = useParams();
 
     useEffect(() => {
-        if(priceMin) {
+        if (priceMin) {
             setTempPriceMin(priceMin);
         } else {
             setTempPriceMin("")
@@ -104,6 +99,9 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
 
 
     const handleClearAll = () => {
+        if(brand) {
+            navigate(`/${categoryName}/${subcategoryName}/`)
+        }
         setUpdatingFilters(true);
         dispatch(clearFilters());
         setTempPriceMin("");
@@ -120,7 +118,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             tempPriceMax !== "" ||
             selectedCategories.length > 0 ||
             selectedSubcategories.length > 0;
-    
+
         setIsFilterActive(active);
     }, [selectedBrands, priceDrop, priceMin, priceMax, tempPriceMin, tempPriceMax, selectedCategories, selectedSubcategories, setIsFilterActive]);
 
@@ -128,13 +126,16 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
         checkFilters();
     }, [selectedBrands, checkFilters, priceDrop, priceMin, priceMax, tempPriceMin, tempPriceMax, selectedCategories, selectedSubcategories]);
 
-   
-    const handleSelectBrand = (brand: string) => {
-       setUpdatingFilters(true);
-        if (selectedBrands.includes(brand)) {
-           dispatch(setSelectedManufacturers(selectedBrands.filter(b => b !== brand)));
+
+    const handleSelectBrand = (manufacturer: string) => {
+        setUpdatingFilters(true);
+        if (selectedBrands.includes(manufacturer)) {
+            if(brand) {
+                navigate(`/${categoryName}/${subcategoryName}/`)
+            }
+            dispatch(setSelectedManufacturers(selectedBrands.filter(b => b !== manufacturer)));
         } else {
-            dispatch(setSelectedManufacturers([...selectedBrands, brand]));
+            dispatch(setSelectedManufacturers([...selectedBrands, manufacturer]));
         }
     }
 
@@ -154,10 +155,13 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             return;
         }
         const manufacturersFetch = async () => {
-
+            console.log("RUNS NOW");
             const result: string[] = await getManufacturers(subcategoryName, priceDrop, priceMin, priceMax);
             if (result) {
                 dispatch(setManufacturers(result));
+                if (brand) {
+                    dispatch(setSelectedManufacturers([brand]));
+                }
             }
         }
         const featuredManufacturersFetch = async () => {
@@ -168,14 +172,22 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
         }
         if (!isFeatured && updatingFilters) {
             manufacturersFetch();
-           setUpdatingFilters(false);
+            setUpdatingFilters(false);
         } else if (isFeatured && updatingFilters) {
             featuredManufacturersFetch();
             setUpdatingFilters(false);
         }
 
 
-    }, [dispatch, marketingLabel, updatingFilters, priceDrop, isFeatured, selectedCategories, selectedSubcategories, subcategoryName, priceMin, priceMax]);
+    }, [dispatch, brand, marketingLabel, updatingFilters, priceDrop, isFeatured, selectedCategories, selectedSubcategories, subcategoryName, priceMin, priceMax]);
+
+
+    useEffect(() => {
+        if (brand) {
+            dispatch(setSelectedManufacturers([brand]));
+            setShowBrands(true);
+        }
+    }, [brand]);
 
     useEffect(() => {
 
@@ -242,7 +254,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             return;
         }
         const fetchCategories = async () => {
-            
+
             const result = await getFeaturedCategories(marketingLabel, selectedBrands, priceMin, priceMax);
             if (result) {
                 dispatch(setCategories(result));
@@ -250,7 +262,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
         }
         if (isFeatured && updatingFilters) {
             fetchCategories();
-              setUpdatingFilters(false);
+            setUpdatingFilters(false);
         }
     }, [updatingFilters, marketingLabel, isFeatured, selectedBrands, priceMin, priceMax]);
 
@@ -264,7 +276,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
     }
 
     const handleSelectSubcategory = (subcategory: string) => {
-       setUpdatingFilters(true);
+        setUpdatingFilters(true);
         if (selectedSubcategories.includes(subcategory)) {
             dispatch(setSelectedSubcategories(selectedSubcategories.filter(s => s !== subcategory)));
         } else {
@@ -290,8 +302,8 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
         }
         if (updatingFilters) {
             fetchSubcategories();
-           setUpdatingFilters(false);
-            
+            setUpdatingFilters(false);
+
         }
     }, [selectedCategories, marketingLabel, selectedBrands, priceMin, priceMax]);
 
@@ -303,10 +315,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             const filteredSubcategories = selectedSubcategories.filter(subcategory => subcategories.includes(subcategory));
             dispatch(setSelectedSubcategories(filteredSubcategories));
         }
-           
+
     }, [updatingFilters]);
 
-      useEffect(() => {
+    useEffect(() => {
         if (updatingFilters) {
             return;
         }
@@ -314,10 +326,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             const filteredBrands = selectedBrands.filter(brand => manufacturers.includes(brand));
             dispatch(setSelectedManufacturers(filteredBrands));
         }
-          
-      }, [updatingFilters])
 
-      useEffect(() => {
+    }, [updatingFilters])
+
+    useEffect(() => {
         if (updatingFilters) {
             return;
         }
@@ -325,7 +337,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
             const filteredCategories = selectedCategories.filter(category => categories.includes(category));
             dispatch(setSelectedCategories(filteredCategories))
         }
-      }, [updatingFilters]);
+    }, [updatingFilters]);
 
     const handleClearPriceMinMax = () => {
         setTempPriceMin("");
@@ -336,10 +348,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
 
 
     return (
-       <> <div className="flex items-center justify-between mb-6">
-                <h4 className="text-xl font-bold">Refine Your Search</h4>
-                {isFilterActive && <button onClick={() => handleClearAll()} className="ml-1 text-red-800 text-sm hover:underline">(Clear All)</button>}
-            </div>
+        <> <div className="flex items-center justify-between mb-6">
+            <h4 className="text-xl font-bold">Refine Your Search</h4>
+            {isFilterActive && <button onClick={() => handleClearAll()} className="ml-1 text-red-800 text-sm hover:underline">(Clear All)</button>}
+        </div>
 
             {isFeatured && (
                 <div className="border-t-2 border-gray-200 py-4">
@@ -444,7 +456,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
                                 type="checkbox"
                                 className="mr-3 w-6 h-6 custom-checkbox"
                                 checked={priceDrop}
-                                onChange={() => dispatch(setPriceDrop(!priceDrop))}
+                                onChange={() => {
+                                    dispatch(setPriceDrop(!priceDrop));
+                                    setUpdatingFilters(true);
+                                }}
                             />
                             <label>Price drop</label>
                         </div>
@@ -486,7 +501,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ subcategoryName }) =
                 </div>
 
             </div>
-       </>
-           
+        </>
+
     )
 }

@@ -22,7 +22,11 @@ import {
 } from "../../redux-store/FiltersSlice";
 
 
-export const ProductsPage = () => {
+interface ProductsPageProps {
+    brand: string;
+}
+
+export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
     const allCategories = useSelector(selectCategories)
     const [id, setId] = useState<number>();
@@ -32,7 +36,6 @@ export const ProductsPage = () => {
     const [productVariantsMap, setProductVariantsMap] = useState<Record<string, Product[]>>({});
     const [uniqueProducts, setUniqueProducts] = useState(Object.values(productVariantsMap).map(variants => variants[0]))
     const [displayValue, setDisplayValue] = useState(24);
-
     const formattedSubcategoryName = subcategoryName ? subcategoryName : "";
     const [sorting, setSorting] = useState("Best Match");
     const [currentPage, setCurrentPage] = useState(1);
@@ -170,16 +173,17 @@ export const ProductsPage = () => {
 
     useEffect(() => {
         if (showFiltersSlider && scrollContainerRef.current) {
-          scrollContainerRef.current.scrollTop = 0;
+            scrollContainerRef.current.scrollTop = 0;
         }
-      }, [showFiltersSlider]);
+    }, [showFiltersSlider]);
 
     return (
         <div className="flex flex-col mb-14">
-            <h2 className="text-3xl text-center font-bold mb-6">{formattedSubcategoryName}:</h2>
+            <h2 className="text-3xl text-center font-bold mb-6">{brand ? brand : ""} {formattedSubcategoryName}:</h2>
             <div className="flex space-between justify-center">
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
                     <RefineSearch
+                        brand={brand}
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}
                     />
@@ -219,6 +223,7 @@ export const ProductsPage = () => {
                 </div>
                 <div className="p-10">
                     <RefineSearch
+                        brand={brand}
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}
                     />
