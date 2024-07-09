@@ -2,7 +2,7 @@ const db = require('../config/db');
 
 const subcategoriesSearch = async (searchTerm) => {
     const query = `
-    SELECT subcategories.name, subcategories.image, subcategories.id, categories.name as category_name, categories.alt_name as category_alt_name
+    SELECT subcategories.name as subcategory_name, subcategories.image, subcategories.id, categories.name as category_name, categories.alt_name as category_alt_name
     FROM subcategories 
     JOIN categories ON categories.id = subcategories.category_id
     WHERE categories.name ILIKE '%' || $1 || '%' OR categories.alt_name ILIKE '%' || $1 || '%' OR subcategories.name ILIKE '%' || $1 || '%'`;
@@ -16,7 +16,7 @@ const subcategoriesSearch = async (searchTerm) => {
 
 const manufacturersSearch = async (searchTerm) => {
     const query = `
-    SELECT DISTINCT subcategories.name, 
+    SELECT DISTINCT subcategories.name as subcategory_name, 
     subcategories.image, 
     subcategories.id, 
     categories.name as category_name, 
@@ -36,7 +36,34 @@ const manufacturersSearch = async (searchTerm) => {
     }
 }
 
+
+const productSearch = async (searchTerm) => {
+    const query = `
+    SELECT products.id,
+    products.name,
+    variants.variant_name,
+    variants.image1,
+    subcategories.name as subcategory_name,
+    categories.name as category_name,
+    categories.alt_name as category_alt_name,
+    products.manufacturer
+    FROM products
+    JOIN variants ON variants.product_id = products.id
+    JOIN subcategories ON subcategories.id = products.subcategory_id
+    JOIN categories ON categories.id = products.category_id
+    WHERE products.name ILIKE '%' || $1 || '%'
+    OR variants.variant_name ILIKE '%' || $1 || '%'
+    ORDER BY products.name`;
+    try {
+        const result = await db.query(query, [searchTerm]);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     subcategoriesSearch,
-    manufacturersSearch
+    manufacturersSearch,
+    productSearch
 }

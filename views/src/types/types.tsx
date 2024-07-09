@@ -15,8 +15,19 @@ export interface Subcategory {
     category_alt_name?: string;
 }
 
-export interface SubcategoryByBrand extends Subcategory {
+export interface SubcategoryResult extends Subcategory {
+    subcategory_name: string;
+}
+
+export interface SubcategoryByBrand extends SubcategoryResult {
+    subcategory_name: string;
     manufacturer: string;
+}
+
+export interface ProductResult extends SubcategoryResult, SubcategoryByBrand {
+    image1: string;
+    name: string;
+    variant_name: string;
 }
 
 export interface Product {

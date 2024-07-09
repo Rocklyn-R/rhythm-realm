@@ -1,10 +1,10 @@
 import { IoSearch } from "react-icons/io5";
 import React, { useState, useEffect } from "react";
-import { getSearchByBrand, getSearchSubcategories } from "../../api/search";
+import { getSearchByBrand, getSearchByProduct, getSearchSubcategories } from "../../api/search";
 import { useDispatch, useSelector } from "react-redux";
-import { selectSubcategoryResults, setSubcategoryByBrandResults, setSubcategoryResults } from "../../redux-store/SearchSlice";
+import { selectSubcategoryResults, setProductsResults, setSubcategoryByBrandResults, setSubcategoryResults } from "../../redux-store/SearchSlice";
 import { SearchResults } from "./SearchResults/SearchResults";
-import { Subcategory, SubcategoryByBrand } from "../../types/types";
+import { ProductResult, Subcategory, SubcategoryByBrand, SubcategoryResult } from "../../types/types";
 import e from "express";
 
 export const SearchBar = () => {
@@ -17,6 +17,9 @@ export const SearchBar = () => {
 
     const handleFocus = () => {
         setIsFocused(true);
+        if (!searchInput) {
+            setDebouncedSearchTerms([]);
+        }
     };
 
     const handleBlur = () => {
@@ -40,6 +43,7 @@ export const SearchBar = () => {
                 setDebouncedSearchTerms([]);
                 dispatch(setSubcategoryByBrandResults([]));
                 dispatch(setSubcategoryResults([]));
+                dispatch(setProductsResults([]));
             }
         }, 500);
 
@@ -51,53 +55,95 @@ export const SearchBar = () => {
 
     useEffect(() => {
         //Search By Brand First Then Filter By Subcategory
+        let brandNonmatchingTerm: string | undefined;
         const searchByManufacturer = async (searchTermIndex: number) => {
             const byBrandResults: SubcategoryByBrand[] = await getSearchByBrand(debouncedSearchTerms[searchTermIndex]);
             if (byBrandResults.length > 0) {
                 if (debouncedSearchTerms.length > 1) {
+                    const newResults: SubcategoryByBrand[] = [];
                     const filteredResults = byBrandResults.filter(result => {
                         // Check if all search terms (starting from index 1) are included in the result name or category_alt_name
-                        return debouncedSearchTerms.every((term, index) => {
-                            if (index === searchTermIndex) {
+                        const matchesAllTerms = debouncedSearchTerms.every((term, index) => {
+                            if (term === debouncedSearchTerms[searchTermIndex]) {
+                                newResults.push(result);
                                 return true;
                             }
                             const lowerCaseTerm = term.toLowerCase();
-                            return result.name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm);
+                            if (result.subcategory_name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm)) {
+                                newResults.push(result);
+                            }
+                            return result.subcategory_name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm);
                         });
+                        if (!matchesAllTerms) {
+                            brandNonmatchingTerm = debouncedSearchTerms.find((term, index) => {
+                                const lowerCaseTerm = term.toLowerCase();
+                                const foundInNewResults = newResults.some(newResult =>
+                                    newResult.subcategory_name.toLowerCase().includes(lowerCaseTerm) ||
+                                    (newResult.category_alt_name?.toLowerCase() || '').includes(lowerCaseTerm) ||
+                                    (newResult.manufacturer?.toLowerCase() || '').includes(lowerCaseTerm) // Added condition
+                                );
+                                return !foundInNewResults; // Term not found in newResults
+                            });
+                        }
+                        return matchesAllTerms;
                     });
                     dispatch(setSubcategoryByBrandResults(filteredResults));
                     if (filteredResults.length > 0) {
                         return true;
-                    } else return false;
+                    } else {
+                        return false;
+                    } 
                 } else {
                     dispatch(setSubcategoryByBrandResults(byBrandResults));
                     return true;
                 }
             } else {
+                brandNonmatchingTerm = debouncedSearchTerms[0];
                 return false;
             }
+        }
+
+        const searchProducts = async (searchTermIndex: number) => {
+            const productsResults: ProductResult[] = await getSearchByProduct(debouncedSearchTerms[searchTermIndex]);
+            if (productsResults) {
+                const filteredResults = productsResults.filter(result => {
+                    return debouncedSearchTerms.every((term, index) => {
+                        if (term === debouncedSearchTerms[searchTermIndex]) {
+                            return true;
+                        }
+                        const lowerCaseTerm = term.toLowerCase();
+                        return result.name.toLowerCase().includes(lowerCaseTerm) 
+                        || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm) 
+                        || result.category_name?.toLowerCase().includes(lowerCaseTerm) 
+                        || result.manufacturer?.toLowerCase().includes(lowerCaseTerm)
+                        || result.variant_name?.toLowerCase().includes(lowerCaseTerm);
+                    });
+                })
+                dispatch(setProductsResults(filteredResults));
+            }
+            return productsResults;
         }
 
         let nonmatchingTerm: string | undefined;
         // Search Subcategories based on Subcategory name
         const searchSubcategories = async () => {
-            const subcategoryResults: Subcategory[] = await getSearchSubcategories(debouncedSearchTerms[0]);
-            if (subcategoryResults) {
+            const subcategoryResults: SubcategoryResult[] = await getSearchSubcategories(debouncedSearchTerms[0]);
+            if (subcategoryResults.length > 0) {
                 if (debouncedSearchTerms.length > 1) {
-                    const newResults: Subcategory[] = [];
+                    const newResults: SubcategoryResult[] = [];
                     const filteredResults = subcategoryResults.filter(result => {
                         const matchesAllTerms = debouncedSearchTerms.slice(1).every(term => {
                             const lowerCaseTerm = term.toLowerCase();
-                            if (result.name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm)) {
+                            if (result.subcategory_name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm)) {
                                 newResults.push(result);
                             }
-                            return result.name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm);
+                            return result.subcategory_name.toLowerCase().includes(lowerCaseTerm) || result.category_alt_name?.toLowerCase().includes(lowerCaseTerm);
                         });
                         if (!matchesAllTerms) {
                             nonmatchingTerm = debouncedSearchTerms.slice(1).find(term => {
                                 const lowerCaseTerm = term.toLowerCase();
                                 const foundInNewResults = newResults.some(newResult =>
-                                    newResult.name.toLowerCase().includes(lowerCaseTerm) ||
+                                    newResult.subcategory_name.toLowerCase().includes(lowerCaseTerm) ||
                                     (newResult.category_alt_name?.toLowerCase() || '').includes(lowerCaseTerm)
                                 );
                                 return !foundInNewResults; // Term not found in newResults
@@ -112,10 +158,12 @@ export const SearchBar = () => {
                         return false;
                     }
                 } else {
+                    console.log("TRUE")
                     dispatch(setSubcategoryResults(subcategoryResults));
                     return true;
                 }
             } else {
+                nonmatchingTerm = debouncedSearchTerms[0];
                 return false;
             }
         }
@@ -126,23 +174,28 @@ export const SearchBar = () => {
         const performSearch = async () => {
             dispatch(setSubcategoryByBrandResults([]));
             dispatch(setSubcategoryResults([]));
+            dispatch(setProductsResults([]));
             if (debouncedSearchTerms.length > 0) {
                 const brandSearch = await searchByManufacturer(0);
                 if (!brandSearch) {
-                    console.log("CALLING");
+                    console.log("RAN NOW")
                     const subcatSearch = await searchSubcategories();
+                    console.log(subcatSearch);
                     if (!subcatSearch) {
-                        console.log(nonmatchingTerm);
+                        console.log("NEXT")
                         const nonmatchingIndex = debouncedSearchTerms.indexOf(nonmatchingTerm!);
                         const newBrandSearch = await searchByManufacturer(nonmatchingIndex);
                         if (!newBrandSearch) {
-                            
+                            console.log("NEXT");
+                            const brandNonmatchingIndex = debouncedSearchTerms.indexOf(brandNonmatchingTerm!);
+                            const prodSearch = await searchProducts(brandNonmatchingIndex);
                         }
                     }
                 }
             } else {
                 dispatch(setSubcategoryResults([]));
                 dispatch(setSubcategoryByBrandResults([]));
+                dispatch(setProductsResults([]));
             }
         }
 
@@ -169,10 +222,11 @@ export const SearchBar = () => {
                 </button>
             </div>
             {searchTerms.length > 0 && searchTerms[0].length >= 3 && isFocused && (
-                <div className="absolute bg-gray-100 top-8 py-4 px-2 border rounded-lg border-gray-300 shadow-lg w-full mt-1 z-30">
+                <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full mt-1 z-30">
                     <SearchResults
                         handleBlur={handleBlur}
                         setSearchInput={setSearchInput}
+                        debouncedSearchTerms={debouncedSearchTerms}
                     />
                 </div>
             )}

@@ -98,8 +98,8 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ brand, subcategoryNa
     }, [])
 
 
-    const handleClearAll = () => {
-        if(brand) {
+    const handleClearAll = (clearBrandParameter: boolean) => {
+        if(brand && clearBrandParameter) {
             navigate(`/${categoryName}/${subcategoryName}/`)
         }
         setUpdatingFilters(true);
@@ -184,8 +184,12 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ brand, subcategoryNa
 
     useEffect(() => {
         if (brand) {
+            handleClearAll(false);
             dispatch(setSelectedManufacturers([brand]));
             setShowBrands(true);
+        } else {
+            handleClearAll(false);
+            dispatch(setSelectedManufacturers([]));
         }
     }, [brand]);
 
@@ -350,7 +354,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ brand, subcategoryNa
     return (
         <> <div className="flex items-center justify-between mb-6">
             <h4 className="text-xl font-bold">Refine Your Search</h4>
-            {isFilterActive && <button onClick={() => handleClearAll()} className="ml-1 text-red-800 text-sm hover:underline">(Clear All)</button>}
+            {isFilterActive && <button onClick={() => handleClearAll(true)} className="ml-1 text-red-800 text-sm hover:underline">(Clear All)</button>}
         </div>
 
             {isFeatured && (

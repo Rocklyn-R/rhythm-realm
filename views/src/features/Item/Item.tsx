@@ -29,6 +29,7 @@ export const Item = () => {
         const fetchSelectedProduct = async () => {
             const selectedProductData = await getSelectedProduct(productName!, variantName!);
             if (selectedProductData) {
+                console.log(selectedProductData);
                 dispatch(setSelectedProduct(selectedProductData));
                 const variantData = await getAllVariants(selectedProductData.id);
                 if (variantData) {

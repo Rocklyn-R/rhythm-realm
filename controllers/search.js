@@ -1,4 +1,4 @@
-const { subcategoriesSearch, manufacturersSearch } = require('../models/search');
+const { subcategoriesSearch, manufacturersSearch, productSearch } = require('../models/search');
 
 
 
@@ -28,7 +28,21 @@ const searchByManufacturers = async (req, res) => {
     }
 }
 
+const searchByProduct = async (req, res) => {
+    const { searchTerm } = req.query;
+    try {
+        const result = await productSearch(searchTerm);
+        if (result) {
+            res.status(200).json({ productsResults: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
+
+
 module.exports = {
     searchSubcategories,
-    searchByManufacturers
+    searchByManufacturers,
+    searchByProduct
 }

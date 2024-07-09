@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { Subcategory, SubcategoryByBrand } from "../types/types";
+import { ProductResult, SubcategoryByBrand, SubcategoryResult } from "../types/types";
 import { RootState } from "./store";
 
 export const SearchSlice = createSlice({
     name: "search",
     initialState: {
-        subcategoryResults: [] as Subcategory[],
+        subcategoryResults: [] as SubcategoryResult[],
         subcategoryByBrandResults: [] as SubcategoryByBrand[],
-        products: [],
-        brands: [],
+        productsResults: [] as ProductResult[],
+        suggestedProductResults: [],
     },
 
     reducers: {
@@ -17,16 +17,21 @@ export const SearchSlice = createSlice({
         },
         setSubcategoryByBrandResults: (state, action) => {
             state.subcategoryByBrandResults = action.payload;
+        },
+        setProductsResults: (state, action) => {
+            state.productsResults = action.payload;
         }
     }
 });
 
 export const {
     setSubcategoryResults,
-    setSubcategoryByBrandResults
+    setSubcategoryByBrandResults,
+    setProductsResults
 } = SearchSlice.actions;
 
 export const selectSubcategoryResults = (state: RootState) => state.search.subcategoryResults;
 export const selectSubcategoryByBrandResults = (state: RootState) => state.search.subcategoryByBrandResults;
+export const selectProductResults = (state: RootState) => state.search.productsResults;
 
 export default SearchSlice.reducer;

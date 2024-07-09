@@ -68,7 +68,7 @@ const productsGet = async (subcategoryName, manufacturers = [], sale = false, pr
 
 
 const selectedProductGet = async (name, variant) => {
-    const query = `SELECT products.name AS name, 
+    let query = `SELECT products.name AS name, 
     products.price, 
     products.description, 
     products.manufacturer, 
@@ -87,9 +87,17 @@ const selectedProductGet = async (name, variant) => {
     JOIN variants ON products.id = variants.product_id
     JOIN categories ON products.category_id = categories.id
     JOIN subcategories ON products.subcategory_id = subcategories.id
-    WHERE products.name = $1 AND variants.variant_name = $2`;
+    WHERE products.name = $1`;
+
+    let params = [name];
+
+    if (variant !== 'undefined') {
+        query += ` AND variants.variant_name = $2`;
+        params.push(variant);
+    }
+   
     try {
-        const result = await db.query(query, [name, variant]);
+        const result = await db.query(query, params);
         return result.rows;
     } catch (error) {
         throw error;
@@ -310,6 +318,7 @@ const featuredManufacturersGet = async (marketingLabel, categories = [], subcate
         throw error;
     }
 }
+
 
 
 
