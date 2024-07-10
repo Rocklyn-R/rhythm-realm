@@ -17,6 +17,7 @@ export interface Subcategory {
 
 export interface SubcategoryResult extends Subcategory {
     subcategory_name: string;
+    subcategory_alt_name: string;
 }
 
 export interface SubcategoryByBrand extends SubcategoryResult {

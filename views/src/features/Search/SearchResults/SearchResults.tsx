@@ -16,9 +16,10 @@ interface SearchResultsProps {
     handleBlur: () => void;
     setSearchInput: (arg0: string) => void;
     debouncedSearchTerms: string[];
+    searchInput: string;
 }
 
-export const SearchResults: React.FC<SearchResultsProps> = ({ debouncedSearchTerms, setSearchInput, handleBlur }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debouncedSearchTerms, setSearchInput, handleBlur }) => {
     const subcategoryResults = useSelector(selectSubcategoryResults);
     const navigate = useNavigate();
     const byBrandResults = useSelector(selectSubcategoryByBrandResults);
@@ -85,7 +86,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ debouncedSearchTer
                 <div className="w-full flex flex-col">
                   
                     {productsResults.map((product, index) => (
-                        <button onClick={() => handleSelectProduct(product)} key={index} className="flex items-center w-full border-b border-t p-2 bg-white rounded-md">
+                        <button onClick={() => handleSelectProduct(product)} key={index} className="flex items-center w-full border-b border-t p-2 bg-white">
                             <img src={product.image1} width={50} />
                             <p className="mx-2 hover:underline">{product.name} {product.variant_name}</p>
                         </button>

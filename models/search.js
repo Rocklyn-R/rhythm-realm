@@ -2,10 +2,16 @@ const db = require('../config/db');
 
 const subcategoriesSearch = async (searchTerm) => {
     const query = `
-    SELECT subcategories.name as subcategory_name, subcategories.image, subcategories.id, categories.name as category_name, categories.alt_name as category_alt_name
+    SELECT subcategories.name as subcategory_name, 
+    subcategories.image, 
+    subcategories.id, 
+    subcategories.alt_name as subcategory_alt_name,
+    categories.name as category_name, 
+    categories.alt_name as category_alt_name
     FROM subcategories 
     JOIN categories ON categories.id = subcategories.category_id
-    WHERE categories.name ILIKE '%' || $1 || '%' OR categories.alt_name ILIKE '%' || $1 || '%' OR subcategories.name ILIKE '%' || $1 || '%'`;
+    WHERE categories.name ILIKE '%' || $1 || '%' OR categories.alt_name ILIKE '%' || $1 || '%' 
+    OR subcategories.name ILIKE '%' || $1 || '%' OR subcategories.alt_name ILIKE '%' || $1 || '%'`;
     try {
         const result = await db.query(query, [searchTerm]);
         return result.rows;
@@ -21,6 +27,7 @@ const manufacturersSearch = async (searchTerm) => {
     subcategories.id, 
     categories.name as category_name, 
     categories.alt_name as category_alt_name,
+    subcategories.alt_name as subcategory_alt_name,
     products.manufacturer
     FROM subcategories
     JOIN categories ON categories.id = subcategories.category_id
@@ -44,6 +51,7 @@ const productSearch = async (searchTerm) => {
     variants.variant_name,
     variants.image1,
     subcategories.name as subcategory_name,
+    subcategories.alt_name as subcategory_alt_name,
     categories.name as category_name,
     categories.alt_name as category_alt_name,
     products.manufacturer
