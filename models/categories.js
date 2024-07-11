@@ -92,7 +92,7 @@ const featuredSubcategoriesGet = async (
         query += ` AND c.name IN (${categories.map((_, index) => `$${paramIndex++}`).join(',')})`;
         params.push(...categories);
     }
-    console.log(manufacturers);
+    
     if (manufacturers.length > 0) {
         query += ` AND p.manufacturer IN (${manufacturers.map((_, index) => `$${paramIndex++}`).join(',')})`;
         params.push(...manufacturers);
@@ -111,7 +111,6 @@ const featuredSubcategoriesGet = async (
     }
 
     query += ` ORDER BY s.id`;
-    console.log(query);
     try {
         if (categories.length === 0) {
             return []

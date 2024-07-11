@@ -36,7 +36,6 @@ const manufacturersSearch = async (searchTerm) => {
     ORDER BY subcategories.id;`;
     try {
         const result = await db.query(query, [searchTerm]);
-        console.log(result);
         return result.rows;
     } catch (error) {
         throw error;
@@ -70,8 +69,69 @@ const productSearch = async (searchTerm) => {
     }
 }
 
+const recommendedProductsSearch = async (brand = undefined, subcategories = []) => {
+    let query = `
+    SELECT DISTINCT ON (products.id)
+    products.id,
+    products.name,
+    products.price,
+    variants.variant_name,
+    variants.image1,
+    subcategories.name as subcategory_name,
+    subcategories.alt_name as subcategory_alt_name,
+    categories.name as category_name,
+    categories.alt_name as category_alt_name,
+    products.manufacturer,
+    reviews.rating
+FROM products
+JOIN (
+    SELECT DISTINCT ON (product_id) *
+    FROM variants
+    
+) AS variants ON variants.product_id = products.id
+JOIN subcategories ON subcategories.id = products.subcategory_id
+JOIN categories ON categories.id = products.category_id
+LEFT JOIN reviews ON reviews.product_id = products.id
+`;
+    console.log(subcategories);
+    let params = [];
+    let paramIndex = 1;
+
+    if (brand !== 'undefined') {
+        query += ` WHERE products.manufacturer = $1`;
+        paramIndex++;
+        params.push(brand);
+    }
+
+    if (subcategories.length > 0 && brand !== 'undefined') {
+        query += ` AND subcategories.name IN (${subcategories.map(() => `$${paramIndex++}`).join(',')})`;
+        params.push(...subcategories);
+    }
+
+    if (subcategories.length > 0 && brand === 'undefined') {
+        query += ` WHERE subcategories.name IN (${subcategories.map(() => `$${paramIndex++}`).join(',')})`;
+        params.push(...subcategories);
+    }
+
+    query += ` ORDER BY products.id, variants.id`;
+
+    query += ` LIMIT 5`;
+    console.log(query);
+    console.log(params);
+
+    try {
+        const result = await db.query(query, params);
+        //console.log(result.rows);
+        return result.rows; // Return the rows directly
+    } catch (error) {
+        //console.log(error);
+        throw error;
+    }
+}
+
 module.exports = {
     subcategoriesSearch,
     manufacturersSearch,
-    productSearch
+    productSearch,
+    recommendedProductsSearch
 }

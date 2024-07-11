@@ -93,10 +93,8 @@ const cartInsert = async (user_id, product_id, variant_id, quantity) => {
     `
     try {
         const insertResult = await db.query(insertQuery, [user_id, product_id, variant_id, quantity]);
-        console.log('Inserted item:', insertResult.rows[0]);
         return insertResult;
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }

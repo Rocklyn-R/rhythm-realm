@@ -226,3 +226,17 @@ export const postReview = async (
         throw error;
     }
 }
+
+
+export const getAverageRating = async (product_id: number) => {
+    try {
+        const response = await fetch(`http://localhost:4000/products/review/avg-rating?product_id=${product_id}`);
+        const data = await response.json();
+        if (response.ok) {
+            return data.avg_rating[0].avg_rating;
+        }
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

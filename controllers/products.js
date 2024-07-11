@@ -32,8 +32,7 @@ const getProducts = async (req, res) => {
 
 const getSelectedProduct = async (req, res) => {
     const { name, variant } = req.query;
-    console.log(name);
-    console.log(variant);
+
     try {
         const result = await selectedProductGet(name, variant);
         if (result) {

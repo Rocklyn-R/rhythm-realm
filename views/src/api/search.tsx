@@ -34,3 +34,26 @@ export const getSearchByProduct = async (searchTerm: string) => {
         throw error;
     }
 }
+
+export const getRecommendedProducts = async (subcategories: string[], brand?: string) => {
+    console.log("RUNS")
+    try {
+        let url = `http://localhost:4000/search/recommended-products?brand=${brand}`;
+        // Append categories to the URL if provided
+        if (subcategories && subcategories.length > 0) {
+            const subcategoriesParam = subcategories.join(',');
+            url += `&subcategories=${subcategoriesParam}`;
+        }
+
+        //console.log(url);
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (response.ok) {
+            return data.products;
+        } else return "FAILED"
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

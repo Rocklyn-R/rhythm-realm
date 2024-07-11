@@ -148,10 +148,8 @@ const manufacturersGet = async (subcategoryName, sale = false, priceMin = undefi
 
     try {
         const result = await db.query(query, params);
-        console.log(result);
         return result.rows.map(row => row.manufacturer);
     } catch (error) {
-        console.log(error);
         throw error;
     }
 }

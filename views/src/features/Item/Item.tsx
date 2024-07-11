@@ -23,7 +23,7 @@ export const Item = () => {
     const itemDescriptionRef = useRef<HTMLDivElement>(null);
     const [showReviews, setShowReviews] = useState(true);
     const reviewsRef = useRef<HTMLDivElement>(null);
-
+   
     useEffect(() => {
         dispatch(setVariants([]));
         const fetchSelectedProduct = async () => {

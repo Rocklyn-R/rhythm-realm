@@ -31,6 +31,11 @@ export interface ProductResult extends SubcategoryResult, SubcategoryByBrand {
     variant_name: string;
 }
 
+export interface RecommendedProductResult extends ProductResult {
+    rating: number;
+    price: string;
+}
+
 export interface Product {
     id: number;
     name: string;
