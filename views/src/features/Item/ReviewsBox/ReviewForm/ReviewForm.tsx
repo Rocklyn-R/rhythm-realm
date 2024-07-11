@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 import { FaX } from "react-icons/fa6";
 import { useSelector } from "react-redux";
 import { selectEmail, selectFirstName, selectIsAuthenticated } from "../../../../redux-store/UserSlice";
-import { postReview } from "../../../../api/products";
-import { addReview, selectSelectedProduct } from "../../../../redux-store/ProductsSlice";
+import { getAverageRating, postReview } from "../../../../api/products";
+import { addReview, selectSelectedProduct, setAverageRating } from "../../../../redux-store/ProductsSlice";
 import { useDispatch } from "react-redux";
 const { TextArea } = Input; // Destructuring TextArea from Input
 
@@ -55,7 +55,16 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ setShowWriteReview }) =>
                 setShowSuccessMessage(true);
                 console.log(reviewData);
                 dispatch(addReview(reviewData));
-                window.scrollTo(0, 2100);
+                window.scrollTo({
+                    top: 1800,
+                    behavior: 'smooth'
+                  });
+                setShowWriteReview(false);
+                const newAverageRating = await getAverageRating(selectedProduct.id);
+                console.log(newAverageRating);
+                if (newAverageRating) {
+                    dispatch(setAverageRating(newAverageRating));
+                }
             }
         }
         if (!rating) {

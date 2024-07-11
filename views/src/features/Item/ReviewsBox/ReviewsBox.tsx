@@ -93,7 +93,7 @@ export const ReviewsBox = () => {
                                 <button onClick={() => setFilterValue(5 - index)} key={index} className="flex items-center mb-4 w-full">
                                     <span className="w-20 font-semibold">{5 - index}</span>
                                     <Bar percentage={percentage} />
-                                    <span className="ml-2 font-semibold">{Math.round(percentage)}%</span>
+                                    <span className="ml-2 font-semibold w-1/4 text-end">{Math.round(percentage)}%</span>
                                 </button>
                             ))}
                         </div>

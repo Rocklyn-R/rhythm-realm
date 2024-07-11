@@ -23,7 +23,18 @@ const reviewPost = async (user_id, product_id, rating, title, review, name, reco
     }
 }
 
+const averageRatingGet = async (product_id) => {
+    const query = `SELECT products.avg_rating FROM products WHERE products.id = $1`;
+    try {
+        const result = await db.query(query, [product_id]);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     reviewsGet,
-    reviewPost
+    reviewPost,
+    averageRatingGet
 }
