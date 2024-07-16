@@ -9,6 +9,8 @@ export const SearchSlice = createSlice({
         subcategoryByBrandResults: [] as SubcategoryByBrand[],
         productsResults: [] as ProductResult[],
         recommendedProductResults: [] as RecommendedProductResult[],
+        searchResultProducts: [] as ProductResult[],
+        searchTermParams: [] as string[]
     },
 
     reducers: {
@@ -23,6 +25,12 @@ export const SearchSlice = createSlice({
         },
         setRecommendedProductResults: (state, action) => {
             state.recommendedProductResults = action.payload;
+        },
+        setSearchTermParams: (state, action) => {
+            state.searchTermParams = action.payload;
+        },
+        setSearchResultProducts: (state, action) => {
+            state.searchResultProducts = action.payload;
         }
     }
 });
@@ -31,12 +39,16 @@ export const {
     setSubcategoryResults,
     setSubcategoryByBrandResults,
     setProductsResults,
-    setRecommendedProductResults
+    setRecommendedProductResults,
+    setSearchTermParams,
+    setSearchResultProducts
 } = SearchSlice.actions;
 
 export const selectSubcategoryResults = (state: RootState) => state.search.subcategoryResults;
 export const selectSubcategoryByBrandResults = (state: RootState) => state.search.subcategoryByBrandResults;
 export const selectProductResults = (state: RootState) => state.search.productsResults;
 export const selectRecommendedProductResults = (state: RootState) => state.search.recommendedProductResults;
+export const selectSearchTermParams = (state: RootState) => state.search.searchTermParams;
+export const selectSearchResultProducts = (state: RootState) => state.search.searchResultProducts;
 
 export default SearchSlice.reducer;

@@ -12,9 +12,10 @@ const { TextArea } = Input; // Destructuring TextArea from Input
 
 interface ReviewFormProps {
     setShowWriteReview: (arg0: boolean) => void;
+    reviewsRef: React.RefObject<HTMLDivElement>;
 }
 
-export const ReviewForm: React.FC<ReviewFormProps> = ({ setShowWriteReview }) => {
+export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWriteReview }) => {
     const [headline, setHeadline] = useState("");
     const [comments, setComments] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -48,17 +49,18 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ setShowWriteReview }) =>
 
     const handleSubmitReview = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+      
         if (headline && comments && firstName && (wouldRecommend !== null) && rating) {
 
             const reviewData = await postReview(selectedProduct.id, rating, headline, comments, firstName, wouldRecommend, orderNumber);
+            console.log(reviewData);
             if (reviewData) {
                 setShowSuccessMessage(true);
                 console.log(reviewData);
                 dispatch(addReview(reviewData));
-                window.scrollTo({
-                    top: 1800,
-                    behavior: 'smooth'
-                  });
+                if (reviewsRef.current) {
+                    reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
+                }
                 setShowWriteReview(false);
                 const newAverageRating = await getAverageRating(selectedProduct.id);
                 console.log(newAverageRating);

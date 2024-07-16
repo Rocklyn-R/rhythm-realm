@@ -62,8 +62,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
 
 
     return (
-        <div className="sticky top-0 h-full self-start border-2 border-gray-300 w-1/3 p-4 ml-10">
-            <h1 className="montserrat-bold text-2xl border-b-2 border-b-gray-300 pb-4">Order Summary</h1>
+        <div className="sticky top-0 h-full self-start w-1/3 px-4 pb-4 ml-10 bg-white rounded-md shadow-lg">
+            <h1 className="montserrat-bold text-2xl border-b-2 border-b-gray-300 p-4">Order Summary</h1>
             <div>
                 <CouponCode />
 

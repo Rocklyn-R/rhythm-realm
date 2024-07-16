@@ -24,9 +24,10 @@ import {
 
 interface ProductsPageProps {
     brand: string;
+    searchTerm: string;
 }
 
-export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
+export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand }) => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
     const allCategories = useSelector(selectCategories)
     const [id, setId] = useState<number>();
@@ -42,7 +43,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
     const [showFiltersSlider, setShowFiltersSlider] = useState(false);
     const overlayRef = useRef<HTMLDivElement>(null);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-
     const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
         if (overlayRef.current && e.target === overlayRef.current) {
             setShowFiltersSlider(false);
@@ -50,13 +50,13 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
     };
 
 
-    useEffect(() => {
-        if (allCategories) {
+/*    useEffect(() => {
+        if (allCategories.length > 0) {
             setId(allCategories.find(item => item.name === categoryName)!.id)
         }
-    }, [allCategories, categoryName])
+    }, [allCategories, categoryName])*/
 
-    useEffect(() => {
+   useEffect(() => {
         if (allProducts) {
             const newProductVariantsMap = allProducts.reduce((acc: Record<string, Product[]>, product: Product) => {
                 if (!acc[product.id]) {
@@ -94,8 +94,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
     };
 
 
-    useEffect(() => {
+  /*  useEffect(() => {
         const fetchSubcategories = async () => {
+          
             if (id) {
                 const subcategoryData = await getSubcategories(id);
                 if (subcategoryData) {
@@ -104,14 +105,15 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
             }
 
         }
-        if (allSubcategories.length === 0) {
+        if (allSubcategories.length === 0 && !searchTerm) {
             fetchSubcategories();
         }
-    }, [dispatch, id, allSubcategories.length]);
+    }, [dispatch, id, allSubcategories.length]);*/
 
 
     useEffect(() => {
         const fetchProducts = async () => {
+            console.log("FETCHES")
             dispatch(setProducts([])); // Clear previous products while fetching new ones
             const productsData: Product[] = await getProducts(formattedSubcategoryName);
             if (productsData) {
@@ -121,7 +123,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
 
         const fetchDeals = async () => {
             const marketingLabel = subcategoryName === "Sale" ? "On Sale" : subcategoryName === "New Arrivals" ? "New Arrival" : "Top Seller";
-
+            console.log("FETCH");
             const result = await getFeaturedDeals(marketingLabel);
             console.log(marketingLabel);
             if (result) {
@@ -132,6 +134,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
 
         if (categoryName === 'Featured') {
             fetchDeals();
+        } else if (searchTerm) {
+            return;
         } else {
             fetchProducts();
         }
@@ -179,10 +183,13 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
 
     return (
         <div className="flex flex-col mb-14">
+           {formattedSubcategoryName ? (
             <h2 className="text-3xl text-center font-bold mb-6">{brand ? brand : ""} {formattedSubcategoryName}:</h2>
+           ) : <h2 className="text-3xl text-center font-bold mb-6">Showing search results for "{searchTerm}":</h2> } 
             <div className="flex space-between justify-center">
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
                     <RefineSearch
+                        searchTerm={searchTerm}
                         brand={brand}
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}
@@ -205,11 +212,12 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
                     />
                 </div>
             </div>
+            
             <div className="bg-white flex w-full justify-center space-x-2 py-8 mt-2 shadow-md">
                 <button className={`flex items-center ${currentPage === 1 ? 'text-gray-400' : ''}`} onClick={handlePreviousPage} disabled={currentPage === 1}><IoCaretBack className="mr-2" />Previous</button>
                 {/* Render page number buttons */}
                 {Array.from({ length: totalPages }, (_, index) => (
-                    <button className={`px-2 rounded-md ${currentPage === index + 1 ? 'bg-red-800 text-white' : ""}`} key={index + 1} onClick={() => setCurrentPage(index + 1)}>
+                    <button className={`px-2 rounded-md ${currentPage === totalPages ? "cursor-default" : "cursor-pointer"} ${currentPage === index + 1 ? 'bg-red-800 text-white' : ""}`} key={index + 1} onClick={() => setCurrentPage(index + 1)} >
                         {index + 1}
                     </button>
                 ))}
@@ -223,6 +231,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ brand }) => {
                 </div>
                 <div className="p-10">
                     <RefineSearch
+                     searchTerm={searchTerm}
                         brand={brand}
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}

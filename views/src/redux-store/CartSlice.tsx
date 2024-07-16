@@ -40,7 +40,9 @@ export const CartSlice = createSlice({
             } else {
                 state.cart.unshift(action.payload);
             }
-            const pricePerItem = parseFloat(action.payload.price);
+            const pricePerItem = action.payload.sale_price
+                ? parseFloat(action.payload.sale_price)
+                : parseFloat(action.payload.price);
             const totalPriceToAdd = pricePerItem * action.payload.quantity;
             const newTotal = parseFloat(state.total) + totalPriceToAdd;
             state.total = newTotal.toFixed(2);
@@ -53,7 +55,9 @@ export const CartSlice = createSlice({
             const foundItemIndex = state.cart.findIndex(item => item.variant_id === action.payload.variant_id);
             if (foundItemIndex !== -1) {
                 state.cart[foundItemIndex].quantity += 1;
-                const price = parseFloat(action.payload.price);
+                const price = action.payload.sale_price
+                    ? parseFloat(action.payload.sale_price)
+                    : parseFloat(action.payload.price);
                 const newTotal = parseFloat(state.total) + price;
                 state.total = newTotal.toFixed(2);
                 state.total_items = state.total_items + 1;
@@ -70,7 +74,9 @@ export const CartSlice = createSlice({
                 } else {
                     state.cart[foundItemIndex].quantity -= 1;
                 }
-                const price = parseFloat(action.payload.price);
+                const price = action.payload.sale_price
+                    ? parseFloat(action.payload.sale_price)
+                    : parseFloat(action.payload.price);
                 const newTotal = parseFloat(state.total) - price;
                 state.total = newTotal.toFixed(2);
                 state.total_items = state.total_items - 1;

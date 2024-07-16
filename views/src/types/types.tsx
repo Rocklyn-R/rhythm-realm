@@ -11,7 +11,7 @@ export interface Subcategory {
     name: string;
     category_id: number;
     image: string;
-    category_name?: string;
+    category_name: string;
     category_alt_name?: string;
 }
 
@@ -29,11 +29,14 @@ export interface ProductResult extends SubcategoryResult, SubcategoryByBrand {
     image1: string;
     name: string;
     variant_name: string;
+    variant_id: string;
+    sale_price: string;
+    price: string;
 }
 
 export interface RecommendedProductResult extends ProductResult {
     rating: number;
-    price: string;
+    avg_rating: number;
 }
 
 export interface Product {

@@ -55,13 +55,6 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
     };
 
-    /* useEffect(() => {
-         if (productsForSelection.length === 0) {
-             setProductsForSelection(sortedProducts);
-         }
-     }, [dispatch, uniqueProducts])*/
-
-
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
         const variant = productsForSelection.length === 0 ? product.variant_name : productsForSelection.find(item => item.id === product.id)?.variant_name;
@@ -148,7 +141,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
 
                             <div className="flex flex-col flex-grow w-1/2 md:w-full justify-center md:justify-end mt-2">
                                 <p className="p-1 text-gray-700">{product.name}</p>
-                                <StarRating 
+                                <StarRating
                                     rating={product.avg_rating}
                                 />
                                 {findProduct(product)?.sale_price ? (

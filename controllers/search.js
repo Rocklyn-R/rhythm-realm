@@ -2,7 +2,8 @@ const {
     subcategoriesSearch,
     manufacturersSearch,
     productSearch,
-    recommendedProductsSearch
+    recommendedProductsSearch,
+    searchResultsGetProducts
 } = require('../models/search');
 
 
@@ -66,10 +67,30 @@ const searchRecommendedProducts = async (req, res) => {
 
 }
 
+const getProductSearchResults = async (req, res) => {
+    const { brand, subcategories } = req.query;
+    let subcategoriesArray = [];
+    // If manufacturers is provided in the query, split it into an array
+    if (subcategories) {
+        subcategoriesArray = Array.isArray(subcategories) ? subcategories : subcategories.split(',');
+    }
+
+    try {
+        // Call productsGet function with parsed parameters
+        const result = await searchResultsGetProducts(brand, subcategoriesArray);
+        // Check if result is not empty before sending response
+        if (result) {
+            res.status(200).json({ products: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 module.exports = {
     searchSubcategories,
     searchByManufacturers,
     searchByProduct,
-    searchRecommendedProducts
+    searchRecommendedProducts,
+    getProductSearchResults
 }

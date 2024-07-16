@@ -59,16 +59,16 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
 
 
     return (
-        <div className="flex w-full h-full overflow-hidden" style={{ maxHeight: '600px' }}>
+        <div className="flex w-full h-full overflow-hidden mb-1" style={{ maxHeight: '600px' }}>
         {/* Left Side - Categories or By Brand Section */}
-        {(subcategoryResults.length > 0 || byBrandResults.length > 0) && (
-            <div className="flex flex-col w-2/5 border-r border-gray-300 overflow-y-auto">
-                {/* No Results Found */}
-                {debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && (
+              {/* No Results Found */}
+              {debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && (
                     <div className="w-full flex justify-center p-6 text-lg font-semibold">
                         <p>No results found.</p>
                     </div>
                 )}
+        {(subcategoryResults.length > 0 || byBrandResults.length > 0) && (
+            <div className="flex flex-col w-2/5 border-r border-gray-300 overflow-y-auto">
 
                 {/* Categories Section */}
                 {subcategoryResults.length > 0 && (
@@ -76,7 +76,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
                         <h1 className="font-semibold text-lg p-4 self-center">Categories:</h1>
                         <div className="space-y-4 flex flex-col px-4 pb-4">
                             {subcategoryResults.map((subcategory, index) => (
-                                <button key={index} onClick={() => handleSelectSubcategory(subcategory)} className="flex hover:shadow-lg items-center border bg-white border-gray-300 rounded-md p-4" >
+                                <button key={index} onClick={() => handleSelectSubcategory(subcategory)} className="flex hover:shadow-lg items-center bg-white rounded-md p-4" >
                                     <img src={subcategory.image} width={50} alt={subcategory.subcategory_name} />
                                     <p className="mx-2 w-3/4">{subcategory.subcategory_name}</p>
                                 </button>

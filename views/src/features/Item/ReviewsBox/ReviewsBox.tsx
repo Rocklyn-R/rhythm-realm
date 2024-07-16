@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { useSelector } from "react-redux"
 import { selectReviews, selectSelectedProduct } from "../../../redux-store/ProductsSlice"
 import { StarRating } from "../StarRating/StarRating";
@@ -32,6 +32,9 @@ export const ReviewsBox = () => {
     const [filterValue, setFilterValue] = useState<number | null>(null);
     const filteredReviews = filterValue ? reviews.filter(review => review.rating === filterValue) : null;
     const [showWriteReview, setShowWriteReview] = useState(false);
+    const reviewFormRef = useRef<HTMLDivElement>(null);
+    const reviewsRef = useRef<HTMLDivElement>(null);
+
 
     const handleSelectSortByValue: SelectProps['onChange'] = (value) => {
         setSortByValue(value);
@@ -39,7 +42,7 @@ export const ReviewsBox = () => {
 
 
     return (
-        <div className="py-10 px-20 w-full">
+        <div className="py-10 px-20 w-full" ref={reviewsRef}>
             {reviews.length === 0 ? (
                 <div className="flex flex-col items-center w-full">
                     <h3 className="mb-4">Be the first to review this product.</h3>
@@ -47,19 +50,22 @@ export const ReviewsBox = () => {
                         onClick={() => {
                             setShowWriteReview(true);
                             setTimeout(() => {
-                                window.scrollTo({
-                                    top: 1910,
-                                    behavior: 'smooth'
-                                });
+                                if (reviewFormRef.current) {
+                                    reviewFormRef.current.scrollIntoView({ behavior: 'smooth' });
+                                }
+
                             }, 100);
                         }}
                         className="py-2 px-4 bg-red-700 text-white rounded-sm">Write Review
                     </button>
-                    {showWriteReview && (
-                        <ReviewForm
-                            setShowWriteReview={setShowWriteReview}
-                        />
-                    )}
+                    <div ref={reviewFormRef} className="w-full">
+                        {showWriteReview && (
+                            <ReviewForm
+                                reviewsRef={reviewsRef}
+                                setShowWriteReview={setShowWriteReview}
+                            />
+                        )}
+                    </div>
                 </div>
             ) : (
                 <>
@@ -72,10 +78,9 @@ export const ReviewsBox = () => {
                                 onClick={() => {
                                     setShowWriteReview(true);
                                     setTimeout(() => {
-                                        window.scrollTo({
-                                            top: 2100,
-                                            behavior: 'smooth'
-                                        });
+                                        if (reviewFormRef.current) {
+                                            reviewFormRef.current.scrollIntoView({ behavior: 'smooth' });
+                                        }
                                     }, 100);
                                 }}
                                 className="py-2 px-4 bg-red-700 text-white rounded-sm">Write Review
@@ -99,9 +104,13 @@ export const ReviewsBox = () => {
                         </div>
                     </div>
                     {showWriteReview && (
-                        <ReviewForm
+                        <div ref={reviewFormRef} className="w-full">
+                            <ReviewForm
                             setShowWriteReview={setShowWriteReview}
-                        />
+                            reviewsRef={reviewsRef}
+                        /> 
+                        </div>
+                       
                     )}
                     <div className="flex rounded-md mt-10 px-4 py-4 bg-gray-300 items-center justify-between">
                         <h3 className="text-lg font-semibold">

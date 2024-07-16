@@ -41,6 +41,10 @@ export const App = () => {
             element={<Checkout />}
           />
           <Route
+            path='/SearchResults'
+            element={<ProductsPageWrapper />}
+          />
+          <Route
             path="/:categoryName"
             element={<Subcategories />}
           />
