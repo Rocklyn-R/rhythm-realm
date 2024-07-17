@@ -368,7 +368,6 @@ export const SearchBar = () => {
             return;
         }
         event.preventDefault();
-
         if (currentByBrandResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
             await searchProductsBasedOnSearch(currentByBrandResults);
         } else if (currentSubcategoryResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {

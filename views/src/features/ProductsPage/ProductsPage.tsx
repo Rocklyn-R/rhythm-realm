@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { X } from "lucide-react";
-import { selectProducts, setProducts } from "../../redux-store/ProductsSlice";
+import { selectLoadidngProducts, selectProducts, setLoadingProducts, setProducts } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
@@ -40,7 +40,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             setShowFiltersSlider(false);
         }
     };
-    const [loadingProducts, setLoadingProducts] = useState(true);
+  
+    const loadingProducts = useSelector(selectLoadidngProducts);
 
 
     useEffect(() => {
@@ -84,12 +85,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
 
     useEffect(() => {
         const fetchProducts = async () => {
+            dispatch(setLoadingProducts(true));
             dispatch(setProducts([]));
             dispatch(setProductsForFilters([])) // Clear previous products while fetching new ones
             const productsData: Product[] = await getProducts(formattedSubcategoryName);
             if (productsData) {
                 dispatch(setProducts(productsData));
                 dispatch(setProductsForFilters(productsData))
+                dispatch(setLoadingProducts(false));
             }
         };
 
@@ -101,6 +104,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             if (result) {
                 dispatch(setProducts(result));
                 dispatch(setProductsForFilters(result))
+                setLoadingProducts(false);
             }
         }
 
@@ -108,6 +112,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
         if (categoryName === 'Featured') {
             fetchDeals();
         } else if (searchTerm) {
+            dispatch(setLoadingProducts(false));
             return;
         } else {
             fetchProducts();
@@ -162,7 +167,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             <div className="flex space-between justify-center">
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
                     <RefineSearch
-                        setLoadingProducts={setLoadingProducts}
+
                         setCurrentPage={setCurrentPage}
                         searchTerm={searchTerm}
                         brand={brand}
@@ -209,7 +214,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                 </div>
                 <div className="p-10">
                     <RefineSearch
-                        setLoadingProducts={setLoadingProducts}
+                      
                         setCurrentPage={setCurrentPage}
                         searchTerm={searchTerm}
                         brand={brand}

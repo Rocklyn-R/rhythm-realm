@@ -24,7 +24,8 @@ export const ProductsSlice = createSlice({
         reviews: [] as Review[],
         featuredDeals: [] as Product[],
         newArrivals: [] as Product[],
-        topSellers: [] as Product[]
+        topSellers: [] as Product[],
+        loadingProducts: true,
     },
     reducers: {
         setCategories: (state, action: PayloadAction<Category[]>) => {
@@ -59,6 +60,9 @@ export const ProductsSlice = createSlice({
         },
         setAverageRating: (state, action) => {
             state.selectedProduct.avg_rating = action.payload;
+        },
+        setLoadingProducts: (state, action) => {
+            state.loadingProducts = action.payload;
         }
     }
 });
@@ -74,7 +78,8 @@ export const {
     setTopSellers,
     setReviews,
     addReview,
-    setAverageRating
+    setAverageRating,
+    setLoadingProducts
 } = ProductsSlice.actions
 
 export const selectCategories = (state: RootState) => state.products.categories;
@@ -86,5 +91,6 @@ export const selectFeaturedDeals = (state: RootState) => state.products.featured
 export const selectNewArrivals = (state: RootState) => state.products.newArrivals;
 export const selectTopSellers = (state: RootState) => state.products.topSellers;
 export const selectReviews = (state: RootState) => state.products.reviews;
+export const selectLoadidngProducts = (state: RootState) => state.products.loadingProducts;
 
 export default ProductsSlice.reducer;

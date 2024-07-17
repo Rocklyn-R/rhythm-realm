@@ -39,10 +39,9 @@ interface RefineSearchProps {
     brand: string;
     searchTerm: string;
     setCurrentPage: (arg0: number) => void;
-    setLoadingProducts: (arg0: boolean) => void;
 }
 
-export const RefineSearch: React.FC<RefineSearchProps> = ({ setLoadingProducts, setCurrentPage, searchTerm, brand, subcategoryName }) => {
+export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, searchTerm, brand, subcategoryName }) => {
     const manufacturers = useSelector(selectManufacturersFilter);
     const selectedBrands = useSelector(selectSelectedManufacturers);
     const priceDrop = useSelector(selectPriceDrop);
@@ -213,18 +212,17 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setLoadingProducts, 
             getCategories(productsForFilters);
             getManufacturers(productsForFilters)
             setUpdatingFilters(false);
-            setLoadingProducts(false);
-            setLoadingProducts(false);   
+
         }
         if (searchTerm) {
             getCategories(searchResultProducts);
             getManufacturers(searchResultProducts)
             setUpdatingFilters(false);
-            setLoadingProducts(false);   
+    
     
         }
          // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [productsForFilters, searchResultProducts, searchTerm, setLoadingProducts])
+    }, [productsForFilters, searchResultProducts, searchTerm])
 
     useEffect(() => {
         if (!updatingFilters) {
