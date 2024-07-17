@@ -1,10 +1,9 @@
 import { Input } from "antd";
 import { useEffect, useCallback, useState, ChangeEvent, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
-import { getFeaturedDeals, getManufacturers, getProducts, getFeaturedItemManufacturers } from "../../../api/products";
-import { getFeaturedCategories, getFeaturedSubcategories } from "../../../api/categories";
+import { getFeaturedDeals, getProducts } from "../../../api/products";
 import { selectProducts, setProducts } from "../../../redux-store/ProductsSlice";
-import { Product } from "../../../types/types";
+import { Product, ProductResult } from "../../../types/types";
 import { GoDash } from "react-icons/go";
 import { GoPlus } from "react-icons/go";
 import { useSelector } from "react-redux";
@@ -27,20 +26,23 @@ import {
     setSubcategories,
     selectSelectedSubcategories,
     setSelectedSubcategories,
-    clearFilters
+    clearFilters,
+    selectProductsForFilters
 } from "../../../redux-store/FiltersSlice";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { selectSearchResultProducts } from "../../../redux-store/SearchSlice";
-
+import { sortCategoriesArray } from "../../../utilities/utilities";
 
 interface RefineSearchProps {
     products: Product[];
     subcategoryName: string;
     brand: string;
     searchTerm: string;
+    setCurrentPage: (arg0: number) => void;
+    setLoadingProducts: (arg0: boolean) => void;
 }
 
-export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, subcategoryName }) => {
+export const RefineSearch: React.FC<RefineSearchProps> = ({ setLoadingProducts, setCurrentPage, searchTerm, brand, subcategoryName }) => {
     const manufacturers = useSelector(selectManufacturersFilter);
     const selectedBrands = useSelector(selectSelectedManufacturers);
     const priceDrop = useSelector(selectPriceDrop);
@@ -52,7 +54,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
     const [showBrands, setShowBrands] = useState(brand ? true : false);
     const [showSavings, setShowSavings] = useState(false);
     const [showPrice, setShowPrice] = useState(false);
-    const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals" || subcategoryName === "Top Sellers");
+    const isFeatured = subcategoryName === 'Sale' || subcategoryName === "New Arrivals" || subcategoryName === "Top Sellers";
     const categories = useSelector(selectCategoriesFilter);
     const selectedCategories = useSelector(selectSelectedCategories);
     const [showCategories, setShowCategories] = useState(false);
@@ -69,10 +71,13 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
     const { categoryName } = useParams();
     const searchResultProducts = useSelector(selectSearchResultProducts);
     const location = useLocation();
+    const productsForFilters = useSelector(selectProductsForFilters);
+
+
 
     useEffect(() => {
-        setUpdatingFilters(true); // Increment to trigger re-render
-      }, [location]);
+        setUpdatingFilters(true);
+    }, [location]);
 
     useEffect(() => {
         if (priceMin) {
@@ -103,18 +108,20 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
         if (priceDrop) {
             setShowPriceDrop(true)
         }
+         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
 
-    const handleClearAll = (clearBrandParameter: boolean) => {
-        if(brand && clearBrandParameter) {
+    const handleClearAll = useCallback((clearBrandParameter: boolean) => {
+        if (brand && clearBrandParameter) {
             navigate(`/${categoryName}/${subcategoryName}/`)
         }
         setUpdatingFilters(true);
         dispatch(clearFilters());
         setTempPriceMin("");
         setTempPriceMax("");
-    };
+        setCurrentPage(1);
+    }, [brand, navigate, categoryName, subcategoryName, dispatch, setTempPriceMin, setTempPriceMax, setCurrentPage, setUpdatingFilters]);
 
     const checkFilters = useCallback(() => {
         const active =
@@ -136,9 +143,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
 
 
     const handleSelectBrand = (manufacturer: string) => {
+        setCurrentPage(1);
         setUpdatingFilters(true);
         if (selectedBrands.includes(manufacturer)) {
-            if(brand) {
+            if (brand) {
                 navigate(`/${categoryName}/${subcategoryName}/`)
             }
             dispatch(setSelectedManufacturers(selectedBrands.filter(b => b !== manufacturer)));
@@ -158,47 +166,83 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
         }
     }, [allProducts]);
 
+    const getManufacturers = (product: (Product | ProductResult)[]) => {
+        const uniqueBrands = Array.from(
+            new Set(
+                product
+                    .filter(product =>
+                        (selectedCategories.length === 0 || selectedCategories.includes(product.category_name)) &&
+                        (selectedSubcategories.length === 0 || selectedSubcategories.includes(product.subcategory_name)) &&
+                        (!priceDrop || product.sale_price) &&
+                        (!priceMin || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) >= parseFloat(priceMin))) &&
+                        (!priceMax || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) <= parseFloat(priceMax)))
+                    )
+                    .map(product => product.manufacturer)
+            )
+        ).sort((a, b) => a.localeCompare(b));          
+        dispatch(setManufacturers(uniqueBrands));
+        if (brand) {
+            dispatch(setSelectedManufacturers([brand]));
+        }
+    }
+
+    const getCategories = useCallback((products: Product[] | ProductResult[]) => {
+        const uniqueCategories = Array.from(
+            new Set(products.map(result => result.category_name))
+        );
+        dispatch(setCategories(sortCategoriesArray(uniqueCategories)));
+    }, [dispatch])
+
+    const fetchSubcategories = useCallback((products: (Product | ProductResult)[]) => {
+        const uniqueSubcategories = Array.from(
+            new Set(
+                products.filter(product => selectedCategories.includes(product.category_name) &&
+                    (selectedBrands.length === 0 || selectedBrands.includes(product.manufacturer)) &&
+                    (!priceDrop || product.sale_price) &&
+                    (!priceMin || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) >= parseFloat(priceMin))) &&
+                    (!priceMax || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) <= parseFloat(priceMax)))
+                )
+                    .map(product => product.subcategory_name)
+            )
+        );
+        dispatch(setSubcategories(uniqueSubcategories));
+    }, [dispatch, priceDrop, priceMax, priceMin, selectedBrands, selectedCategories])
+
+    useEffect(() => {
+        if (!searchTerm) {
+            getCategories(productsForFilters);
+            getManufacturers(productsForFilters)
+            setUpdatingFilters(false);
+            setLoadingProducts(false);
+            setLoadingProducts(false);   
+        }
+        if (searchTerm) {
+            getCategories(searchResultProducts);
+            getManufacturers(searchResultProducts)
+            setUpdatingFilters(false);
+            setLoadingProducts(false);   
+    
+        }
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [productsForFilters, searchResultProducts, searchTerm, setLoadingProducts])
+
     useEffect(() => {
         if (!updatingFilters) {
             return;
         }
-        const manufacturersFetch = async () => {
-            const result: string[] = await getManufacturers(subcategoryName, priceDrop, priceMin, priceMax);
-            if (result) {
-                dispatch(setManufacturers(result));
-                if (brand) {
-                    dispatch(setSelectedManufacturers([brand]));
-                }
-            }
-        }
-        const featuredManufacturersFetch = async () => {
-            const result: string[] = await getFeaturedItemManufacturers(marketingLabel, selectedCategories, selectedSubcategories, priceMin, priceMax);
-            if (result) {
-                dispatch(setManufacturers(result));
-            }
-        }
+
         if (!isFeatured && updatingFilters && !searchTerm) {
-            manufacturersFetch();
+            getManufacturers(productsForFilters);
             setUpdatingFilters(false);
         } else if (isFeatured && updatingFilters && !searchTerm) {
-            featuredManufacturersFetch();
+            getManufacturers(productsForFilters);
             setUpdatingFilters(false);
         }
         if (searchTerm && updatingFilters) {
-            const uniqueBrands = Array.from(
-                new Set(
-                  searchResultProducts
-                    .filter(product => 
-                      (selectedCategories.length === 0 || selectedCategories.includes(product.category_name)) &&
-                      (selectedSubcategories.length === 0 || selectedSubcategories.includes(product.subcategory_name))
-                    )
-                    .map(product => product.manufacturer)
-                )
-              );
-              dispatch(setManufacturers(uniqueBrands));
-              setUpdatingFilters(false);
+            getManufacturers(searchResultProducts);
+            setUpdatingFilters(false);
         }
-
+ // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, brand, marketingLabel, updatingFilters, priceDrop, isFeatured, selectedCategories, selectedSubcategories, subcategoryName, priceMin, priceMax]);
 
 
@@ -211,7 +255,8 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             handleClearAll(false);
             dispatch(setSelectedManufacturers([]));
         }
-    }, [brand]);
+        
+    }, [brand, dispatch, handleClearAll]);
 
     useEffect(() => {
 
@@ -230,14 +275,14 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
         }
         if (!isFeatured && !searchTerm) {
             filteredProductsFetch();
-        
+
         }
-        if (isFeatured && !searchTerm ) {
+        if (isFeatured && !searchTerm) {
             filteredSaleProductsFetch();
-           
+
         }
         if (searchTerm) {
-            const filteredProducts = searchResultProducts.filter(product => 
+            const filteredProducts = searchResultProducts.filter(product =>
                 (selectedCategories.length === 0 || selectedCategories.includes(product.category_name)) &&
                 (selectedSubcategories.length === 0 || selectedSubcategories.includes(product.subcategory_name)) &&
                 (selectedBrands.length === 0 || selectedBrands.includes(product.manufacturer)) &&
@@ -246,10 +291,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
                 (!priceMax || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) <= parseFloat(priceMax)))
             )
             dispatch(setProducts(filteredProducts));
-      
+
         }
 
-    }, [dispatch, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);
+    }, [dispatch, searchTerm, searchResultProducts, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;
@@ -260,6 +305,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             setTempPriceMin("")
             dispatch(setPriceMin(undefined));
         }
+        setCurrentPage(1);
     };
 
     const handleMaxChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -271,49 +317,46 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             setTempPriceMax("");
             dispatch(setPriceMax(undefined));
         }
+        setCurrentPage(1);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             if (tempPriceMin === "") {
                 dispatch(setPriceMin(undefined))
+                setCurrentPage(1);
             } else {
                 dispatch(setPriceMin(tempPriceMin));
+                setCurrentPage(1);
             }
             if (tempPriceMax === "") {
                 dispatch(setPriceMax(undefined))
+                setCurrentPage(1);
             } else {
                 dispatch(setPriceMax(tempPriceMax));
+                setCurrentPage(1);
             }
         }
     };
 
     useEffect(() => {
         if (!updatingFilters) {
-            //console.log("PREVENTION");
             return;
         }
-        const fetchCategories = async () => {
-            const result = await getFeaturedCategories(marketingLabel, selectedBrands, priceMin, priceMax);
-            if (result) {
-                dispatch(setCategories(result));
-            }
-        }
+
         if (isFeatured && updatingFilters && !searchTerm) {
-            fetchCategories();
-            setUpdatingFilters(false);
+            getCategories(productsForFilters);
+            setUpdatingFilters(false)
         }
         if (searchTerm && updatingFilters) {
-            const uniqueCategories = Array.from(
-                new Set(searchResultProducts.map(result => result.category_name))
-              );
-            dispatch(setCategories(uniqueCategories));
-            setUpdatingFilters(false);
+            getCategories(searchResultProducts);
+            setUpdatingFilters(false)
         }
-        
-    }, [searchTerm, searchResultProducts, updatingFilters, marketingLabel, isFeatured, selectedBrands, priceMin, priceMax]);
+
+    }, [searchTerm, productsForFilters, getCategories, location, searchResultProducts, updatingFilters, marketingLabel, isFeatured, selectedBrands, priceMin, priceMax]);
 
     const handleSelectCategory = (category: string) => {
+        setCurrentPage(1);
         setUpdatingFilters(true);
         if (selectedCategories.includes(category)) {
             dispatch(setSelectedCategories(selectedCategories.filter(b => b !== category)));
@@ -323,6 +366,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
     }
 
     const handleSelectSubcategory = (subcategory: string) => {
+        setCurrentPage(1);
         setUpdatingFilters(true);
         if (selectedSubcategories.includes(subcategory)) {
             dispatch(setSelectedSubcategories(selectedSubcategories.filter(s => s !== subcategory)));
@@ -335,32 +379,18 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
         if (!updatingFilters) {
             return;
         }
-        const fetchSubcategories = async () => {
-            let result: string[];
-            if (selectedCategories.length > 0) {
-                result = await getFeaturedSubcategories(marketingLabel, selectedCategories, selectedBrands, priceMin, priceMax);
-            } else {
-                result = await getFeaturedSubcategories(marketingLabel);
-            }
-            if (result) {
-                dispatch(setSubcategories(result));
-            }
-        }
+
         if (updatingFilters && !searchTerm) {
-            fetchSubcategories();
+            fetchSubcategories(productsForFilters);
             setUpdatingFilters(false);
         }
         if (updatingFilters && searchTerm) {
-            const uniqueSubcategories = Array.from(
-                new Set(
-                  searchResultProducts
-                    .filter(product => selectedCategories.includes(product.category_name))
-                    .map(product => product.subcategory_name)
-                )
-              );
-            dispatch(setSubcategories(uniqueSubcategories));
+            fetchSubcategories(searchResultProducts);
+            setUpdatingFilters(false);
         }
-    }, [selectedCategories, marketingLabel, selectedBrands, priceMin, priceMax]);
+
+
+    }, [selectedCategories, productsForFilters, searchResultProducts, fetchSubcategories, searchTerm, updatingFilters, marketingLabel, selectedBrands, priceMin, priceMax]);
 
     useEffect(() => {
         if (updatingFilters) {
@@ -370,7 +400,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             const filteredSubcategories = selectedSubcategories.filter(subcategory => subcategories.includes(subcategory));
             dispatch(setSelectedSubcategories(filteredSubcategories));
         }
-
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updatingFilters]);
 
     useEffect(() => {
@@ -381,7 +411,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             const filteredBrands = selectedBrands.filter(brand => manufacturers.includes(brand));
             dispatch(setSelectedManufacturers(filteredBrands));
         }
-
+  // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updatingFilters])
 
     useEffect(() => {
@@ -392,6 +422,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
             const filteredCategories = selectedCategories.filter(category => categories.includes(category));
             dispatch(setSelectedCategories(filteredCategories))
         }
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [updatingFilters]);
 
     const handleClearPriceMinMax = () => {
@@ -399,6 +430,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
         dispatch(setPriceMin(undefined));
         setTempPriceMax("");
         dispatch(setPriceMax(undefined));
+        setCurrentPage(1);
     }
 
 
@@ -436,7 +468,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
 
                 </div>
             )}
-            {(isFeatured && selectedCategories.length > 0) || (selectedCategories.length > 0 && searchTerm) && (
+            {(((isFeatured && selectedCategories.length > 0) || (selectedCategories.length > 0 && searchTerm)) && (subcategories.length > 1)) && (
                 <div className="border-t-2 border-gray-200 py-4">
                     <div className="flex items-center justify-between w-full">
                         <h4 className="font-semibold">Subcategory</h4>
@@ -463,7 +495,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
                     </div>
                 </div>
             )}
-            {manufacturers.length > 0 && (
+            {manufacturers.length > 1 && (
                 <div className="border-t-2 border-gray-200 py-4 w-full">
                     <div className="flex items-center justify-between w-full">
                         <h4 className="font-semibold">Brand</h4>
@@ -512,6 +544,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
                                 checked={priceDrop}
                                 onChange={() => {
                                     dispatch(setPriceDrop(!priceDrop));
+                                    setCurrentPage(1);
                                     setUpdatingFilters(true);
                                 }}
                             />
@@ -526,7 +559,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ searchTerm, brand, s
                 <div className="flex items-center justify-between w-full">
                     <div className="flex items-center">
                         <h4 className="font-semibold">Price</h4>
-                        {priceMin || priceMax && <button onClick={() => handleClearPriceMinMax()} className="ml-1 text-red-800 text-sm hover:underline">(Clear)</button>}
+                        {(priceMin || priceMax) && <button onClick={() => handleClearPriceMinMax()} className="ml-1 text-red-800 text-sm hover:underline">(Clear)</button>}
                     </div>
 
                     <button onClick={() => setShowPrice(!showPrice)}>{showPrice ? <GoDash className="text-2xl text-gray-500" /> : <GoPlus className="text-2xl text-gray-500" />}</button>

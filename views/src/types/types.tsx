@@ -87,6 +87,7 @@ export interface FilterState {
     selectedCategories: string[];
     subcategories: string[];
     selectedSubcategories: string[];
+    productsForFilters: Product[];
 }
 
 export interface Review {

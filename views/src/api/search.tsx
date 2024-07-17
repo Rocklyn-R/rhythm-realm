@@ -44,7 +44,7 @@ export const getRecommendedProducts = async (subcategories: string[], brand?: st
             url += `&subcategories=${subcategoriesParam}`;
         }
 
-        //console.log(url);
+   
         const response = await fetch(url);
         const data = await response.json();
 
@@ -59,7 +59,7 @@ export const getRecommendedProducts = async (subcategories: string[], brand?: st
 
 export const getProductSearchResults = async (subcategories: string[], brand?: string) => {
     try {
-        console.log("RUNS");
+
         let url = `http://localhost:4000/search/search-results?brand=${brand}`;
         // Append categories to the URL if provided
         if (subcategories && subcategories.length > 0) {
@@ -76,7 +76,7 @@ export const getProductSearchResults = async (subcategories: string[], brand?: s
             return data.products;
         } else return "FAILED"
     } catch (error) {
-        console.log(error);
+   
         throw error;
     }
 }

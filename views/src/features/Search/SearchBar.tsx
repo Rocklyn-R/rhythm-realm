@@ -1,14 +1,12 @@
 import { IoSearch } from "react-icons/io5";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { getProductSearchResults, getRecommendedProducts, getSearchByBrand, getSearchByProduct, getSearchSubcategories } from "../../api/search";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProductResults, selectSubcategoryByBrandResults, selectSubcategoryResults, setProductsResults, setRecommendedProductResults, setSearchResultProducts, setSearchTermParams, setSubcategoryByBrandResults, setSubcategoryResults } from "../../redux-store/SearchSlice";
 import { SearchResults } from "./SearchResults/SearchResults";
-import { ProductResult, Subcategory, SubcategoryByBrand, SubcategoryResult } from "../../types/types";
-import e from "express";
+import { ProductResult, SubcategoryByBrand, SubcategoryResult } from "../../types/types";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setProducts } from "../../redux-store/ProductsSlice";
-import { setCategories } from "../../redux-store/FiltersSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 export const SearchBar = () => {
@@ -32,7 +30,7 @@ export const SearchBar = () => {
             const termsArray = decodedSearchParameter.split(' ').filter(term => term.trim() !== '');
             dispatch(setSearchTermParams(termsArray));
         }
-    }, [searchParameter]);
+    }, [searchParameter, dispatch]);
 
     const handleFocus = () => {
         setIsFocused(true);
@@ -73,7 +71,7 @@ export const SearchBar = () => {
         return () => {
             clearTimeout(timerId); // Cleanup on component unmount or when searchTerms changes
         };
-    }, [searchTerms]);
+    }, [searchTerms, dispatch]);
 
     const clearOtherResults = (resultToKeep: string) => {
         if (currentByBrandResults.length > 0 && resultToKeep !== 'bybrand') {
@@ -132,9 +130,7 @@ export const SearchBar = () => {
                     }
                     return matchesAllTerms;
                 });
-                //clearOtherResults('bybrand');
-                //dispatch(reducerToUse(filteredResults));
-                //}
+     
                 if (filteredResults.length > 0) {
                     if (filteredResults.length !== byBrandResults.length && searchType === "searchbar") {
                         clearOtherResults('bybrand');
@@ -198,7 +194,7 @@ export const SearchBar = () => {
                             || result.variant_name?.toLowerCase().includes(lowerCaseTerm)
                     })
                     if (!matchesAllTerms) {
-                        let newTerm = termsToUse.find((term, index) => {
+                        termsToUse.find((term, index) => {
                             const lowerCaseTerm = term.toLowerCase();
                             const foundInNewResults = newResults.some(newResult =>
                                 newResult.subcategory_name.toLowerCase().includes(lowerCaseTerm)
@@ -212,7 +208,7 @@ export const SearchBar = () => {
                     }
                     return matchesAllTerms;
                 })
-                if (filteredResults.length !== productsResults.length || filteredResults.length !== newResults.length && searchType === "searchbar") {
+                if (((filteredResults.length !== productsResults.length) || (filteredResults.length !== newResults.length)) && searchType === "searchbar") {
                     clearOtherResults('products');
                     dispatch(reducerToUse(filteredResults));
                     return true;
@@ -276,6 +272,7 @@ export const SearchBar = () => {
                     return matchesAllTerms;
                 });
                 if (searchType === "searchbar") {
+                    clearOtherResults("subcategories");
                     dispatch(reducerToUse(filteredResults));
                 }
 
@@ -290,8 +287,8 @@ export const SearchBar = () => {
                     return false;
                 }
             } else {
-                //clearOtherResults('subcategories');
                 if (searchType === "searchbar") {
+                    clearOtherResults('subcategories');
                     dispatch(reducerToUse(subcategoryResults));
                     return true;
                 } else {
@@ -305,7 +302,7 @@ export const SearchBar = () => {
         }
     }
 
-    const searchRecommendedProducts = async (results: SubcategoryByBrand[] | SubcategoryResult[]) => {
+    const searchRecommendedProducts = useCallback( async(results: SubcategoryByBrand[] | SubcategoryResult[]) => {
         const brand = ('manufacturer' in results[0]) ? (results as SubcategoryByBrand[])[0].manufacturer : undefined;
         const subcategories = results.map(result => result.subcategory_name);
 
@@ -314,19 +311,19 @@ export const SearchBar = () => {
         if (searchRecommended) {
             dispatch(setRecommendedProductResults(searchRecommended));
         }
-    }
+    }, [dispatch])
 
     useEffect(() => {
         if (currentByBrandResults.length > 0) {
             searchRecommendedProducts(currentByBrandResults);
         }
-    }, [currentByBrandResults]);
+    }, [currentByBrandResults, searchRecommendedProducts]);
 
     useEffect(() => {
         if (currentSubcategoryResults.length > 0) {
             searchRecommendedProducts(currentSubcategoryResults);
         }
-    }, [currentSubcategoryResults]);
+    }, [currentSubcategoryResults, searchRecommendedProducts]);
 
     useEffect(() => {
 
@@ -341,7 +338,7 @@ export const SearchBar = () => {
                         const newBrandSearch = await searchByManufacturer("searchbar", nonmatchingIndex, debouncedSearchTerms, setSubcategoryByBrandResults);
                         if (!newBrandSearch) {
                             const brandNonmatchingIndex = debouncedSearchTerms.indexOf(brandNonmatchingTerm!);
-                            const prodSearch = await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
+                            await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
                         }
                     }
                 }
@@ -353,16 +350,15 @@ export const SearchBar = () => {
         }
 
         performSearch();
+          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearchTerms]);
 
     const searchProductsBasedOnSearch = async (results: SubcategoryByBrand[] | SubcategoryResult[]) => {
         const brand = ('manufacturer' in results[0]) ? (results as SubcategoryByBrand[])[0].manufacturer : undefined;
         const subcategories = results.map(result => result.subcategory_name);
-        //console.log(subcategories);
         const productSearchResults = await getProductSearchResults(subcategories, brand);
         if (productSearchResults) {
             dispatch(setProducts(productSearchResults));
-            //console.log(productSearchResults);
             dispatch(setSearchResultProducts(productSearchResults));
         }
     }
@@ -372,26 +368,23 @@ export const SearchBar = () => {
             return;
         }
         event.preventDefault();
-        console.log(searchTerms);
-        //console.log(currentByBrandResults);
-        //console.log(currentSubcategoryResults);
-        //console.log(currentProductResults);
+
         if (currentByBrandResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
             await searchProductsBasedOnSearch(currentByBrandResults);
         } else if (currentSubcategoryResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
             await searchProductsBasedOnSearch(currentSubcategoryResults);
-            //console.log("RUNNING TOO");
+        
         } else if (currentProductResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
             dispatch(setProducts(currentProductResults));
             dispatch(setSearchResultProducts(currentProductResults));
         } else {
             const performSearch = async () => {
                 if (searchTerms.length > 0) {
-                    //console.log(searchTerms);
+                
                     const brandSearch = await searchByManufacturer("keywords", 0, searchTerms, setSubcategoryByBrandResults);
-                    console.log(brandSearch);
+                
                     if (!brandSearch) {
-                        console.log("PERFORMING SUbcat  SEARCH")
+            
                         const subcatSearch = await searchSubcategories("keywords", searchTerms, setSubcategoryResults);
                         if (!subcatSearch) {
                             const nonmatchingIndex = searchTerms.indexOf(nonmatchingTerm!);
@@ -417,7 +410,6 @@ export const SearchBar = () => {
                         } else {
                             if (Array.isArray(subcatSearch)) {
                                 await searchProductsBasedOnSearch(subcatSearch);
-                                console.log(subcatSearch);
                             }
 
                         }
@@ -439,7 +431,7 @@ export const SearchBar = () => {
             //dispatch(setSearchResultProducts([]));
             //dispatch(setProducts([]));
         }
-        //console.log(searchTerms);
+
         navigate(`/SearchResults?searchTerm=${encodeURIComponent(searchInput)}`)
         setSearchTerms([]);
         clearOtherResults("none");
@@ -456,7 +448,7 @@ export const SearchBar = () => {
                     <input
                         value={searchInput}
                         onFocus={handleFocus}
-                        onBlur={() => searchTerms.length === 0 || (searchTerms[0] && searchTerms[0].length < 3) && handleBlur()}
+                        onBlur={() => (searchTerms.length === 0 || (searchTerms[0] && searchTerms[0].length < 3)) && handleBlur()}
                         onChange={handleChange}
                         placeholder="Enter search term..."
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-red-900 focus:border-red-900 focus:outline-red-900 h-12 p-2.5 w-full z-40"

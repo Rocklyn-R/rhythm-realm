@@ -118,7 +118,7 @@ export const getFeaturedDeals = async (
             url += `&subcategories=${subcategoriesParam}`;
         }
         // Append manufacturers to the URL if it's provided
-        //console.log(manufacturers);
+     
         if (manufacturers && manufacturers.length > 0) {
             const manufacturersParam = manufacturers.join(',');
             url += `&manufacturers=${manufacturersParam}`;
@@ -137,7 +137,7 @@ export const getFeaturedDeals = async (
         if (priceMax !== undefined) {
             url += `&priceMax=${priceMax}`;
         }
-        //console.log(url);
+    
         const response = await fetch(url);
         const data = await response.json();
 
@@ -236,7 +236,7 @@ export const getAverageRating = async (product_id: number) => {
             return data.avg_rating[0].avg_rating;
         }
     } catch (error) {
-        console.log(error);
+     
         throw error;
     }
 }

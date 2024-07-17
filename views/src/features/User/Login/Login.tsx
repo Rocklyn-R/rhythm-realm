@@ -43,7 +43,6 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                 } else {
                     const previousCart = await getItemsFromCart();
                     if (previousCart.cart.length === 0) {
-                        console.log("RANNN")
                         dispatch(setCartMode("current"));
                         toggleLogin();
                     } else if (_.isEqual(previousCart.cart, cart)) {

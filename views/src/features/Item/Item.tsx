@@ -29,7 +29,6 @@ export const Item = () => {
         const fetchSelectedProduct = async () => {
             const selectedProductData = await getSelectedProduct(productName!, variantName!);
             if (selectedProductData) {
-                console.log(selectedProductData);
                 dispatch(setSelectedProduct(selectedProductData));
                 const variantData = await getAllVariants(selectedProductData.id);
                 if (variantData) {
@@ -110,7 +109,7 @@ export const Item = () => {
                         <div className="flex flex-col border-gray-400 border-b pb-6 mb-4 w-full space-y-3">
                             <p>Condition: New</p>
                             <p className="font-semibold text-green-700">In-stock</p>
-                            <a onClick={scrollToItemDescription} className="cursor-pointer underline">View Item Description</a>
+                            <button onClick={scrollToItemDescription} className="cursor-pointer underline">View Item Description</button>
                         </div>
 
                         {variants.length > 1 && <Variants />}

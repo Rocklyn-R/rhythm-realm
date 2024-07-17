@@ -48,7 +48,6 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                 }
                 return item; // Keep other products unchanged
             });
-            console.log(updatedProductsForSelection);
             setProductsForSelection(updatedProductsForSelection);
 
         }

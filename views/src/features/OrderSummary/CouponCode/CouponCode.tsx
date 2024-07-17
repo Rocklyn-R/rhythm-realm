@@ -31,7 +31,7 @@ export const CouponCode = () => {
                     const newTotal = currentTotal - (currentTotal * foundCoupon.discount);
                     const taxRate = FiftyStates.find(state => state.abbreviation === US_State)?.tax_rate;
                     if (taxRate) {
-                        console.log(shippingCost);
+                   
                         let totalTax;
                         let totalWithTax;
                         const totalWithCouponAndShipping = shippingCost
@@ -40,8 +40,7 @@ export const CouponCode = () => {
 
                         totalTax = totalWithCouponAndShipping * taxRate;
                         totalWithTax = totalWithCouponAndShipping + totalTax;
-                        console.log(totalTax);
-                        console.log(totalWithTax);
+                    
                         dispatch(setSalesTax(totalTax.toFixed(2)));
                         dispatch(setTotalWithTax(totalWithTax.toFixed(2)));
                     }

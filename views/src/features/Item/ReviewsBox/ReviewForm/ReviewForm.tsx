@@ -1,10 +1,9 @@
-import { StarRateSharp } from "@mui/icons-material";
 import { Rating } from "@mui/material";
 import { Input } from "antd"
 import { useEffect, useState } from "react";
 import { FaX } from "react-icons/fa6";
 import { useSelector } from "react-redux";
-import { selectEmail, selectFirstName, selectIsAuthenticated } from "../../../../redux-store/UserSlice";
+import { selectFirstName, selectIsAuthenticated } from "../../../../redux-store/UserSlice";
 import { getAverageRating, postReview } from "../../../../api/products";
 import { addReview, selectSelectedProduct, setAverageRating } from "../../../../redux-store/ProductsSlice";
 import { useDispatch } from "react-redux";
@@ -19,13 +18,11 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
     const [headline, setHeadline] = useState("");
     const [comments, setComments] = useState("");
     const [firstName, setFirstName] = useState("");
-    const [email, setEmail] = useState("");
     const [wouldRecommend, setWouldRecommend] = useState<boolean | null>(null);
     const [rating, setRating] = useState<number | null>(null);
     const [orderNumber, setOrderNumber] = useState<string | null>(null);
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const userFirstName = useSelector(selectFirstName);
-    const userEmail = useSelector(selectEmail);
     const selectedProduct = useSelector(selectSelectedProduct);
     const [showSuccessMessage, setShowSuccessMessage] = useState(false);
     const [missingRating, setMissingRating] = useState("");
@@ -35,17 +32,9 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
     useEffect(() => {
         if (isAuthenticated) {
             setFirstName(userFirstName);
-            setEmail(userEmail);
         }
-    }, [isAuthenticated])
+    }, [isAuthenticated, userFirstName])
 
-    /* product_id: string,
-    rating: number,
-    title: string,
-    review: string,
-    name: string,
-    recommend: boolean,
-    order_id: string */
 
     const handleSubmitReview = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -53,17 +42,17 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
         if (headline && comments && firstName && (wouldRecommend !== null) && rating) {
 
             const reviewData = await postReview(selectedProduct.id, rating, headline, comments, firstName, wouldRecommend, orderNumber);
-            console.log(reviewData);
+
             if (reviewData) {
                 setShowSuccessMessage(true);
-                console.log(reviewData);
+
                 dispatch(addReview(reviewData));
                 if (reviewsRef.current) {
                     reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
                 }
                 setShowWriteReview(false);
                 const newAverageRating = await getAverageRating(selectedProduct.id);
-                console.log(newAverageRating);
+
                 if (newAverageRating) {
                     dispatch(setAverageRating(newAverageRating));
                 }
@@ -84,7 +73,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                 setShowWriteReview(false);
             }, 5000);
         }
-    }, [showSuccessMessage]);
+    }, [showSuccessMessage, setShowSuccessMessage, setShowWriteReview]);
 
 
     return (

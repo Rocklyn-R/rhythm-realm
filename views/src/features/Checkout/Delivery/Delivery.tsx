@@ -109,7 +109,6 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         if (!cityInput) newErrors.city = "City is required";
         if (!US_state) newErrors.US_state = "State is required";
         if (!zipCodeInput) newErrors.zipCode = "Zip code is required";
-        console.log(errors);
         setErrors(newErrors);
 
         // Return true if no errors

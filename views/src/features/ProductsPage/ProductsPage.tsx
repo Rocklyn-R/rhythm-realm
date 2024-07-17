@@ -1,9 +1,8 @@
 import { useParams } from "react-router-dom";
 import { X } from "lucide-react";
-import { selectCategories, selectProducts, selectSubcategories, setProducts, setSubcategories } from "../../redux-store/ProductsSlice";
+import { selectProducts, setProducts } from "../../redux-store/ProductsSlice";
 import { useSelector } from "react-redux";
-import React, { useEffect, useState, useRef, ReactEventHandler } from "react";
-import { getSubcategories } from "../../api/categories";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { getProducts } from "../../api/products";
 import { Product } from "../../types/types";
@@ -13,13 +12,9 @@ import { SortBy } from "./SortBy/SortBy";
 import { getFeaturedDeals } from "../../api/products";
 import { IoCaretBack, IoCaretForward } from "react-icons/io5";
 import {
-    setSelectedManufacturers,
-    setPriceDrop,
-    setPriceMin,
-    setPriceMax,
-    setSelectedCategories,
-    setSelectedSubcategories
+    setProductsForFilters
 } from "../../redux-store/FiltersSlice";
+import { LoadingProducts } from "./Loading/Loading";
 
 
 interface ProductsPageProps {
@@ -29,9 +24,6 @@ interface ProductsPageProps {
 
 export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand }) => {
     const { categoryName, subcategoryName } = useParams<{ categoryName: string, subcategoryName?: string }>();
-    const allCategories = useSelector(selectCategories)
-    const [id, setId] = useState<number>();
-    const allSubcategories = useSelector(selectSubcategories);
     const dispatch = useDispatch();
     const allProducts = useSelector(selectProducts);
     const [productVariantsMap, setProductVariantsMap] = useState<Record<string, Product[]>>({});
@@ -48,15 +40,10 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             setShowFiltersSlider(false);
         }
     };
+    const [loadingProducts, setLoadingProducts] = useState(true);
 
 
-/*    useEffect(() => {
-        if (allCategories.length > 0) {
-            setId(allCategories.find(item => item.name === categoryName)!.id)
-        }
-    }, [allCategories, categoryName])*/
-
-   useEffect(() => {
+    useEffect(() => {
         if (allProducts) {
             const newProductVariantsMap = allProducts.reduce((acc: Record<string, Product[]>, product: Product) => {
                 if (!acc[product.id]) {
@@ -94,40 +81,26 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
     };
 
 
-  /*  useEffect(() => {
-        const fetchSubcategories = async () => {
-          
-            if (id) {
-                const subcategoryData = await getSubcategories(id);
-                if (subcategoryData) {
-                    dispatch(setSubcategories(subcategoryData))
-                }
-            }
-
-        }
-        if (allSubcategories.length === 0 && !searchTerm) {
-            fetchSubcategories();
-        }
-    }, [dispatch, id, allSubcategories.length]);*/
-
 
     useEffect(() => {
         const fetchProducts = async () => {
-            console.log("FETCHES")
-            dispatch(setProducts([])); // Clear previous products while fetching new ones
+            dispatch(setProducts([]));
+            dispatch(setProductsForFilters([])) // Clear previous products while fetching new ones
             const productsData: Product[] = await getProducts(formattedSubcategoryName);
             if (productsData) {
                 dispatch(setProducts(productsData));
+                dispatch(setProductsForFilters(productsData))
             }
         };
 
         const fetchDeals = async () => {
             const marketingLabel = subcategoryName === "Sale" ? "On Sale" : subcategoryName === "New Arrivals" ? "New Arrival" : "Top Seller";
-            console.log("FETCH");
+      
             const result = await getFeaturedDeals(marketingLabel);
-            console.log(marketingLabel);
+      
             if (result) {
                 dispatch(setProducts(result));
+                dispatch(setProductsForFilters(result))
             }
         }
 
@@ -142,7 +115,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
 
 
 
-    }, [dispatch, formattedSubcategoryName, categoryName]);
+    }, [dispatch, formattedSubcategoryName, categoryName, searchTerm, subcategoryName]);
 
     const handleNextPage = () => {
         setCurrentPage(prevPage => prevPage + 1);
@@ -183,12 +156,14 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
 
     return (
         <div className="flex flex-col mb-14">
-           {formattedSubcategoryName ? (
-            <h2 className="text-3xl text-center font-bold mb-6">{brand ? brand : ""} {formattedSubcategoryName}:</h2>
-           ) : <h2 className="text-3xl text-center font-bold mb-6">Showing search results for "{searchTerm}":</h2> } 
+            {formattedSubcategoryName ? (
+                <h2 className="text-3xl text-center font-bold mb-6">{brand ? brand : ""} {formattedSubcategoryName}:</h2>
+            ) : <h2 className="text-3xl text-center font-bold mb-6">Showing search results for "{searchTerm}":</h2>}
             <div className="flex space-between justify-center">
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
                     <RefineSearch
+                        setLoadingProducts={setLoadingProducts}
+                        setCurrentPage={setCurrentPage}
                         searchTerm={searchTerm}
                         brand={brand}
                         products={uniqueProducts}
@@ -205,14 +180,17 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                         setCurrentPage={setCurrentPage}
                         setShowFiltersSlider={setShowFiltersSlider}
                     />
-                    <Products
-                        uniqueProducts={currentProducts} // Render current page products
-                        productVariantsMap={productVariantsMap}
-                        sortedProducts={uniqueProducts} // Pass all uniqueProducts for sorting purposes
-                    />
+                    {loadingProducts ? <LoadingProducts /> :
+
+                        <Products
+                            uniqueProducts={currentProducts} // Render current page products
+                            productVariantsMap={productVariantsMap}
+                            sortedProducts={uniqueProducts} // Pass all uniqueProducts for sorting purposes
+                        />}
+
                 </div>
             </div>
-            
+
             <div className="bg-white flex w-full justify-center space-x-2 py-8 mt-2 shadow-md">
                 <button className={`flex items-center ${currentPage === 1 ? 'text-gray-400' : ''}`} onClick={handlePreviousPage} disabled={currentPage === 1}><IoCaretBack className="mr-2" />Previous</button>
                 {/* Render page number buttons */}
@@ -231,7 +209,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                 </div>
                 <div className="p-10">
                     <RefineSearch
-                     searchTerm={searchTerm}
+                        setLoadingProducts={setLoadingProducts}
+                        setCurrentPage={setCurrentPage}
+                        searchTerm={searchTerm}
                         brand={brand}
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}

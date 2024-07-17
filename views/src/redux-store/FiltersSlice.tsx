@@ -14,6 +14,7 @@ export const FiltersSlice = createSlice({
         selectedCategories: [],
         subcategories: [],
         selectedSubcategories: [],
+        productsForFilters: []
     } as FilterState,
 
     reducers: {
@@ -51,6 +52,9 @@ export const FiltersSlice = createSlice({
             state.priceMax = undefined;
             state.selectedSubcategories = [];
             state.priceDrop = false;
+        },
+        setProductsForFilters: (state, action) => {
+            state.productsForFilters = action.payload;
         }
     }
 })
@@ -65,7 +69,8 @@ export const {
    setSelectedCategories,
    setSubcategories,
    setSelectedSubcategories,
-   clearFilters
+   clearFilters,
+   setProductsForFilters
 } = FiltersSlice.actions;
 
 export const selectManufacturersFilter = (state: RootState) => state.filters.manufacturers;
@@ -77,30 +82,6 @@ export const selectCategoriesFilter = (state: RootState) => state.filters.catego
 export const selectSelectedCategories = (state: RootState) => state.filters.selectedCategories;
 export const selectSubcategoriesFilter = (state: RootState) => state.filters.subcategories;
 export const selectSelectedSubcategories = (state: RootState) => state.filters.selectedSubcategories;
+export const selectProductsForFilters = (state: RootState) => state.filters.productsForFilters;
 
 export default FiltersSlice.reducer;
-/*const [manufacturers, setManufacturers] = useState<string[]>([])
-const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-const [priceDrop, setPriceDrop] = useState(false);
-const [showPriceDrop, setShowPriceDrop] = useState(true);
-const [priceMin, setPriceMin] = useState<string | undefined>(undefined);
-const [priceMax, setPriceMax] = useState<string | undefined>(undefined);
-const [tempPriceMin, setTempPriceMin] = useState<string>('');
-const [tempPriceMax, setTempPriceMax] = useState<string>('');
-const [showBrands, setShowBrands] = useState(false);
-const [showSavings, setShowSavings] = useState(false);
-const [showPrice, setShowPrice] = useState(false);
-const [isFeatured, setIsSale] = useState((subcategoryName === 'Sale') || subcategoryName === "New Arrivals");
-const [categories, setCategories] = useState<string[]>([]);
-const [selectedCategories, setSelectedCategories] = useState<string[]>([])
-const [showCategories, setShowCategories] = useState(false);
-const [subcategories, setSubcategories] = useState<string[]>([]);
-const [showSubcategories, setShowSubcategories] = useState(false);
-const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
-const allProducts = useSelector(selectProducts);
-const [isFilterActive, setIsFilterActive] = useState(false);
-const dispatch = useDispatch();
-const [updatingFilters, setUpdatingFilters] = useState(true);
-const marketingLabel = subcategoryName === "Sale" ? "On Sale" :
-subcategoryName === "New Arrivals" ? "New Arrival" :
-"";*/

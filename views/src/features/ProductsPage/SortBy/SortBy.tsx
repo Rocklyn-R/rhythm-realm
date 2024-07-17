@@ -25,7 +25,6 @@ export const SortBy: React.FC<SortByProps> = ({ setShowFiltersSlider, setCurrent
     }
 
     const handleSelectDisplayValue: SelectProps['onChange'] = (value) => {
-        console.log(totalProducts);
         setDisplayValue(value);
         if (totalProducts < value) {
             setCurrentPage(1);
@@ -44,6 +43,7 @@ export const SortBy: React.FC<SortByProps> = ({ setShowFiltersSlider, setCurrent
                     height: "50px",
                     fontFamily: "Montserrat",
                     fontSize: "2rem",
+                    width: "200px"
                 }}
                 options={[
                     ...options.map(option => ({
