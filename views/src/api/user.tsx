@@ -32,25 +32,25 @@ export const createNewUser = async (name: string, lastName: string, email: strin
 export const signInUser = async (email: string, password: string) => {
     try {
         const response = await fetch('http://localhost:4000/user/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            email,
-            password,
-        }),
-        credentials: 'include'
-    });
-    const responseData = await response.json();
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+            credentials: 'include'
+        });
+        const responseData = await response.json();
 
         if (!response.ok) {
-            return { error: "Incorrect email or password"}
+            return { error: "Incorrect email or password" }
         }
         return { user: responseData.user };
     } catch (error: any) {
-        return { error: "Incorrect email or password"}
-    } 
+        return { error: "Incorrect email or password" }
+    }
 }
 
 export const checkAuthentication = async () => {
@@ -70,7 +70,7 @@ export const checkAuthentication = async () => {
         } else return { user: data.user };
 
     } catch (error: any) {
-       return { error: 'User not signed in '}
+        return { error: 'User not signed in ' }
     }
 }
 
@@ -83,9 +83,79 @@ export const logoutUser = async () => {
             },
             credentials: 'include'
         });
-       return response.status;
-       
+        return response.status;
+
     } catch (error: any) {
-       return { error: error }
+        return { error: error }
+    }
+}
+
+export const updateUserName = async (first_name: string, last_name: string) => {
+    try {
+        const response = await fetch('http://localhost:4000/user/user-name', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                first_name,
+                last_name,
+            }),
+            credentials: 'include'
+        });
+        
+        if (response.ok) {
+            return true;
+        }
+    } catch (error: any) {
+
+        throw error;
+    }
+}
+
+export const updateUserEmail = async (email: string) => {
+    try {
+        const response = await fetch('http://localhost:4000/user/email', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                email
+            }),
+            credentials: 'include'
+        });
+        if (response.ok) {
+            return true;
+        }
+    } catch (error: any) {
+        throw error;
+    }
+}
+
+export const updateUserPassword = async (oldPassword: string, newPassword: string) => {
+    try {
+        const response = await fetch('http://localhost:4000/user/update-password', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ oldPassword, newPassword })
+        })
+
+        const data = await response.json();
+        console.log(data.message);
+
+        if (response.ok) {
+            //console.log('Success');
+            return 'Success';
+        } else if (!response.ok && data.message === 'Old password incorrect') {
+            return 'Old password incorrect';
+        } else {
+            throw new Error('Failed to update user email')
+        }
+    } catch (error) {
+        console.log(error)
     }
 }

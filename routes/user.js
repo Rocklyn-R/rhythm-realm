@@ -1,6 +1,6 @@
 const express = require('express');
 const passport = require('passport');
-const { createUser, checkAuthenticated } = require('../controllers/user');
+const { createUser, checkAuthenticated, updateUserName, updateEmail, updateUserPassword } = require('../controllers/user');
 const router = express.Router();
 
 const userRouter = express.Router();
@@ -30,5 +30,10 @@ userRouter.get('/auth', checkAuthenticated, (req, res) => {
     return res.status(200).json({ user: req.user })
 });
 
+userRouter.put('/user-name', checkAuthenticated, updateUserName);
+
+userRouter.put('/email', checkAuthenticated, updateEmail);
+
+userRouter.put('/update-password', checkAuthenticated, updateUserPassword);
 
 module.exports = userRouter;

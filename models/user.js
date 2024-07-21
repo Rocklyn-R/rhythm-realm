@@ -31,10 +31,47 @@ const findUserById = async (id) => {
 };
 
 
+const userNameUpdate = async (first_name, last_name, user_id) => {
+    const query = `UPDATE users
+   SET first_name = $1, last_name = $2
+   WHERE id = $3`;
+    try {
+        const result = await db.query(query, [first_name, last_name, user_id]);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 
+const emailUpdate = async (email, user_id) => {
+    const query = `UPDATE users
+   SET email = $1
+   WHERE id = $2`;
+    try {
+        const result = await db.query(query, [email, user_id]);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
+
+const passwordUpdate = async (password, user_id) => {
+    const query = `UPDATE users
+    SET password = $1
+    WHERE id = $2`
+    try {
+        const result = await db.query(query, [password, user_id]);
+        return result;
+    } catch (error) {
+        throw error;
+    }
+}
 
 module.exports = {
     userCreate,
     findUserByEmail,
     findUserById,
+    userNameUpdate,
+    emailUpdate,
+    passwordUpdate
 };

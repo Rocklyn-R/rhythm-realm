@@ -12,6 +12,7 @@ import { useFetchWishList } from './hooks/useFetchWishList';
 import { ScrollTop } from './utilities/ScrollTop';
 import { ProductsPageWrapper } from './wrappers/ProductsPageWrapper';
 import { WishList } from './features/WishList/WishList';
+import { AccountSettings } from './features/AccountSettings/AccountSettings';
 
 
 export const App = () => {
@@ -47,6 +48,10 @@ export const App = () => {
           <Route 
             path="/WishList"
             element={<WishList />}
+          />
+          <Route 
+            path="/AccountSettings"
+            element={<AccountSettings />}
           />
           <Route
             path="/:categoryName"

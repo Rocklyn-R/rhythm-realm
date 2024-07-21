@@ -33,6 +33,11 @@ export const UserAccount: React.FC<UserAccountProps> = ({ isOpen, toggleUserAcco
         navigate('/WishList');
     }
 
+    const handleClickProfile = () => {
+        toggleUserAccount();
+        navigate('/AccountSettings');
+    }
+
     return (
         <div
             ref={slidingLoginRef}
@@ -44,15 +49,17 @@ export const UserAccount: React.FC<UserAccountProps> = ({ isOpen, toggleUserAcco
                     onClick={() => toggleUserAccount()}
                 ><X /></button>
             </div>
-            
+
             <div className="mx-4 py-8 px-4 border border-black mt-8 w-5/6">
                 <h4 className="text-center font-bold text-xl">My Account</h4>
                 <div className="flex items-center hover:underline cursor-pointer mt-4 mb-2 text-lg">
                     <FaTruck className="mr-2" /> <p>Track Order</p>
                 </div>
-                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
-                    <IoSettingsSharp className="mr-2" /><p>Profile Settings</p>
-                </div>
+                <button
+                    onClick={() => handleClickProfile()}
+                    className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
+                    <IoSettingsSharp className="mr-2" /><p>Account Settings</p>
+                </button>
                 <button
                     onClick={() => handleClickWishList()}
                     className="flex items-center hover:underline cursor-pointer mb-2 text-lg"
