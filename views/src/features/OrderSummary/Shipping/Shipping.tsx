@@ -136,6 +136,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
                     />
                     <div className="w-1/3">
                         <Input
+                            name="Zip Code"
                             placeholder="Zip Code"
                             className="ml-2"
                             onChange={(e) => setZipCodeInput(e.target.value)}

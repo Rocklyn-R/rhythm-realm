@@ -21,10 +21,10 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
         e.preventDefault();
         try {
             const response = await createNewUser(firstName, lastName, email, password);
-    
+            console.log(response);
             if (response.error) {
                 if (response.error === 'User with this email already exists') {
-                    setErrorMessage("User with this email already exists. Try a different email");
+                    setErrorMessage("User with this email already exists. Try a different email.");
                 } else {
                     setErrorMessage('Failed to sign up');
                     console.error(response.details); // Log details for debugging
@@ -49,29 +49,34 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
             className="flex flex-col justify-center items-center w-full pt-6 pb-8 border-b-2 border-gray-300"
         >
             <form
+                id="signup"
                 className="flex flex-col justify-center items-center"
                 onSubmit={handleCreateUser}
             >
                 <div className=" bg-red-800 rounded-md w-5/6 p-6">
                     <Input
+                        name="First name"
                         placeholder="First name"
                         className="mb-6"
                         required
                         onChange={(e) => setFirstName(e.target.value)}
                     />
                     <Input
+                        name="Last name"
                         placeholder="Last name"
                         className="mb-6"
                         required
                         onChange={(e) => setLastName(e.target.value)}
                     />
                     <Input
+                        name="Email"
                         placeholder="Email"
                         className="mb-6"
                         required
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <Input.Password
+                        name="Password"
                         placeholder="Password"
                         className="mb-6 text-xl"
                         required
@@ -86,6 +91,7 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                 >
                     Create Account
                 </button>
+                {errorMessage && <p className="mt-6 text-red-800">{errorMessage}</p>}
             </form>
         </div>
     )

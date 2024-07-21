@@ -26,6 +26,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
         try {
             // Make a POST request to your server's signup endpoint using fetch
             const response = await signInUser(email, password);
+            console.log(response);
             if (response.error) {
                 setErrorMessage('Incorrect email or password. Try again.');
                 setEmail('');
@@ -66,17 +67,21 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
             className="flex flex-col justify-center items-center w-full pt-6 pb-8 border-b-2 border-gray-300"
         >
             <form
+                id="login"
                 className="flex flex-col justify-center items-center"
                 onSubmit={handleLogin}
             >
                 <div className=" bg-red-800 rounded-md w-5/6 p-6">
                     <Input
+                        name="email"
                         placeholder="Email"
                         className="mb-6"
                         onChange={(e) => setEmail(e.target.value)}
                         required
+                        autoComplete="Email"
                     />
                     <Input.Password
+                        name="Password"
                         placeholder="Password"
                         className="text-xl"
                         onChange={(e) => setPassword(e.target.value)}
@@ -90,6 +95,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                 >
                     Sign in
                 </button>
+                {errorMessage && <p className="mt-6 text-red-800">{errorMessage}</p>}
             </form>
         </div>
 

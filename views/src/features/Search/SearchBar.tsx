@@ -1,12 +1,12 @@
 import { IoSearch } from "react-icons/io5";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { getProductSearchResults, getRecommendedProducts, getSearchByBrand, getSearchByProduct, getSearchSubcategories } from "../../api/search";
 import { useDispatch, useSelector } from "react-redux";
 import { selectProductResults, selectSubcategoryByBrandResults, selectSubcategoryResults, setProductsResults, setRecommendedProductResults, setSearchResultProducts, setSearchTermParams, setSubcategoryByBrandResults, setSubcategoryResults } from "../../redux-store/SearchSlice";
 import { SearchResults } from "./SearchResults/SearchResults";
 import { ProductResult, SubcategoryByBrand, SubcategoryResult } from "../../types/types";
 import { useLocation, useNavigate } from "react-router-dom";
-import { setProducts } from "../../redux-store/ProductsSlice";
+import { setLoadingProducts, setProducts } from "../../redux-store/ProductsSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
 export const SearchBar = () => {
@@ -23,7 +23,7 @@ export const SearchBar = () => {
     const searchParams = new URLSearchParams(location.search);
     const searchParameter = searchParams.get('searchTerm');
     const searchInputRef = useRef<HTMLInputElement>(null);
-
+   
     useEffect(() => {
         if (searchParameter) {
             const decodedSearchParameter = decodeURIComponent(searchParameter);
@@ -34,9 +34,6 @@ export const SearchBar = () => {
 
     const handleFocus = () => {
         setIsFocused(true);
-        if (!searchInput) {
-            setDebouncedSearchTerms([]);
-        }
     };
 
     const handleBlur = () => {
@@ -58,6 +55,7 @@ export const SearchBar = () => {
         // Debounce logic to set debouncedSearchTerms after 500ms of no typing
         const timerId = setTimeout(() => {
             if (searchTerms.length > 0 && searchTerms[0].length >= 3) {
+                
                 setDebouncedSearchTerms([...searchTerms]);
             } else {
                 setDebouncedSearchTerms([]);
@@ -74,21 +72,24 @@ export const SearchBar = () => {
     }, [searchTerms, dispatch]);
 
     const clearOtherResults = (resultToKeep: string) => {
-        if (currentByBrandResults.length > 0 && resultToKeep !== 'bybrand') {
+        if (resultToKeep === "none") {
             dispatch(setSubcategoryByBrandResults([]));
             dispatch(setRecommendedProductResults([]));
-        }
-        if (currentProductResults.length > 0 && resultToKeep !== 'products') {
+            dispatch(setProductsResults([]));
+            dispatch(setSubcategoryResults([]));
+        } else if (currentByBrandResults.length > 0 && resultToKeep !== 'bybrand') {
+            dispatch(setSubcategoryByBrandResults([]));
+            dispatch(setRecommendedProductResults([]));
+        } else if (currentProductResults.length > 0 && resultToKeep !== 'products') {
             dispatch(setProductsResults([]));
             dispatch(setRecommendedProductResults([]));
-        }
-        if (currentSubcategoryResults.length > 0 && resultToKeep !== 'subcategories') {
+        } else if (currentSubcategoryResults.length > 0 && resultToKeep !== 'subcategories') {
             dispatch(setSubcategoryResults([]));
             dispatch(setRecommendedProductResults([]));
         }
     }
 
-    //Search By Brand First Then Filter By Subcategory
+
     let brandNonmatchingTerm: string | undefined;
     const searchByManufacturer = async (
         searchType: "keywords" | "searchbar",
@@ -130,7 +131,7 @@ export const SearchBar = () => {
                     }
                     return matchesAllTerms;
                 });
-     
+
                 if (filteredResults.length > 0) {
                     if (filteredResults.length !== byBrandResults.length && searchType === "searchbar") {
                         clearOtherResults('bybrand');
@@ -302,7 +303,7 @@ export const SearchBar = () => {
         }
     }
 
-    const searchRecommendedProducts = useCallback( async(results: SubcategoryByBrand[] | SubcategoryResult[]) => {
+    const searchRecommendedProducts = async (results: SubcategoryByBrand[] | SubcategoryResult[]) => {
         const brand = ('manufacturer' in results[0]) ? (results as SubcategoryByBrand[])[0].manufacturer : undefined;
         const subcategories = results.map(result => result.subcategory_name);
 
@@ -311,19 +312,26 @@ export const SearchBar = () => {
         if (searchRecommended) {
             dispatch(setRecommendedProductResults(searchRecommended));
         }
-    }, [dispatch])
+    }
 
     useEffect(() => {
         if (currentByBrandResults.length > 0) {
             searchRecommendedProducts(currentByBrandResults);
+        } else {
+            setRecommendedProductResults([]);
         }
-    }, [currentByBrandResults, searchRecommendedProducts]);
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentByBrandResults]);
 
     useEffect(() => {
         if (currentSubcategoryResults.length > 0) {
             searchRecommendedProducts(currentSubcategoryResults);
         }
-    }, [currentSubcategoryResults, searchRecommendedProducts]);
+        else {
+            setRecommendedProductResults([]);
+        }
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentSubcategoryResults]);
 
     useEffect(() => {
 
@@ -350,7 +358,7 @@ export const SearchBar = () => {
         }
 
         performSearch();
-          // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedSearchTerms]);
 
     const searchProductsBasedOnSearch = async (results: SubcategoryByBrand[] | SubcategoryResult[]) => {
@@ -360,37 +368,55 @@ export const SearchBar = () => {
         if (productSearchResults) {
             dispatch(setProducts(productSearchResults));
             dispatch(setSearchResultProducts(productSearchResults));
+            dispatch(setLoadingProducts(false));
         }
     }
+    useEffect(() => {
+        const urlPattern = /^\/SearchResults\?searchTerm=.+$/;
+        if (urlPattern.test(location.pathname + location.search)) {
+            const searchParams = new URLSearchParams(location.search);
+            const searchTerm = searchParams.get('searchTerm');
+            if (searchTerm) {
+                const termsArray = searchTerm.split(' ');
+                submitSearchForProducts(termsArray);
+                console.log(searchTerm);
+            }
+        }
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location]);
 
-    const submitSearchForProducts = async (event: any) => {
-        if (!searchInput) {
+    const submitSearchForProducts = async (terms: string[], event?: any, submit?: string) => {
+        if (!searchInput && submit === "search") {
             return;
         }
-        event.preventDefault();
-        if (currentByBrandResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
-            await searchProductsBasedOnSearch(currentByBrandResults);
-        } else if (currentSubcategoryResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
-            await searchProductsBasedOnSearch(currentSubcategoryResults);
         
-        } else if (currentProductResults.length > 0 && searchTerms.length === debouncedSearchTerms.length) {
+        if (event) {
+            event.preventDefault();
+        }
+
+        if (currentByBrandResults.length > 0 && terms.length === debouncedSearchTerms.length) {
+            await searchProductsBasedOnSearch(currentByBrandResults);
+        } else if (currentSubcategoryResults.length > 0 && terms.length === debouncedSearchTerms.length) {
+            await searchProductsBasedOnSearch(currentSubcategoryResults);
+
+        } else if (currentProductResults.length > 0 && terms.length === debouncedSearchTerms.length) {
             dispatch(setProducts(currentProductResults));
             dispatch(setSearchResultProducts(currentProductResults));
         } else {
             const performSearch = async () => {
-                if (searchTerms.length > 0) {
-                
-                    const brandSearch = await searchByManufacturer("keywords", 0, searchTerms, setSubcategoryByBrandResults);
-                
+                if (terms.length > 0) {
+
+                    const brandSearch = await searchByManufacturer("keywords", 0, terms, setSubcategoryByBrandResults);
+
                     if (!brandSearch) {
-            
-                        const subcatSearch = await searchSubcategories("keywords", searchTerms, setSubcategoryResults);
+
+                        const subcatSearch = await searchSubcategories("keywords", terms, setSubcategoryResults);
                         if (!subcatSearch) {
-                            const nonmatchingIndex = searchTerms.indexOf(nonmatchingTerm!);
-                            const newBrandSearch = await searchByManufacturer("keywords", nonmatchingIndex, searchTerms, setSubcategoryByBrandResults);
+                            const nonmatchingIndex = terms.indexOf(nonmatchingTerm!);
+                            const newBrandSearch = await searchByManufacturer("keywords", nonmatchingIndex, terms, setSubcategoryByBrandResults);
                             if (!newBrandSearch) {
-                                const brandNonmatchingIndex = searchTerms.indexOf(brandNonmatchingTerm!);
-                                const prodSearch = await searchProducts("keywords", brandNonmatchingIndex, searchTerms, setProductsResults);
+                                const brandNonmatchingIndex = terms.indexOf(brandNonmatchingTerm!);
+                                const prodSearch = await searchProducts("keywords", brandNonmatchingIndex, terms, setProductsResults);
                                 if (!prodSearch) {
                                     dispatch(setProducts([]));
                                     dispatch(setSearchResultProducts([]));
@@ -399,6 +425,7 @@ export const SearchBar = () => {
                                     if (Array.isArray(prodSearch)) {
                                         dispatch(setProducts(prodSearch));
                                         dispatch(setSearchResultProducts(prodSearch));
+                                        dispatch(setLoadingProducts(false));
                                     }
                                 }
                             } else {
@@ -423,19 +450,20 @@ export const SearchBar = () => {
                     dispatch(setProductsResults([]));
                     dispatch(setProducts([]));
                     dispatch(setSearchResultProducts([]));
+                    dispatch(setLoadingProducts(false));
                     return;
                 }
             }
             performSearch();
-            //dispatch(setSearchResultProducts([]));
-            //dispatch(setProducts([]));
         }
 
-        navigate(`/SearchResults?searchTerm=${encodeURIComponent(searchInput)}`)
-        setSearchTerms([]);
-        clearOtherResults("none");
-        setSearchInput("");
-        handleBlur();
+        if (submit === "submit") {
+            navigate(`/SearchResults?searchTerm=${encodeURIComponent(searchInput)}`)
+            setSearchTerms([]);
+            setSearchInput("");
+            handleBlur();
+            clearOtherResults("none");
+        }
     }
 
 
@@ -443,8 +471,9 @@ export const SearchBar = () => {
         <div className="relative z-50 w-5/6 sm:w-2/3 md:w-2/3 lg:w-5/6 h-10">
             {isFocused && <div className="fixed inset-0 bg-black opacity-50" onClick={handleBlur}></div>}
             <div className="flex w-full mb-1 relative z-50">
-                <form className="w-full" onSubmit={submitSearchForProducts}>
+                <form id="searchbar" className="w-full" onSubmit={(event) => submitSearchForProducts(searchTerms, event, "submit")}>
                     <input
+                        name="search"
                         value={searchInput}
                         onFocus={handleFocus}
                         onBlur={() => (searchTerms.length === 0 || (searchTerms[0] && searchTerms[0].length < 3)) && handleBlur()}
@@ -452,6 +481,7 @@ export const SearchBar = () => {
                         placeholder="Enter search term..."
                         className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-red-900 focus:border-red-900 focus:outline-red-900 h-12 p-2.5 w-full z-40"
                         ref={searchInputRef}
+                        autoComplete="off"
                     />
                     <button type="submit" className="absolute right-0 text-2xl p-2 text-black ml-2">
                         <IoSearch className="z-50" />

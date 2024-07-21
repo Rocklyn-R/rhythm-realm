@@ -80,7 +80,7 @@ export const {
     addReview,
     setAverageRating,
     setLoadingProducts
-} = ProductsSlice.actions
+} = ProductsSlice.actions;
 
 export const selectCategories = (state: RootState) => state.products.categories;
 export const selectSubcategories = (state: RootState) => state.products.subcategories;

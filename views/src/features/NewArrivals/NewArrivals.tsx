@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { shuffleArray } from "../../utilities/utilities";
 import { clearFilters } from "../../redux-store/FiltersSlice";
 import { formatPrice } from "../../utilities/utilities";
+import ReactPlayer from "react-player";
 
 export const NewArrivals = () => {
     const dispatch = useDispatch();
@@ -196,20 +197,17 @@ export const NewArrivals = () => {
     return (
         <div className="p-10 m-4 flex flex-col bg-gradient-to-b from-darkred to-red-600">
             <div className="flex lg:flex-row flex-col items-center lg:justify-around w-full">
-                <div className="flex flex-col items-center text-white pb-4 lg:pb-0 w-full">
-                    <h1 className="lg:text-8xl xs:text-5xl font-bold">NEW</h1>
-                    <h1 className="lg:text-8xl xs:text-5xl font-bold">ARRIVALS</h1>
+                <div className="flex flex-col items-center text-white pb-4 lg:pb-0">
+                    <h1 className="lg:text-7xl xs:text-5xl font-bold">NEW</h1>
+                    <h1 className="lg:text-7xl xs:text-5xl font-bold">ARRIVALS</h1>
                 </div>
-                <div className="lg:w-3/4 sm:w-2/3 sm:h-80 xs:w-full xs:h-80">
-                    <iframe
-                        className="w-full h-full"
-                        src="https://www.youtube-nocookie.com/embed/lYFLQzkqaqc?si=nCOkLri26MfJYez9"
-                        title="YouTube video player"
-                        allow="accelerometer; autoplay; clipboard-write; gyroscope; picture-in-picture"
-                        allowFullScreen
+                <div className="lg:w-fit sm:w-2/3 xs:w-full flex justify-center">
+                    <ReactPlayer
+                        url="https://www.youtube-nocookie.com/embed/lYFLQzkqaqc?si=nCOkLri26MfJYez9"
+                        controls={true}
                     >
 
-                    </iframe>
+                    </ReactPlayer>
                 </div>
 
             </div>

@@ -27,12 +27,14 @@ export const NewsletterSignUp = () => {
             <h2 className="font-bold text-xl text-center mx-4">Be the first to know about exclusive offers, tips and more.</h2>
             {successMessage ? <p className="mt-10">{successMessage}</p> : (
                 <>
-                    <form className="flex flex-col sm:flex-row items-center w-2/3 md:w-1/2 mt-6 mb-4" onSubmit={handleSignUpForNewsletter}>
+                    <form id="newsletter-signup" className="flex flex-col sm:flex-row items-center w-2/3 md:w-1/2 mt-6 mb-4" onSubmit={handleSignUpForNewsletter}>
                         <Input
+                            name="Email"
                             placeholder="Enter Email Address"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="Email"
                         />
                         <button
                             type="submit"
@@ -44,12 +46,13 @@ export const NewsletterSignUp = () => {
                     <div className="flex flex-col w-full md:w-3/4 lg:w-1/2 items-center justify-center">
                         <div className="flex items-center justify-center w-full">
                             <input
+                                id="Terms"
                                 type="checkbox"
                                 checked={termsChecked}
                                 onChange={() => handleCheckTerms()}
                                 className="mr-3 custom-checkbox"
                             />
-                            <label className="w-2/3 md:w-full text-sm md:text-md">Yes, I would like to receive emails with news and offers from Rhythm Realm.</label>
+                            <label htmlFor="Terms" className="w-2/3 md:w-full text-sm md:text-md">Yes, I would like to receive emails with news and offers from Rhythm Realm.</label>
                         </div>
                         {termsErrorMessage && <p className="self-start text-red-800 text-sm">{termsErrorMessage}</p>}
                     </div>

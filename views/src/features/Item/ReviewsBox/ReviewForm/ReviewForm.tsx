@@ -87,10 +87,11 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                         <button onClick={() => setShowWriteReview(false)} className="absolute right-4 top-4 text-xl"><FaX /></button>
                     </div>
 
-                    <form className="space-y-6 flex flex-col" onSubmit={handleSubmitReview}>
+                    <form id="review" className="space-y-6 flex flex-col" onSubmit={handleSubmitReview}>
                         <div className="flex flex-col">
                             <label className="font-semibold mb-2">Headline:</label>
                             <Input
+                                name="Headline"
                                 placeholder="I would buy this product again and again."
                                 value={headline}
                                 onChange={(e) => setHeadline(e.target.value)}
@@ -130,6 +131,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                             {missingRecommend && <p className="text-red-800 -mt-2 mb-2">{missingRecommend}</p>}
                             <div className="flex items-center">
                                 <input
+                                    name="Would Recommend"
                                     type="radio"
                                     value="Yes"
                                     checked={wouldRecommend !== null && wouldRecommend !== false}
@@ -143,6 +145,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                             </div>
                             <div className="flex items-center mt-2">
                                 <input
+                                    name="Not Recommend"
                                     type="radio"
                                     value="No"
                                     checked={wouldRecommend !== null && wouldRecommend !== true}
@@ -158,6 +161,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                         <div className="flex flex-col">
                             <label className="font-semibold mb-2">First Name:</label>
                             <Input
+                                name="name"
                                 value={firstName}
                                 placeholder="Ex: James"
                                 onChange={(e) => setFirstName(e.target.value)}
@@ -167,6 +171,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                         <div className="flex flex-col">
                             <label className="font-semibold mb-2 flex">Order Number (optional): </label>
                             <Input
+                                name="Order No."
                                 placeholder="Ex: CFG12934920"
                                 value={orderNumber ? orderNumber : ""}
                                 onChange={(e) => setOrderNumber(e.target.value)}

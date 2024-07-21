@@ -2,7 +2,6 @@ import './App.css';
 import { Home } from './features/Home/Home';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Subcategories } from './features/Subcategories/Subcategories';
-import { ProductsPage } from "./features/ProductsPage/ProductsPage";
 import { Item } from './features/Item/Item';
 import { Layout } from './wrappers/Layout';
 import { ShoppingCart } from './features/ShoppingCart/ShoppingCart';
@@ -12,6 +11,7 @@ import { useInitializeCart } from './hooks/useInitializeCart';
 import { useFetchWishList } from './hooks/useFetchWishList';
 import { ScrollTop } from './utilities/ScrollTop';
 import { ProductsPageWrapper } from './wrappers/ProductsPageWrapper';
+import { WishList } from './features/WishList/WishList';
 
 
 export const App = () => {
@@ -43,6 +43,10 @@ export const App = () => {
           <Route
             path='/SearchResults'
             element={<ProductsPageWrapper />}
+          />
+          <Route 
+            path="/WishList"
+            element={<WishList />}
           />
           <Route
             path="/:categoryName"

@@ -109,12 +109,12 @@ export const Item = () => {
                         <div className="flex flex-col border-gray-400 border-b pb-6 mb-4 w-full space-y-3">
                             <p>Condition: New</p>
                             <p className="font-semibold text-green-700">In-stock</p>
-                            <button onClick={scrollToItemDescription} className="cursor-pointer underline">View Item Description</button>
+                            <button onClick={scrollToItemDescription} className="cursor-pointer underline flex">View Item Description</button>
                         </div>
 
                         {variants.length > 1 && <Variants />}
                         <div className={`${variants.length === 1 ? "pt-4 pb-8" : "pb-4"} border-gray-400 border-b mb-4 w-full flex items-center`}>
-                            <AddToCart />
+                            <AddToCart product={selectedProduct} />
                             <AddToWishList
                                 variant={selectedProduct}
                                 mode="Item Page"

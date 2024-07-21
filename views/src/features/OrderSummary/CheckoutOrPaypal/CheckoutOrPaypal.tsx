@@ -3,7 +3,7 @@ import PayPalLogo from '../../../images/icons/PaypalLogo.png';
 
 export const CheckoutOrPaypal = () => {
     return (
-        <div className="flex flex-col items-center mt-4">
+        <div className="flex flex-col items-center mt-4 pb-4">
             <Link to="/Checkout" className="w-full">
                 <button className="hover:bg-red-800 transition-colors duration-300 ease w-full x-36 p-4 rounded-md bg-black text-white text-xl">
                     Checkout

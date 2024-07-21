@@ -15,6 +15,7 @@ export const addItemToWishList = async (product_id: number, variant_id: number) 
 }
 
 export const removeItemFromWishList = async (product_id: number, variant_id: number) => {
+
     try {
         const response = await fetch(`http://localhost:4000/wish-list/`, {
             method: 'DELETE',

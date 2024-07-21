@@ -57,7 +57,12 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
         const variant = productsForSelection.length === 0 ? product.variant_name : productsForSelection.find(item => item.id === product.id)?.variant_name;
-        navigate(`/${categoryName}/${subcategoryName}/${product.name}${variant ? `/${variant}` : ''}`)
+        if (categoryName && subcategoryName) {
+            navigate(`/${categoryName}/${subcategoryName}/${product.name}${variant ? `/${variant}` : ''}`)
+        } else {
+            navigate(`/${product.category_name}/${product.subcategory_name}/${product.name}${variant ? `/${variant}` : ''}`)
+        }
+
     }
 
     const findProduct = (product: Product) => {
@@ -76,20 +81,23 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                 >
                     <button onClick={() => handleClickProduct(product)} className="w-full h-full flex justify-between p-2 ">
                         <div className="w-full h-full xxs:flex-col flex xs:flex-row md:flex-col justify-between">
-                            <div className="flex flex-col justify-center xs:w-1/2 sm:w-1/3 md:w-full">
-                                <div className={`${findProduct(product)?.marketing_label ? "justify-between" : "justify-end"} w-full flex mb-1 h-6 items-center`}>
+                            <div className="flex flex-col justify-center xs:w-1/2 sm:w-1/3 md:w-full relative">
+                                <div className={`${findProduct(product)?.marketing_label ? "justify-between" : "justify-end"} w-fit flex mb-1 h-6 items-center z-20`}>
                                     {findProduct(product)?.marketing_label ? <p className={`${product.marketing_label === "Top Seller" ? `bg-black` : product.marketing_label === "New Arrival" ? `bg-blue-700` : `bg-red-800`} text-white py-1 px-2 text-xs font-semibold`}>{product.marketing_label}</p> : ""}
-                                    <AddToWishList
-                                        variant={product}
-                                        mode="Products Page"
-                                    />
+
                                 </div>
-                                <div className="relative w-full overflow-hidden">
+                                <div className="w-full overflow-hidden">
                                     <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                         {productVariantsMap[product.id].map((variant, index) => (
                                             <div className="min-w-full relative" key={variant.variant_id}>
                                                 <img className="w-full" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
+                                                <AddToWishList
+                                                    variant={variant}
+                                                    key={variant.variant_id}
+                                                    mode="Products Page"
+                                                />
                                             </div>
+
                                         ))}
                                     </div>
                                 </div>

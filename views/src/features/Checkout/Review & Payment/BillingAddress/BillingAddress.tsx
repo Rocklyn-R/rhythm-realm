@@ -67,12 +67,13 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
         <div className="mt-4">
             <div className="flex items-center">
                 <input
+                    id="billingsame"
                     type="checkbox"
                     className="mr-3 w-6 h-6 custom-checkbox"
                     checked={billingSameAsShipping}
                     onChange={() => setBillingSameAsShipping(!billingSameAsShipping)}
                 />
-                <label>Billing address same as shipping</label>
+                <label htmlFor="billingsame">Billing address same as shipping</label>
             </div>
             {billingSameAsShipping ? (
                 <div className="px-6 pt-4 pb-2">
@@ -86,6 +87,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                     <div className="w-full flex">
                         <div className="w-1/2 flex flex-col">
                             <Input
+                                name="Full name"
                                 placeholder="Full Name"
                                 value={nameInput}
                                 className="w-full"
@@ -95,6 +97,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                         </div>
                         <div className="flex flex-col w-1/2 mr-2">
                             <Input
+                                name="Phone"
                                 placeholder="Phone number"
                                 className="ml-2 w-full"
                                 value={phoneInput}
@@ -105,6 +108,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                     </div>
 
                     <Input
+                        name="Address"
                         placeholder="Address"
                         className="w-full mt-4"
                         value={addressInput}
@@ -113,6 +117,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                     {errors.address && <span className="text-red-700 text-xs mt-1">{errors.address}</span>}
                     {showAptInput ? (
                         <Input
+                            name="Apt"
                             placeholder="Apt, suite, etc. (Optional)"
                             className="mt-4"
                             value={aptSuite}
@@ -127,6 +132,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                     <div className="flex">
                         <div className="flex flex-col w-1/3 mr-2 mt-4">
                             <Input
+                                name="City"
                                 placeholder="City"
                                 value={cityInput}
                                 onChange={(e) => setCityInput(e.target.value)}
@@ -142,6 +148,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
                         />
                         <div className="flex flex-col w-1/3 ml-2 mt-4">
                             <Input
+                                name="Zip Code"
                                 placeholder="Zip Code"
                                 value={zipCodeInput}
                                 onChange={(e) => setZipCode(e.target.value)}

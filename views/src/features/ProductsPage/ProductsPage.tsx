@@ -40,7 +40,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             setShowFiltersSlider(false);
         }
     };
-  
+
     const loadingProducts = useSelector(selectLoadidngProducts);
 
 
@@ -98,9 +98,9 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
 
         const fetchDeals = async () => {
             const marketingLabel = subcategoryName === "Sale" ? "On Sale" : subcategoryName === "New Arrivals" ? "New Arrival" : "Top Seller";
-      
+
             const result = await getFeaturedDeals(marketingLabel);
-      
+
             if (result) {
                 dispatch(setProducts(result));
                 dispatch(setProductsForFilters(result))
@@ -112,7 +112,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
         if (categoryName === 'Featured') {
             fetchDeals();
         } else if (searchTerm) {
-            dispatch(setLoadingProducts(false));
             return;
         } else {
             fetchProducts();
@@ -166,6 +165,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             ) : <h2 className="text-3xl text-center font-bold mb-6">Showing search results for "{searchTerm}":</h2>}
             <div className="flex space-between justify-center">
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
+
                     <RefineSearch
 
                         setCurrentPage={setCurrentPage}
@@ -174,17 +174,25 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                         products={uniqueProducts}
                         subcategoryName={formattedSubcategoryName}
                     />
+
                 </div>
                 <div className="flex flex-col w-full md:w-3/4 h-full">
-                    <SortBy
-                        uniqueProducts={uniqueProducts}
-                        sorting={sorting}
-                        setSorting={setSorting}
-                        setDisplayValue={setDisplayValue}
-                        displayValue={displayValue}
-                        setCurrentPage={setCurrentPage}
-                        setShowFiltersSlider={setShowFiltersSlider}
-                    />
+                    {!loadingProducts && uniqueProducts.length > 0 ?
+                        <SortBy
+                            uniqueProducts={uniqueProducts}
+                            sorting={sorting}
+                            setSorting={setSorting}
+                            setDisplayValue={setDisplayValue}
+                            displayValue={displayValue}
+                            setCurrentPage={setCurrentPage}
+                            setShowFiltersSlider={setShowFiltersSlider}
+                        /> : ""
+
+                    }
+                    {uniqueProducts.length === 0 && !loadingProducts &&
+                        <div className="h-80 w-full flex justify-center items-center text-xl font-semibold">
+                            No products found.
+                        </div>}
                     {loadingProducts ? <LoadingProducts /> :
 
                         <Products
@@ -214,7 +222,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                 </div>
                 <div className="p-10">
                     <RefineSearch
-                      
+
                         setCurrentPage={setCurrentPage}
                         searchTerm={searchTerm}
                         brand={brand}

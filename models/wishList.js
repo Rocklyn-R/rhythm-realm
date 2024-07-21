@@ -27,7 +27,8 @@ const wishListRemove = async (user_id, product_id, variant_id) => {
 const wishListGet = async (user_id) => {
     const query = `
     SELECT 
-    p.name AS product_name, 
+    p.name, 
+    p.id,
     p.price, 
     p.description, 
     p.manufacturer, 

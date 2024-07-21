@@ -32,6 +32,7 @@ export interface ProductResult extends SubcategoryResult, SubcategoryByBrand {
     variant_id: string;
     sale_price: string;
     price: string;
+    product_id: number;
 }
 
 export interface RecommendedProductResult extends ProductResult {
@@ -75,6 +76,7 @@ export interface User {
     wish_list: Product[];
     cartMode: "current" | "previous" | "combine" | "";
     cartQuestion: boolean;
+    isLoadingAuth: boolean;
 }
 
 export interface FilterState {

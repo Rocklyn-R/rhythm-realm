@@ -91,6 +91,7 @@ export const CouponCode = () => {
                         <div className="flex flex-col w-full pb-4">
                             <div className="flex w-full">
                                 <input
+                                    name="Coupon code"
                                     onChange={(e) => setCouponInput(e.target.value)}
                                     maxLength={7}
                                     placeholder="Coupon Code"

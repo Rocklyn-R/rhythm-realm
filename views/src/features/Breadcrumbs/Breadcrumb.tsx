@@ -6,6 +6,8 @@ export const Breadcrumbs = () => {
     const { categoryName, subcategoryName, productName, variantName } = useParams();
     const location = useLocation();
     const pathSegments = location.pathname.split('/').filter(Boolean); // Splitting the path and filtering out empty strings
+    const searchParams = new URLSearchParams(location.search);
+    const searchTerm = searchParams.get('searchTerm');
     const isLastSegment = (segment: string) => {
         // Decode the segment for comparison
         const decodedLastSegment = decodeURIComponent(pathSegments[pathSegments.length - 1]);
@@ -18,6 +20,18 @@ export const Breadcrumbs = () => {
             {location.pathname !== "/" && (
                 <>
                     <Link to="/" className="underline hover:no-underline">Home</Link>
+                </>
+            )}
+            {isLastSegment("SearchResults") && searchTerm && (
+                <>
+                    <span>/</span>
+                    <span>Search Results</span>
+                </>
+            )}
+            {isLastSegment("WishList") && (
+                <>
+                    <span>/</span>
+                    <span>Wish List</span>
                 </>
             )}
             {isLastSegment("Cart") ? (

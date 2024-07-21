@@ -449,15 +449,16 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                         style={{ maxHeight: showCategories ? `${categories.length * 40}px` : "0px" }}
                     >
                         <div className="flex flex-col items-start">
-                            {categories.map(category => (
+                            {categories.map((category, index) => (
                                 <div key={category} className="flex items-center my-2">
                                     <input
+                                        id={`category-${index}`}
                                         type="checkbox"
                                         className="mr-3 w-6 h-6 custom-checkbox"
                                         checked={selectedCategories.includes(category)}
                                         onChange={() => handleSelectCategory(category)}
                                     />
-                                    <label>{category}</label>
+                                    <label htmlFor={`category-${index}`}>{category}</label>
                                 </div>
                             ))}
 
@@ -477,15 +478,16 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                         style={{ maxHeight: showSubcategories ? `${subcategories.length * 40}px` : "0px" }}
                     >
                         <div className="flex flex-col items-start">
-                            {subcategories.map(subcategory => (
+                            {subcategories.map((subcategory, index) => (
                                 <div key={subcategory} className="flex items-center my-2">
                                     <input
+                                        id={`subcategory-${index}`}
                                         type="checkbox"
                                         className="mr-3 w-6 h-6 custom-checkbox"
                                         checked={selectedSubcategories.includes(subcategory)}
                                         onChange={() => handleSelectSubcategory(subcategory)}
                                     />
-                                    <label>{subcategory}</label>
+                                    <label htmlFor={`subcategory-${index}`}>{subcategory}</label>
                                 </div>
                             ))}
 
@@ -506,15 +508,16 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
 
 
                         <div className="flex flex-col items-start">
-                            {manufacturers.map(brand => (
+                            {manufacturers.map((brand, index) => (
                                 <div key={brand} className="flex items-center my-2">
                                     <input
+                                       id={`brand-${index}`}
                                         type="checkbox"
                                         className="mr-3 w-6 h-6 custom-checkbox"
                                         checked={selectedBrands.includes(brand)}
                                         onChange={() => handleSelectBrand(brand)}
                                     />
-                                    <label>{brand}</label>
+                                    <label htmlFor={`brand-${index}`}>{brand}</label>
                                 </div>
 
                             ))}
@@ -537,6 +540,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                     >
                         <div className="flex items-center mt-4">
                             <input
+                                id="pricedrop"
                                 type="checkbox"
                                 className="mr-3 w-6 h-6 custom-checkbox"
                                 checked={priceDrop}
@@ -546,7 +550,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                                     setUpdatingFilters(true);
                                 }}
                             />
-                            <label>Price drop</label>
+                            <label htmlFor="pricedrop">Price drop</label>
                         </div>
                     </div>
 
@@ -568,6 +572,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                 >
                     <div className="flex items-center w-full mt-4">
                         <Input
+                            name="priceMin"
                             placeholder="$ Min"
                             className="w-1/2"
                             value={tempPriceMin}
@@ -576,6 +581,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                         />
                         <GoDash className="text-4xl text-gray-400" />
                         <Input
+                            name="priceMax"
                             placeholder="$ Max"
                             className="w-1/2"
                             value={tempPriceMax}

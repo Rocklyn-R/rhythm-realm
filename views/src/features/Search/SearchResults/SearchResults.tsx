@@ -1,8 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom";
-import { getSelectedProduct } from "../../../api/products";
-import { setSelectedProduct } from "../../../redux-store/ProductsSlice";
 import {
     selectProductResults,
     selectRecommendedProductResults,
@@ -13,7 +11,7 @@ import {
     setSubcategoryByBrandResults,
     setSubcategoryResults,
 } from "../../../redux-store/SearchSlice"
-import { ProductResult, Subcategory, SubcategoryByBrand, SubcategoryResult } from "../../../types/types";
+import { ProductResult, SubcategoryByBrand, SubcategoryResult } from "../../../types/types";
 import { formatPrice } from "../../../utilities/utilities";
 import { StarRating } from "../../Item/StarRating/StarRating";
 
@@ -59,7 +57,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
 
 
     return (
-        <div className="flex w-full h-full overflow-hidden mb-1" style={{ maxHeight: '600px' }}>
+        <div className="flex w-full h-full overflow-hidden" style={{ maxHeight: '600px' }}>
         {/* Left Side - Categories or By Brand Section */}
               {/* No Results Found */}
               {debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && (
@@ -124,7 +122,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
         {productsResults.length > 0 && (
             <div className="flex flex-col w-full">
                 {productsResults.map((product, index) => (
-                    <button onClick={() => handleSelectProduct(product)} key={index} className="flex items-center w-full rounded-b-md border-b border-t p-2 bg-white">
+                    <button onClick={() => handleSelectProduct(product)} key={index} className="flex items-center w-full rounded-b-md rounded-t-md border-b border-t p-2 bg-white">
                         <img src={product.image1} width={50} alt={product.name} />
                         <p className="mx-2 hover:underline">{product.name} {product.variant_name}</p>
                     </button>
