@@ -13,7 +13,8 @@ export const UserSlice = createSlice({
         wish_list: [],
         cartMode: "",
         cartQuestion: false,
-        isLoadingAuth: true
+        isLoadingAuth: true,
+        orders: []
     } as User,
     reducers: {
         authenticateUser: (state) => {

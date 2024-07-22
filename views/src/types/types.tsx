@@ -77,6 +77,7 @@ export interface User {
     cartMode: "current" | "previous" | "combine" | "";
     cartQuestion: boolean;
     isLoadingAuth: boolean;
+    orders: [];
 }
 
 export interface FilterState {

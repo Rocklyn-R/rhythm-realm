@@ -3,8 +3,17 @@ import { useEffect, useRef, useState } from "react"
 import { MdInfoOutline, MdLock } from "react-icons/md";
 import { BillingAddress } from "./BillingAddress/BillingAddress";
 import PayPalLogo from "../../../images/icons/PaypalLogo.png";
+import { createOrder, createOrderItems } from "../../../api/order";
+import { generateOrderNumber } from "../../../utilities/utilities";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, selectShippingType, selectTotal, selectTotalWithCoupon, selectTotalWithTax } from "../../../redux-store/CartSlice";
 
-export const ReviewAndPayment = () => {
+interface ReviewAndPaymentProps {
+    setOrderComplete: (arg0: boolean) => void;
+}
+
+export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setOrderComplete }) => {
     const [selectedPayment, setSelectedPayment] = useState("Credit or Debit");
     const [showCreditOrDebit, setShowCreditOrDebit] = useState(true);
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -15,6 +24,14 @@ export const ReviewAndPayment = () => {
     const [payPalContentHeight, setPayPalContentHeight] = useState('0px')
     const creditRef = useRef<any>(null);
     const paypalRef = useRef<any>(null);
+    const cart = useSelector(selectCart);
+    const total_with_tax = useSelector(selectTotalWithTax);
+    const total = useSelector(selectTotal);
+    const total_with_coupon = useSelector(selectTotalWithCoupon);
+    const total_tax = useSelector(selectSalesTax);
+    const shipping_cost = useSelector(selectShippingCost);
+    const shipping_type = useSelector(selectShippingType);
+    const applied_coupon = useSelector(selectAppliedCoupon);
 
     const handleClickOutside = (event: any) => {
         if (infoMessageRef.current && !infoMessageRef.current.contains(event.target)) {
@@ -58,7 +75,29 @@ export const ReviewAndPayment = () => {
         } else {
             setPayPalContentHeight('0px');
         }
-    }, [showPaypal])
+    }, [showPaypal]);
+
+    const handleCompleteOrder = async () => {
+        const order_id = generateOrderNumber();
+        const discount = applied_coupon ? applied_coupon.discount.toFixed(2) : null;
+        const cost_of_shipping = shipping_cost ? shipping_cost : null;
+        const completeOrder = await createOrder(order_id,
+            total,
+            discount,
+            total_with_coupon,
+            total_tax,
+            shipping_type,
+            cost_of_shipping,
+            total_with_tax
+        );
+            console.log(completeOrder);
+        if (completeOrder) {
+            cart.forEach(async (item) => {
+                await createOrderItems(order_id, item.variant_id, item.quantity)
+            })
+        }
+        setOrderComplete(true);
+    }
 
     return (
         <div className="mt-6 flex flex-col">
@@ -166,7 +205,7 @@ export const ReviewAndPayment = () => {
                 </div>
             </div>
 
-            <button className="hover:bg-red-800 transition-colors duration-300 ease flex-1 x-36 p-4 mx-4 mt-6 rounded-md bg-black text-white text-xl self-center">Complete My Order</button>
+            <button onClick={() => handleCompleteOrder()} className="hover:bg-red-800 transition-colors duration-300 ease flex-1 x-36 p-4 mx-4 mt-6 rounded-md bg-black text-white text-xl self-center">Complete My Order</button>
         </div>
     )
 }

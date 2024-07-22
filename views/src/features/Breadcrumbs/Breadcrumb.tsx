@@ -34,6 +34,12 @@ export const Breadcrumbs = () => {
                     <span>Wish List</span>
                 </>
             )}
+            {isLastSegment("AccountSettings") && (
+                <>
+                    <span>/</span>
+                    <span>Account Settings</span>
+                </>
+            )}
             {isLastSegment("Cart") ? (
                 <>
                     <span>/</span>

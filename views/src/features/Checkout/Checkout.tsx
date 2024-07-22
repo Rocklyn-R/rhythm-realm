@@ -8,6 +8,7 @@ import { FaRegEdit } from "react-icons/fa";
 import { ReviewAndPayment } from "./Review & Payment/ReviewAndPayment";
 import { selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
+import { OrderComplete } from "./OrderComplete/OrderComplete";
 
 export const Checkout = () => {
     const name = useSelector(selectFullName);
@@ -22,6 +23,7 @@ export const Checkout = () => {
     const shippingCost = useSelector(selectShippingCost);
     const [editMode, setEditMode] = useState(address ? true : false);
     const [showReviewAndPayment, setShowReviewAndPayment] = useState(false);
+    const [orderComplete, setOrderComplete] = useState(false);
 
     const handleEditDelivery = () => {
         setEditMode(true);
@@ -29,66 +31,71 @@ export const Checkout = () => {
     }
 
     return (
-        <div className="flex justify-evenly mx-6 h-full">
-            <div className="flex flex-col w-2/3">
-                <div className="h-fit border-2 border-gray-300 p-6">
-                    <div className="flex items-end">
-                        <h1 className="text-3xl w-full mr-1 font-bold">Delivery</h1>
-                        {showReviewAndPayment && !editMode && (
-                            <button className="flex items-center text-gray-600" onClick={() => handleEditDelivery()}>
-                                <FaRegEdit />
-                                <p className="m-2 font-semibold">Edit</p>
-                            </button>
-                        )}
-                    </div>
-                    {showReviewAndPayment && !editMode ? (
-                        <div className="bg-gray-200 flex flex-col p-2 mt-6">
-                            <div className="flex justify-between">
-                                <div className="flex items-center my-1">
-                                    <TbTruck className="text-xl" />
-                                    <p className="px-2 font-semibold text-md">{shippingType}</p>
+        <>
+            {orderComplete ? (
+                <OrderComplete />
+            ) : (
+                <div className="flex justify-evenly mx-6 h-full">
+
+                    <div className="flex flex-col w-2/3">
+                        <div className="h-fit border-2 border-gray-300 p-6">
+                            <div className="flex items-end">
+                                <h1 className="text-3xl w-full mr-1 font-bold">Delivery</h1>
+                                {showReviewAndPayment && !editMode && (
+                                    <button className="flex items-center text-gray-600" onClick={() => handleEditDelivery()}>
+                                        <FaRegEdit />
+                                        <p className="m-2 font-semibold">Edit</p>
+                                    </button>
+                                )}
+                            </div>
+                            {showReviewAndPayment && !editMode ? (
+                                <div className="bg-gray-200 flex flex-col p-2 mt-6">
+                                    <div className="flex justify-between">
+                                        <div className="flex items-center my-1">
+                                            <TbTruck className="text-xl" />
+                                            <p className="px-2 font-semibold text-md">{shippingType}</p>
+                                        </div>
+                                        <p className={`font-medium ${shippingCost ? "" : "text-green-700"}`}>{shippingCost ? `$${formatPrice(shippingCost)}` : "Free"}</p>
+                                    </div>
+                                    <div className="ml-7">
+                                        <p>{name}</p>
+                                        <p>{address},{apt} {city}, {US_State} {zipCode}</p>
+                                        <p className="font-semibold my-1">Contact Information</p>
+                                        <p>{email}</p>
+                                        <p>{phone}</p>
+                                    </div>
                                 </div>
-                                <p className={`font-medium ${shippingCost ? "" : "text-green-700"}`}>{shippingCost ? `$${formatPrice(shippingCost)}` : "Free"}</p>
-                            </div>
-                            <div className="ml-7">
-                                <p>{name}</p>
-                                <p>{address},{apt} {city}, {US_State} {zipCode}</p>
-                                <p className="font-semibold my-1">Contact Information</p>
-                                <p>{email}</p>
-                                <p>{phone}</p>
-                            </div>
+                            ) : (
+                                editMode ? (
+                                    <Delivery
+                                        setEditMode={setEditMode}
+                                        editMode={editMode}
+                                        setShowReviewAndPayment={setShowReviewAndPayment}
+                                    />
+                                ) : (
+                                    <Delivery
+                                        setEditMode={setEditMode}
+                                        editMode={editMode}
+                                        setShowReviewAndPayment={setShowReviewAndPayment}
+                                    // Additional props can be added here if needed
+                                    />
+                                )
+                            )}
+
                         </div>
-                    ) : (
-                        editMode ? (
-                            <Delivery
-                                setEditMode={setEditMode}
-                                editMode={editMode}
-                                setShowReviewAndPayment={setShowReviewAndPayment}
-                            />
-                        ) : (
-                            <Delivery
-                                setEditMode={setEditMode}
-                                editMode={editMode}
-                                setShowReviewAndPayment={setShowReviewAndPayment}
-                            // Additional props can be added here if needed
-                            />
-                        )
-                    )}
 
-                </div>
-
-                <div className="h-fit border-2 border-gray-300 p-6 mt-4">
-                    <div className="flex items-end">
-                        <h1 className={`text-3xl w-full mr-1 montserrat-bold ${!showReviewAndPayment ? 'text-gray-500' : ''}`}>Review & Payment</h1>
+                        <div className="h-fit border-2 border-gray-300 p-6 mt-4">
+                            <div className="flex items-end">
+                                <h1 className={`text-3xl w-full mr-1 montserrat-bold ${!showReviewAndPayment ? 'text-gray-500' : ''}`}>Review & Payment</h1>
+                            </div>
+                            {showReviewAndPayment ? <ReviewAndPayment setOrderComplete={setOrderComplete} /> : ""}
+                        </div>
                     </div>
-                    {showReviewAndPayment ? <ReviewAndPayment /> : ""}
-        
+                    <OrderSummary
+                        page="Checkout"
+                    />
                 </div>
-
-            </div>
-            <OrderSummary
-                page="Checkout"
-            />
-        </div>
+            )}
+        </>
     )
 }

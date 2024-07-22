@@ -58,3 +58,8 @@ export const formatDate = (dateString: string) => {
     return date.fromNow(); // e.g., '1 year ago' or '2 years ago'
   }
 };
+
+export const generateOrderNumber = () => {
+  const randomNumber = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit random number
+  return `RR${randomNumber}`;
+};
