@@ -55,6 +55,9 @@ export const UserSlice = createSlice({
         },
         setIsLoadingAuth: (state, action) => {
             state.isLoadingAuth = action.payload;
+        },
+        setOrders: (state, action) => {
+            state.orders = action.payload;
         }
     }
 })
@@ -71,7 +74,8 @@ export const {
     setWishList,
     setCartMode,
     setCartQuestion,
-    setIsLoadingAuth
+    setIsLoadingAuth,
+    setOrders
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
@@ -83,5 +87,6 @@ export const selectWishList = (state: RootState) => state.user.wish_list;
 export const selectCartMode = (state: RootState) => state.user.cartMode;
 export const selectCartQuestion = (state: RootState) => state.user.cartQuestion;
 export const selectIsLoadingAuth = (state: RootState) => state.user.isLoadingAuth;
+export const selectOrders = (state: RootState) => state.user.orders;
 
 export default UserSlice.reducer;

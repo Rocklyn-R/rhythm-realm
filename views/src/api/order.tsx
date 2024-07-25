@@ -25,9 +25,9 @@ export const createOrder = async (
                 total_with_tax
             })
         });
-
+        const data = await response.json();
         if (response.ok) {
-            return true;
+            return data.order;
         }
     } catch (error) {
         console.log(error);
@@ -49,10 +49,14 @@ export const createOrderItems = async (
             body: JSON.stringify({ order_id, variant_id, quantity })
         });
 
+        const data = await response.json();
         if (response.ok) {
-            return true;
+            return data.order_item;
         }
+
     } catch (error) {
         throw error;
     }
 }
+
+

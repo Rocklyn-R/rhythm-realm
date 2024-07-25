@@ -11,9 +11,11 @@ import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, se
 
 interface ReviewAndPaymentProps {
     setOrderComplete: (arg0: boolean) => void;
+    setCurrentOrder: (arg0: any) => void;
+    setCurrentOrderItems: (arg0: any) => void;
 }
 
-export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setOrderComplete }) => {
+export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOrderItems, setCurrentOrder, setOrderComplete }) => {
     const [selectedPayment, setSelectedPayment] = useState("Credit or Debit");
     const [showCreditOrDebit, setShowCreditOrDebit] = useState(true);
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -90,12 +92,15 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setOrderComp
             cost_of_shipping,
             total_with_tax
         );
-            console.log(completeOrder);
+        setCurrentOrder(completeOrder);
         if (completeOrder) {
             cart.forEach(async (item) => {
-                await createOrderItems(order_id, item.variant_id, item.quantity)
+                const newItem = await createOrderItems(order_id, item.variant_id, item.quantity);
+                setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
+                console.log(newItem);
             })
         }
+        
         setOrderComplete(true);
     }
 

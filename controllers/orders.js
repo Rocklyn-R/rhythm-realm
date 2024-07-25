@@ -1,4 +1,4 @@
-const { orderCreate, orderItemsCreate } = require('../models/orders');
+const { orderCreate, orderItemsCreate, ordersGetById } = require('../models/orders');
 
 const createOrder = async (req, res) => {
     if (!req.user) {
@@ -30,7 +30,7 @@ const createOrder = async (req, res) => {
             total_with_tax);
            
         if (result) {
-            res.status(200).json({ message: "Order successful" })
+            res.status(200).json({ order: result })
         }
     } catch (error) {
         res.status(500).json({ message: "Internal server error" })
@@ -42,14 +42,16 @@ const createOrderItems = async (req, res) => {
     try {
         const result = await orderItemsCreate(order_id, variant_id, quantity);
         if (result) {
-            res.status(200).json({ message: "Order successful"});
+            res.status(200).json({ order_item: result });
         }
     } catch (error) {
         res.status(500).json({ message: "Internal Server Error" })
     }
 }
 
+
 module.exports = {
     createOrder,
-    createOrderItems
+    createOrderItems,
+    getOrderById
 }

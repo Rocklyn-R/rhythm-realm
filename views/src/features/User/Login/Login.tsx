@@ -23,10 +23,10 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        dispatch(setCartMode(""));
         try {
             // Make a POST request to your server's signup endpoint using fetch
             const response = await signInUser(email, password);
-            console.log(response);
             if (response.error) {
                 setErrorMessage('Incorrect email or password. Try again.');
                 setEmail('');

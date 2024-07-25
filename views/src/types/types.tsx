@@ -106,3 +106,26 @@ export interface Review {
     verified: boolean;
 }
 
+
+export interface OrderItem {
+    image1: string;
+    order_id: string;
+    price: string;
+    variant_id: string;
+    quantity: number;
+    sale_price: string;
+}
+
+export interface Order {
+    id: string;
+    discount: null | number;
+    order_date: string;
+    shipping_cost: null | string;
+    shipping_type: string;
+    status: string;
+    total: string;
+    total_tax: string;
+    total_with_coupon: string;
+    total_with_tax: string;
+    user_id: null | number;
+}

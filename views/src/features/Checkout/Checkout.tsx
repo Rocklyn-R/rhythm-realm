@@ -1,5 +1,5 @@
 import { OrderSummary } from "../OrderSummary/OrderSummary"
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Delivery } from "./Delivery/Delivery";
 import { useSelector } from "react-redux";
 import { selectAddress, selectApartment, selectCity, selectEmail, selectFullName, selectPhone, selectSelectedState, selectZipCode } from "../../redux-store/ShippingSlice";
@@ -9,6 +9,7 @@ import { ReviewAndPayment } from "./Review & Payment/ReviewAndPayment";
 import { selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
 import { OrderComplete } from "./OrderComplete/OrderComplete";
+import { Order, OrderItem } from "../../types/types";
 
 export const Checkout = () => {
     const name = useSelector(selectFullName);
@@ -24,16 +25,20 @@ export const Checkout = () => {
     const [editMode, setEditMode] = useState(address ? true : false);
     const [showReviewAndPayment, setShowReviewAndPayment] = useState(false);
     const [orderComplete, setOrderComplete] = useState(false);
+    const [currentOrder, setCurrentOrder] = useState<Order | undefined>();
+    const [currentOrderItems, setCurrentOrderItems] = useState<OrderItem[]>([]);
 
     const handleEditDelivery = () => {
         setEditMode(true);
         setShowReviewAndPayment(false);
     }
 
+ 
+
     return (
         <>
             {orderComplete ? (
-                <OrderComplete />
+                <OrderComplete currentOrder={currentOrder} currentOrderItems={currentOrderItems} />
             ) : (
                 <div className="flex justify-evenly mx-6 h-full">
 
@@ -88,7 +93,7 @@ export const Checkout = () => {
                             <div className="flex items-end">
                                 <h1 className={`text-3xl w-full mr-1 montserrat-bold ${!showReviewAndPayment ? 'text-gray-500' : ''}`}>Review & Payment</h1>
                             </div>
-                            {showReviewAndPayment ? <ReviewAndPayment setOrderComplete={setOrderComplete} /> : ""}
+                            {showReviewAndPayment ? <ReviewAndPayment setOrderComplete={setOrderComplete} setCurrentOrder={setCurrentOrder} setCurrentOrderItems={setCurrentOrderItems} /> : ""}
                         </div>
                     </div>
                     <OrderSummary

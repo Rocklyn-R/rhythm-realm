@@ -45,7 +45,7 @@ export const AddToWishList: React.FC<AddToWishListProps> = ({ mode, variant }) =
     }
 
     return (
-        <div className="absolute top-0 right-0 z-50">
+        <div className={`${mode === "Products Page" ? "absolute top-0 right-0 z-50" : ""}`}>
             {itemIsInWishList && isAuthenticated ? (
                 <FaHeart
                     className={`${mode === "Products Page" ? "flex" : "mr-4"} text-red-700 text-3xl cursor-pointer z-50`}

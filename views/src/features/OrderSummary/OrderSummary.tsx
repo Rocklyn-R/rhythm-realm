@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectShippingCost } from "../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectShippingCost, selectTotalWithTax } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
 import { MdInfoOutline } from "react-icons/md";
 import { Shipping } from "./Shipping/Shipping";
@@ -20,16 +20,25 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
     const [showTaxInfo, setShowTaxInfo] = useState(false);
     const overlayRef = useRef<any>(null);
     const estimated_tax = useSelector(selectSalesTax);
-    const [sales_tax, setSales_Tax] = useState("")
+    const [sales_tax, setSales_Tax] = useState("");
     const [total_with_tax, setTotal_With_Tax] = useState("");
-    const total_to_render = appliedCoupon ? discountedTotal : total;
+    const [total_to_render, setTotal_to_render] = useState("")
+    //const total_to_render = appliedCoupon ? discountedTotal : total;
     const dispatch = useDispatch();
     const shippingCost = useSelector(selectShippingCost);
 
     const handleShowTaxInfo = () => {
         setShowTaxInfo(true);
     }
-
+    useEffect(() => {
+        if (appliedCoupon) {
+            setTotal_to_render(discountedTotal)
+        } else {
+            setTotal_to_render(total);
+        }
+        
+    }, [appliedCoupon, discountedTotal, total]);
+    
     const handleClickOutside = (event: any) => {
         if (overlayRef.current && !overlayRef.current.contains(event.target)) {
           setShowTaxInfo(false);

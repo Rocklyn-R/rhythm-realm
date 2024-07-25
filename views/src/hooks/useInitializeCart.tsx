@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getItemsFromCart, insertMultipleIntoCart, replaceCart } from "../api/cart";
 import { selectCart, setCart } from "../redux-store/CartSlice";
-import { selectCartMode, selectIsAuthenticated } from "../redux-store/UserSlice";
+import { selectCartMode, selectIsAuthenticated, setCartMode } from "../redux-store/UserSlice";
 import { Cart } from "../types/types";
+import { removeCoupon } from "../redux-store/CartSlice";
 
 export const useInitializeCart = () => {
     const dispatch = useDispatch();
@@ -49,15 +50,22 @@ export const useInitializeCart = () => {
         }
         if (isAuthenticated && cartMode === "previous") {
                cartFetch(); 
+               dispatch(removeCoupon());
+               dispatch(setCartMode(""));
         }
         if (isAuthenticated && cartMode === "current") {
+       
             const cartReplacement = async () => {
+                console.log(cart);
+            console.log("RAN");
                 const result = await replaceCart(cart);
+                console.log(result);
                 if (result) {
                     localStorage.clear();
                 }
             }
             cartReplacement();
+            dispatch(setCartMode(""))
         }
 
         if (isAuthenticated && cartMode === "combine") {
@@ -68,6 +76,8 @@ export const useInitializeCart = () => {
                 }
             } 
             combineCart();
+            dispatch(setCartMode(""))
+            dispatch(removeCoupon());
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, isAuthenticated, cartMode]);
