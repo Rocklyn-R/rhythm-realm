@@ -49,8 +49,8 @@ export const ShoppingCart = () => {
     }
 
     return (
-        <div className="flex mx-6 justify-between">
-            <div className="w-2/3 bg-white px-4 rounded-md shadow-lg">
+        <div className="flex justify-center lg:justify-around flex-col lg:flex-row w-full ">
+            <div className="lg:w-2/3 lg:ml-4 bg-white px-4 rounded-md shadow-lg">
                 <div className="p-4 border-gray-300 flex items-end">
                     <h1 className="text-3xl mr-1 montserrat-bold">Cart</h1>
                     <p className="montserrat-light">({totalItems} items)</p>
@@ -59,8 +59,8 @@ export const ShoppingCart = () => {
                     {cart.map((item, index) => (
                         <div key={index} className="flex border-t-2 justify-between border-gray-300">
                             <div className="flex">
-                                <div>
-                                    <img alt="Item" src={item.image1} width="160" className="cursor-pointer m-6" onClick={() => selectItem(item)} />
+                                <div className="lg:w-44">
+                                    <img alt="Item" src={item.image1} className="cursor-pointer m-6 w-44" onClick={() => selectItem(item)} />
                                 </div>
                                 <div className="flex flex-col ml-6 m-6 items-start">
                                     <span className="font-semibold mb-4 cursor-pointer hover:underline" onClick={() => selectItem(item)}>{item.name} {item.variant_name}</span>

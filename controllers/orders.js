@@ -52,6 +52,5 @@ const createOrderItems = async (req, res) => {
 
 module.exports = {
     createOrder,
-    createOrderItems,
-    getOrderById
+    createOrderItems
 }

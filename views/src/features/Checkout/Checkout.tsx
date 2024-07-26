@@ -33,17 +33,22 @@ export const Checkout = () => {
         setShowReviewAndPayment(false);
     }
 
- 
+
 
     return (
         <>
+
             {orderComplete ? (
                 <OrderComplete currentOrder={currentOrder} currentOrderItems={currentOrderItems} />
             ) : (
-                <div className="flex justify-evenly mx-6 h-full">
-
-                    <div className="flex flex-col w-2/3">
-                        <div className="h-fit border-2 border-gray-300 p-6">
+                <div className="flex lg:flex-row flex-col justify-evenly mx-6 h-full">
+                    <div className="mb-4 lg:hidden">
+                        <OrderSummary
+                            page="Checkout SM"
+                        />
+                    </div>
+                    <div className="flex flex-col lg:w-2/3">
+                        <div className="h-fit bg-white rounded-md shadow-lg p-6">
                             <div className="flex items-end">
                                 <h1 className="text-3xl w-full mr-1 font-bold">Delivery</h1>
                                 {showReviewAndPayment && !editMode && (
@@ -54,7 +59,7 @@ export const Checkout = () => {
                                 )}
                             </div>
                             {showReviewAndPayment && !editMode ? (
-                                <div className="bg-gray-200 flex flex-col p-2 mt-6">
+                                <div className="bg-gray-100 flex flex-col p-2 mt-6">
                                     <div className="flex justify-between">
                                         <div className="flex items-center my-1">
                                             <TbTruck className="text-xl" />
@@ -89,16 +94,19 @@ export const Checkout = () => {
 
                         </div>
 
-                        <div className="h-fit border-2 border-gray-300 p-6 mt-4">
+                        <div className="h-fit bg-white rounded-md shadow-lg p-6 mt-4">
                             <div className="flex items-end">
                                 <h1 className={`text-3xl w-full mr-1 montserrat-bold ${!showReviewAndPayment ? 'text-gray-500' : ''}`}>Review & Payment</h1>
                             </div>
                             {showReviewAndPayment ? <ReviewAndPayment setOrderComplete={setOrderComplete} setCurrentOrder={setCurrentOrder} setCurrentOrderItems={setCurrentOrderItems} /> : ""}
                         </div>
                     </div>
-                    <OrderSummary
-                        page="Checkout"
-                    />
+                    <div className="lg:w-1/3 ml-10 lg:block hidden">
+                        <OrderSummary
+                            page="Checkout"
+                        />
+                    </div>
+
                 </div>
             )}
         </>

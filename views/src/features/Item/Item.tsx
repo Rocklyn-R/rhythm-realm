@@ -147,9 +147,9 @@ export const Item = () => {
                     <div>
                         <p className="px-14 py-10">{selectedProduct.description}</p>
                         <div className="flex justify-around">
-                            <img alt="Image1" src={selectedProduct.image1} className="w-60" />
-                            <img alt="Image2" src={selectedProduct.image2} className="w-60" />
-                            {selectedProduct.image3 && <img alt="Image3" src={selectedProduct.image3} className="w-60" />}
+                            <img alt="Image1" src={selectedProduct.image1} className="w-1/3" />
+                            <img alt="Image2" src={selectedProduct.image2} className="w-1/3" />
+                            {selectedProduct.image3 && <img alt="Image3" src={selectedProduct.image3} className="w-1/3" />}
                         </div>
                     </div>) : ""}
             </div>

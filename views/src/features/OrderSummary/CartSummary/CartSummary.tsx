@@ -115,7 +115,7 @@ export const CartSummary = () => {
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-4">
             <div className="flex justify-between mt-4">
                 <div className="flex items-center">
                     <h2 className="font-bold text-md mr-2">Your Cart</h2>

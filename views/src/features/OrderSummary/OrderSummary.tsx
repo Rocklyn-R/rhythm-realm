@@ -8,9 +8,10 @@ import { Shipping } from "./Shipping/Shipping";
 import { CheckoutOrPaypal } from "./CheckoutOrPaypal/CheckoutOrPaypal";
 import { CouponCode } from "./CouponCode/CouponCode";
 import { CartSummary } from "./CartSummary/CartSummary";
+import { FaAngleDown, FaArrowDown } from "react-icons/fa";
 
 interface OrderSummaryProps {
-    page: "Cart" | "Checkout"
+    page: "Cart" | "Checkout" | "Checkout SM"
 }
 
 export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
@@ -26,6 +27,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
     //const total_to_render = appliedCoupon ? discountedTotal : total;
     const dispatch = useDispatch();
     const shippingCost = useSelector(selectShippingCost);
+    const [showOrderSummary, setShowOrderSummary] = useState(false)
 
     const handleShowTaxInfo = () => {
         setShowTaxInfo(true);
@@ -71,9 +73,13 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
 
 
     return (
-        <div className="sticky top-0 h-full self-start w-1/3 px-4 pb-4 ml-10 bg-white rounded-md shadow-lg">
-            <h1 className="montserrat-bold text-2xl border-b-2 border-b-gray-300 p-4">Order Summary</h1>
-            <div>
+        <div className={`${page === "Checkout" ? "" : "lg:w-1/3 lg:mr-4 lg:ml-10" } sticky  lg:mx-0 top-0 self-start lg:mt-0 mt-4 px-4 bg-white rounded-md shadow-lg`}>
+            <div className={`${page === "Checkout SM" ? "text-3xl" : "text-2xl border-b-2 border-b-gray-300"} montserrat-bold p-4 flex items-center justify-between`}>
+                <h1 >Order Summary</h1>
+                {page === "Checkout SM" && <button onClick={() => setShowOrderSummary(!showOrderSummary)} className="lg:hidden"><FaAngleDown /></button>}
+            </div>
+            
+            <div className={`${page === "Checkout SM" ? `border-t-2 border-b-gray-300 sliding-content ${showOrderSummary ? 'sliding-content-visible' : 'sliding-content-hidden'}` : ''}`}>
                 <CouponCode />
 
                 <div className="flex justify-between py-4">
@@ -87,7 +93,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
                     </div>
                 ) : ""}
                 <Shipping
-                    page={page}
+                    page={page === "Checkout" || page === "Checkout SM" ? "Checkout" : "Cart"}
                     setTotal_With_Tax={setTotal_With_Tax}
                     sales_tax={sales_tax}
                     setSales_Tax={setSales_Tax}

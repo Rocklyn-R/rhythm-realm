@@ -11,7 +11,7 @@ export const Header = () => {
                     <img alt="Rhythm Realm logo" src={logo} width="250" />
                 </div>
 
-                <div className="w-full justify-center hidden sm:flex items-center">
+                <div className="w-full justify-center hidden sm:flex items-center z-40">
                     <SearchBar />
                 </div>
                 <div className="flex sm:mt-0 mt-4 items-center h-fit lg:space-x-0 space-x-6 md:w-1/3 w-1/2 sm:mr-4 md:mr-0 justify-center sm:justify-end md:justify-center">

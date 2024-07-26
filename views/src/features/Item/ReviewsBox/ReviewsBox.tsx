@@ -69,8 +69,8 @@ export const ReviewsBox = () => {
                 </div>
             ) : (
                 <>
-                    <div className="flex space-x-4">
-                        <div className="flex flex-col w-1/3 items-center bg-gray-200 justify-center space-y-3">
+                    <div className="flex md:space-x-4 md:space-y-0 space-y-4 md:flex-row flex-col">
+                        <div className="flex flex-col py-4 md:w-1/3 items-center bg-gray-200 justify-center space-y-3">
                             <p className="text-5xl font-bold">{selectedProduct.avg_rating}</p>
                             <StarRating rating={selectedProduct.avg_rating} />
                             <p>{reviews.length} Reviews</p>
@@ -86,19 +86,19 @@ export const ReviewsBox = () => {
                                 className="py-2 px-4 bg-red-700 text-white rounded-sm">Write Review
                             </button>
                         </div>
-                        <div className="flex flex-col w-1/3 items-center bg-gray-200 justify-center space-y-4">
+                        <div className="flex flex-col py-4  md:w-1/3 items-center bg-gray-200 justify-center space-y-4">
                             <div className="flex items-center justify-center text-4xl font-semibold text-green-700">
                                 <FaRegCircleCheck className="mr-2" />
                                 <p>{percentageRecommend}%</p>
                             </div>
                             <p className="w-2/3 text-sm text-center">of respondents would recommend this to a friend</p>
                         </div>
-                        <div className="py-10 px-16 flex flex-col w-1/3 items-center bg-gray-200 justify-center">
+                        <div className="py-10 px-4 flex flex-col md:w-1/3 items-center bg-gray-200 justify-center">
                             {percentages.reverse().map((percentage, index) => (
-                                <button onClick={() => setFilterValue(5 - index)} key={index} className="flex items-center mb-4 w-full">
-                                    <span className="w-20 font-semibold">{5 - index}</span>
+                                <button onClick={() => setFilterValue(5 - index)} key={index} className="flex justify-center items-center mb-4 w-full space-x-2">
+                                    <span className="w-6 font-semibold text-start">{5 - index}</span>
                                     <Bar percentage={percentage} />
-                                    <span className="ml-2 font-semibold w-1/4 text-end">{Math.round(percentage)}%</span>
+                                    <span className="ml-4 font-semibold w-10 text-end">{Math.round(percentage)}%</span>
                                 </button>
                             ))}
                         </div>

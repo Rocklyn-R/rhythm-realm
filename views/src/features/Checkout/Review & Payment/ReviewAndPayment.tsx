@@ -130,7 +130,7 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOr
                     className="overflow-hidden transition-max-height duration-500 ease-in-out"
                     style={{ maxHeight: creditContentHeight }}
                 >
-                    <div className="relative bg-gray-200 w-full p-4 mt-4 flex">
+                    <div className="relative bg-gray-100 w-full p-4 mt-4 flex">
                         <div className="w-1/2 mr-4 relative">
                             <Input
                                 placeholder="Card Number"

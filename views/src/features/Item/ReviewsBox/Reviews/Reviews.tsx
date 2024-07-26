@@ -54,31 +54,36 @@ export const Reviews: React.FC<ReviewsProps> = ({ sortByValue, filterValue, filt
             )}
 
             {sortedReviews.map((review, index) => (
-                <div key={index} className="flex border-b border-gray-300 py-8 w-full space-x-40">
-                    <div className="w-3/4">
-                        <h2 className="font-semibold mb-2">{review.title}</h2>
-                        <StarRating rating={review.rating} />
+                <div className="border-b border-gray-300 py-8">
+                    <div key={index} className="flex lg:flex-row flex-col justify-start w-full lg:space-x-40">
+                        <div className="w-3/4">
+                            <h2 className="font-semibold mb-2">{review.title}</h2>
+                            <StarRating rating={review.rating} />
+                        </div>
+                        <div className="flex flex-col lg:mt-0 mt-3 justify-start items-start lg:w-1/5 w-1/4 text-xs space-y-2">
+                            {review.verified && (
+                                <div className="space-x-1 flex">
+                                    <FaCircleCheck className="text-green-700 text-lg" /><p>Verified Buyer</p>
+                                </div>
+                            )}
+
+                            <div className="flex">
+                                <p className="mr-1 font-semibold">submitted</p>
+                                <p>{formatDate(review.date_created)}</p>
+                            </div>
+                            <div className="flex">
+                                <p className="mr-1 font-semibold">by</p>
+                                <p>{review.name}</p>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div>
                         <p className="mt-8 font-light">{review.review}</p>
                     </div>
-                    <div className="flex flex-col justify-start items-start w-1/5 text-xs space-y-2">
-                        {review.verified && (
-                            <div className="space-x-1 flex">
-                                <FaCircleCheck className="text-green-700 text-lg" /><p>Verified Buyer</p>
-                            </div>
-                        )}
-
-                        <div className="flex">
-                            <p className="mr-1 font-semibold">submitted</p>
-                            <p>{formatDate(review.date_created)}</p>
-                        </div>
-                        <div className="flex">
-                            <p className="mr-1 font-semibold">by</p>
-                            <p>{review.name}</p>
-                        </div>
-
-                    </div>
                 </div>
-
             ))}
         </div>
     )

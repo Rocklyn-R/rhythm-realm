@@ -12,7 +12,7 @@ export const Layout = () => {
     const isHomePage = location.pathname === '/';
 
     return (
-        <div className="min-h-screen bg-gray-100 montserrat">
+        <div className="min-h-screen bg-gray-100 montserrat w-full">
             <Header />
             <NavBar />
             <Breadcrumbs />
