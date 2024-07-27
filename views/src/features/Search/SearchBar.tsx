@@ -468,7 +468,7 @@ export const SearchBar = () => {
 
 
     return (
-        <div className="relative z-40 w-5/6 sm:w-2/3 md:w-2/3 lg:w-5/6 h-fit">
+        <div className="relative z-40 w-full h-fit">
             {isFocused && <div className="fixed inset-0 bg-black opacity-50" onClick={handleBlur}></div>}
             <div className="flex w-full mb-1 relative z-50">
                 <form id="searchbar" className="w-full" onSubmit={(event) => submitSearchForProducts(searchTerms, event, "submit")}>

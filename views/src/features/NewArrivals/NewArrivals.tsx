@@ -201,7 +201,7 @@ export const NewArrivals = () => {
                     <h1 className="lg:text-7xl xs:text-5xl font-bold">NEW</h1>
                     <h1 className="lg:text-7xl xs:text-5xl font-bold">ARRIVALS</h1>
                 </div>
-                <div className="lg:w-fit sm:w-2/3 xs:w-full flex justify-center">
+                <div className="lg:w-fit sm:w-2/3 w-full flex justify-center">
                     <ReactPlayer
                         url="https://www.youtube-nocookie.com/embed/lYFLQzkqaqc?si=nCOkLri26MfJYez9"
                         controls={true}

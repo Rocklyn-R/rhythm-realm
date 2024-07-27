@@ -51,14 +51,15 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
             {cart.map(item => (
                 <div className="flex mb-6 m-6 justify-center">
 
-                    <div className="w-1/3">
+                    <div className="">
                         <Link
-                            className="hover:underline mr-2"
+                            className="hover:underline mr-2 w-full"
                             to={`/${item.category_name}/${item.subcategory_name}/${item.name}/${item.variant_name}`}
                         >
                             <img
+                                width="180"
                                 src={item.image1}
-                                className="border border-black p-2 w-full h-full object-cover"
+                                className="border flex justify-center border-black p-2  object-cover"
                                 alt={`${item.name} ${item.variant_name}`}
                             />
                         </Link>

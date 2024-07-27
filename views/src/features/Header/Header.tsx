@@ -14,7 +14,7 @@ export const Header = () => {
                 <div className="w-full justify-center hidden sm:flex items-center z-40">
                     <SearchBar />
                 </div>
-                <div className="flex sm:mt-0 mt-4 items-center h-fit lg:space-x-0 space-x-6 md:w-1/3 w-1/2 sm:mr-4 md:mr-0 justify-center sm:justify-end md:justify-center">
+                <div className="flex sm:mt-0 mt-4 items-center h-fit lg:space-x-0 space-x-6 md:w-1/3 sm:mr-4 md:mr-0 justify-center sm:justify-end md:justify-center">
                     <div className="lg:w-1/2 flex justify-center">
                         <UserHeader />
                     </div>

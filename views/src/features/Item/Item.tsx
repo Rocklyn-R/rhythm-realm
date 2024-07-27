@@ -63,8 +63,8 @@ export const Item = () => {
         <div className="flex flex-col w-full">
 
 
-            <div className="flex justify-center mb-14">
-                <div className="mt-4 flex lg:flex-row flex-col justify-center lg:items-stretch">
+            <div className="flex justify-center mb-14 w-full">
+                <div className="mt-4 w-full flex lg:flex-row flex-col justify-center lg:items-stretch">
                     <ImageGallery />
                     <div className="rounded-sm p-6 lg:mr-6 shadow-md flex flex-col items-start lg:ml-4 mx-4 lg:mx-0 lg:w-2/5 lg:mt-0 mt-4 bg-white">
                         {selectedProduct.marketing_label && (
@@ -94,7 +94,7 @@ export const Item = () => {
 
                         <div className="mb-3 w-full">
                             {selectedProduct.sale_price ? (
-                                <div className="flex items-center space-x-2">
+                                <div className="flex md:items-center md:space-x-2 md:flex-row flex-col items-start">
                                     <h2 className="text-3xl mt-2 mb-2 line-through">
                                         ${selectedProduct.price}
                                     </h2>
@@ -121,7 +121,7 @@ export const Item = () => {
                             />
                         </div>
 
-                        <div className="flex">
+                        <div className="flex sm:flex-row flex-col justify-center items-center w-full">
                             <div className="flex flex-col items-center p-4">
                                 <Truck />
                                 <p>Free shipping</p>

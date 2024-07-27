@@ -16,7 +16,7 @@ export const Breadcrumbs = () => {
     };
 
     return (
-        <div className="flex m-4 self-start space-x-2">
+        <div className="flex m-4 self-start space-x-2 flex-wrap">
             {location.pathname !== "/" && (
                 <>
                     <Link to="/" className="underline hover:no-underline">Home</Link>

@@ -80,7 +80,7 @@ export const CartSummary = () => {
                 calculateTaxFromState(selectedState, totalWithCoupon, totalPrice, shippingCost);
             }
         }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dispatch, totalPrice, calculateTaxFromState])
 
     const handleAddQuantity = async (cartItem: Cart) => {
@@ -128,50 +128,52 @@ export const CartSummary = () => {
             <div className={`sliding-content ${showFullCart ? 'sliding-content-visible' : 'sliding-content-hidden'}`} >
                 {cart.map((item, index) => (
                     <div key={index} className={`flex flex-col ${index !== cart.length - 1 ? "border-b-2 border-gray-300 pb-2" : ""}`}>
-                        <div key={index} className="flex justify-between">
+                        <div key={index} className="flex justify-between flex-col">
                             <div className="flex">
-                                <div>
-                                    <img alt="Item" src={item.image1} width="80" className="m-6 border-2 border-gray-300" />
+                                <div className="w-fit my-6 h-fit">
+                                    <img alt="Item" src={item.image1} width="100" className="border-2 border-gray-300" />
                                 </div>
-                                <div className="flex flex-col ml-2 mt-6 w-1/2 items-start">
+                                <div className="flex flex-col ml-4 mt-6 w-full items-start">
                                     <span className="text-sm font-medium">{item.name} {item.variant_name}</span>
                                     <span className="text-xs mt-2 font-light">Item# {item.variant_id}</span>
                                     <span className="text-xs font-light">Condition: New</span>
                                     <span className="text-green-600 text-sm mt-2 font-light">In Stock</span>
+                                    {showEditQuantity[index] ? (
+                                        <div className="flex  justify-between items-center w-full self-end my-4">
+                                            <div className="flex items-center">
+                                                <button
+                                                    className="p-3 border border-gray-400 rounded-md"
+                                                    onClick={() => handleSubtractQuantity(item)}
+                                                >
+                                                    <FiMinus />
+                                                </button>
+                                                <span className="mx-5">{item.quantity}</span>
+                                                <button
+                                                    className="p-3 border border-gray-400 rounded-md"
+                                                    onClick={() => handleAddQuantity(item)}
+                                                >
+                                                    <FiPlus />
+                                                </button>
+                                            </div>
+
+                                            <span className="text-sm font-semibold">${formatPrice((parseFloat(item.price) * item.quantity).toFixed(2))}</span>
+                                        </div>
+                                    ) : (
+                                        <div className="flex justify-between w-full self-end my-4 items-center">
+                                            <button
+                                                className="underline text-red-700"
+                                                onClick={() => handleShowEditQuantity(index)}
+                                            >
+                                                <span className="text-sm">Qty: {item.quantity}</span></button>
+                                            <span className="text-sm font-semibold">${formatPrice((parseFloat(item.price) * item.quantity).toFixed(2))}</span>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
+
                         </div>
 
-                        {showEditQuantity[index] ? (
-                            <div className="flex justify-between items-center w-2/3 self-end my-4">
-                                <div className="flex items-center">
-                                    <button
-                                        className="p-3 border border-gray-400 rounded-md"
-                                        onClick={() => handleSubtractQuantity(item)}
-                                    >
-                                        <FiMinus />
-                                    </button>
-                                    <span className="mx-5">{item.quantity}</span>
-                                    <button
-                                        className="p-3 border border-gray-400 rounded-md"
-                                        onClick={() => handleAddQuantity(item)}
-                                    >
-                                        <FiPlus />
-                                    </button>
-                                </div>
 
-                                <span className="text-sm font-semibold">${formatPrice((parseFloat(item.price) * item.quantity).toFixed(2))}</span>
-                            </div>
-                        ) : (
-                            <div className="flex justify-between w-2/3 self-end my-4 pl-2 items-center">
-                                <button
-                                    className="underline text-red-700"
-                                    onClick={() => handleShowEditQuantity(index)}
-                                >
-                                    <span className="text-sm">Qty: {item.quantity}</span></button>
-                                <span className="text-sm font-semibold">${formatPrice((parseFloat(item.price) * item.quantity).toFixed(2))}</span>
-                            </div>
-                        )}
                     </div>
                 ))}
             </div>

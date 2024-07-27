@@ -73,8 +73,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
 
 
     return (
-        <div className={`${page === "Checkout" ? "" : "lg:w-1/3 lg:mr-4 lg:ml-10" } sticky  lg:mx-0 top-0 self-start lg:mt-0 mt-4 px-4 bg-white rounded-md shadow-lg`}>
-            <div className={`${page === "Checkout SM" ? "text-3xl" : "text-2xl border-b-2 border-b-gray-300"} montserrat-bold p-4 flex items-center justify-between`}>
+        <div className={`${page === "Checkout" ? "" : "lg:w-1/3 lg:mr-4 lg:ml-10 w-full" } sticky  lg:mx-0 top-0 self-start lg:mt-0 mt-4 px-4 bg-white rounded-md shadow-lg`}>
+            <div className={`${page === "Checkout SM" ? "text-3xl" : "text-3xl border-b-2 border-b-gray-300"} montserrat-bold p-4 flex items-center justify-between`}>
                 <h1 >Order Summary</h1>
                 {page === "Checkout SM" && <button onClick={() => setShowOrderSummary(!showOrderSummary)} className="lg:hidden"><FaAngleDown /></button>}
             </div>
