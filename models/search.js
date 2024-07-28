@@ -146,6 +146,7 @@ const searchResultsGetProducts = async (brand = undefined, subcategories = []) =
       variants.variant_name,
       variants.image1,
       variants.sale_price,
+      variants.marketing_label,
       subcategories.name AS subcategory_name,
       subcategories.alt_name AS subcategory_alt_name,
       categories.name AS category_name,

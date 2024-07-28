@@ -167,7 +167,6 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                 <div className="md:block hidden w-1/4 p-4 bg-white rounded-md shadow-lg">
 
                     <RefineSearch
-
                         setCurrentPage={setCurrentPage}
                         searchTerm={searchTerm}
                         brand={brand}

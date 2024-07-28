@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { setLoadingProducts, setProducts } from "../../redux-store/ProductsSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
 
+
 export const SearchBar = () => {
     const [isFocused, setIsFocused] = useState(false);
     const [searchInput, setSearchInput] = useState("");
@@ -386,12 +387,11 @@ export const SearchBar = () => {
     }, [location]);
 
     const submitSearchForProducts = async (terms: string[], event?: any, submit?: string) => {
-        if (!searchInput && submit === "search") {
-            return;
-        }
-        
         if (event) {
             event.preventDefault();
+        }
+        if (!searchInput && (submit === "search" || submit === "submit")) {
+            return;
         }
 
         if (currentByBrandResults.length > 0 && terms.length === debouncedSearchTerms.length) {

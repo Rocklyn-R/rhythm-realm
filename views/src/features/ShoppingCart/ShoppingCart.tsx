@@ -50,7 +50,7 @@ export const ShoppingCart = () => {
 
     return (
         <div className="flex justify-center lg:justify-around flex-col lg:flex-row mx-6">
-            <div className="lg:w-2/3 lg:ml-4 bg-white px-4 rounded-md shadow-lg w-full">
+            <div className="lg:w-2/3 lg:ml-4 bg-white px-4 rounded-md shadow-lg w-full h-fit">
                 <div className="p-4 border-gray-300 flex items-end">
                     <h1 className="text-3xl mr-1 montserrat-bold">Cart</h1>
                     <p className="montserrat-light">({totalItems} items)</p>

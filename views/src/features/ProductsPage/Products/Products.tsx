@@ -90,7 +90,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                     <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                         {productVariantsMap[product.id].map((variant, index) => (
                                             <div className="min-w-full relative" key={variant.variant_id}>
-                                                <img className="w-full" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
+                                                <img className="w-full p-2" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
                                                 <AddToWishList
                                                     variant={variant}
                                                     key={variant.variant_id}
