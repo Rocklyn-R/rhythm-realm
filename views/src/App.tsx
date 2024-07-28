@@ -13,12 +13,15 @@ import { ScrollTop } from './utilities/ScrollTop';
 import { ProductsPageWrapper } from './wrappers/ProductsPageWrapper';
 import { WishList } from './features/WishList/WishList';
 import { AccountSettings } from './features/AccountSettings/AccountSettings';
+import { OrderHistory } from './features/OrderHistory/OrderHistory';
+import { useFetchOrderHistory } from './hooks/useFetchOrderHistory';
 
 
 export const App = () => {
   useUserFetch();
   useInitializeCart();
   useFetchWishList();
+  useFetchOrderHistory();
 
   return (
 
@@ -40,6 +43,10 @@ export const App = () => {
           <Route
             path="/Checkout"
             element={<Checkout />}
+          />
+          <Route
+            path="/OrderHistory"
+            element={<OrderHistory />}
           />
           <Route
             path='/SearchResults'

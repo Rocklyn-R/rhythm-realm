@@ -32,7 +32,7 @@ const orderCreate = async (
                 total_with_tax
             ]);
 
-       
+
         return orderResult.rows[0];
     } catch (error) {
         console.log(error);
@@ -64,9 +64,52 @@ const orderItemsCreate = async (order_id, variant_id, quantity) => {
     }
 }
 
+const orderHistoryGet = async (user_id) => {
+    /*   const query = `
+       SELECT orders.id, 
+       orders.order_date, 
+       orders.status, 
+       orders.total_with_tax,
+       order_items.variant_id,
+       order_items.quantity,
+       variants.variant_name as variant_name,
+       variants.image1,
+       products.name as name
+       FROM orders
+       JOIN order_items ON orders.id = order_items.order_id
+       JOIN variants ON variants.id = order_items.variant_id
+       JOIN products ON products.id = variants.product_id
+       WHERE user_id = $1`*/
+    const query = `SELECT
+    orders.id,
+    orders.order_date,
+    orders.status,
+    orders.total_with_tax,
+    jsonb_agg(jsonb_build_object(
+        'variant_id', order_items.variant_id,
+        'quantity', order_items.quantity,
+        'variant_name', variants.variant_name,
+        'image1', variants.image1,
+        'name', products.name
+    )) as order_items
+FROM orders
+JOIN order_items ON orders.id = order_items.order_id
+JOIN variants ON variants.id = order_items.variant_id
+JOIN products ON products.id = variants.product_id
+WHERE orders.user_id = $1
+GROUP BY orders.id, orders.order_date, orders.status, orders.total_with_tax`
+    try {
+        const result = await db.query(query, [user_id]);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 
 module.exports = {
     orderCreate,
-    orderItemsCreate
+    orderItemsCreate,
+    orderHistoryGet
 }

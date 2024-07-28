@@ -59,4 +59,21 @@ export const createOrderItems = async (
     }
 }
 
-
+export const getOrderHistory = async () => {
+    try {
+        const response = await fetch(`http://localhost:4000/orders/order-history`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await response.json();
+        if (response.ok) {
+            return data.orders
+        }    
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

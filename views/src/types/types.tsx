@@ -77,7 +77,7 @@ export interface User {
     cartMode: "current" | "previous" | "combine" | "";
     cartQuestion: boolean;
     isLoadingAuth: boolean;
-    orders: [];
+    orders: OrderHistory[];
 }
 
 export interface FilterState {
@@ -128,4 +128,21 @@ export interface Order {
     total_with_coupon: string;
     total_with_tax: string;
     user_id: null | number;
+}
+
+export interface OrderHistory {
+    id: string;
+    order_date: string;
+    total_with_tax: string;
+    status: string;
+    order_items: OrderHistoryItem [];
+}
+
+
+export interface OrderHistoryItem {
+    name: string;
+    image1: string;
+    quantity: number;
+    variant_id: string;
+    variant_name: string;
 }

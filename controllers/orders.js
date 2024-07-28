@@ -1,4 +1,4 @@
-const { orderCreate, orderItemsCreate, ordersGetById } = require('../models/orders');
+const { orderCreate, orderItemsCreate, ordersGetById, orderHistoryGet } = require('../models/orders');
 
 const createOrder = async (req, res) => {
     if (!req.user) {
@@ -49,8 +49,22 @@ const createOrderItems = async (req, res) => {
     }
 }
 
+const getOrderHistory = async (req, res) => {
+    const user_id = req.user.id
+    console.log(user_id);
+    try {
+        const result = await orderHistoryGet(user_id);
+        if (result) {
+            res.status(200).json({ orders: result });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal Server Error" })
+    }
+}
+
 
 module.exports = {
     createOrder,
-    createOrderItems
+    createOrderItems,
+    getOrderHistory
 }
