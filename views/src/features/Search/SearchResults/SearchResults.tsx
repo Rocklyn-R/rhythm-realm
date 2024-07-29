@@ -100,15 +100,15 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
             )}
 
             {/* Right Side - Recommended Products Section */}
-            {recommendedProducts.length > 0 && (
+            {recommendedProducts.length > 0 && (byBrandResults.length > 0 || subcategoryResults.length > 0) && (
                 <div className="flex flex-col max-w-full sm:w-3/5 sm:overflow-y-auto">
                     <h1 className="font-semibold p-4 text-lg">Recommended Products:</h1>
-                    <div className="space-y-4">
+                    <div className="space-y-4 pb-4">
                         {recommendedProducts.map((product, index) => (
-                            <div className="flex p-4" key={index}>
-                                <img onClick={() => handleSelectProduct(product)} src={product.image1} className="cursor-pointer border rounded-md w-1/4 sm:w-1/3 h-full p-2 bg-white" alt={product.name} />
+                            <div className="flex p-4 bg-white mx-4 rounded-md shadow-sm" key={index}>
+                                <img onClick={() => handleSelectProduct(product)} src={product.image1} className="cursor-pointer w-1/4 sm:w-1/3 h-full p-2 bg-white" alt={product.name} />
                                 <div className="flex flex-col mx-2 lg:w-3/4">
-                                    <p className="hover:underline cursor-pointer text-sm" onClick={() => handleSelectProduct(product)}>{product.name}</p>
+                                    <p className="hover:underline cursor-pointer" onClick={() => handleSelectProduct(product)}>{product.name}</p>
                                     <StarRating rating={product.rating} />
                                     <p className="font-semibold">${formatPrice(product.price)}</p>
                                 </div>

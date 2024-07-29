@@ -24,6 +24,13 @@ export const SearchBar = () => {
     const searchParams = new URLSearchParams(location.search);
     const searchParameter = searchParams.get('searchTerm');
     const searchInputRef = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        if (!searchInput) {
+            setSearchTerms([]);
+            setDebouncedSearchTerms([]);
+        }
+    }, [searchInput]);
    
     useEffect(() => {
         if (searchParameter) {
@@ -148,6 +155,7 @@ export const SearchBar = () => {
                 }
             } else {
                 if (searchType === "searchbar") {
+                    clearOtherResults('bybrand');
                     dispatch(reducerToUse(byBrandResults));
                     return true;
                 } else {
@@ -216,6 +224,7 @@ export const SearchBar = () => {
                     return true;
                 } else {
                     if (searchType === "searchbar") {
+                        clearOtherResults('products');
                         return true;
                     } else {
                         return filteredResults;
