@@ -63,3 +63,13 @@ export const generateOrderNumber = () => {
   const randomNumber = Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit random number
   return `RR${randomNumber}`;
 };
+
+export const formatDateString = (isoString: string) => {
+  const date = new Date(isoString);
+
+  const month = (date.getUTCMonth() + 1).toString().padStart(2, '0'); // getUTCMonth() is zero-based
+  const day = date.getUTCDate().toString().padStart(2, '0');
+  const year = date.getUTCFullYear().toString().slice(-2); // get last two digits of the year
+
+  return `${month}/${day}/${year}`;
+}
