@@ -65,21 +65,6 @@ const orderItemsCreate = async (order_id, variant_id, quantity) => {
 }
 
 const orderHistoryGet = async (user_id) => {
-    /*   const query = `
-       SELECT orders.id, 
-       orders.order_date, 
-       orders.status, 
-       orders.total_with_tax,
-       order_items.variant_id,
-       order_items.quantity,
-       variants.variant_name as variant_name,
-       variants.image1,
-       products.name as name
-       FROM orders
-       JOIN order_items ON orders.id = order_items.order_id
-       JOIN variants ON variants.id = order_items.variant_id
-       JOIN products ON products.id = variants.product_id
-       WHERE user_id = $1`*/
     const query = `SELECT
     orders.id,
     orders.order_date,
@@ -106,10 +91,21 @@ GROUP BY orders.id, orders.order_date, orders.status, orders.total_with_tax`
     }
 }
 
+const orderFind = async (order_id) => {
+    const query = `SELECT * FROM orders WHERE id = $1`;
+    try {
+        const result = await db.query(query, [order_id]);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 
 module.exports = {
     orderCreate,
     orderItemsCreate,
-    orderHistoryGet
+    orderHistoryGet,
+    orderFind
 }

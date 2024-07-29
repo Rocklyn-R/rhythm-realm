@@ -43,6 +43,11 @@ export const UserAccount: React.FC<UserAccountProps> = ({ isOpen, toggleUserAcco
         navigate('/OrderHistory');
     }
 
+    const handleClickReturns = () => {
+        toggleUserAccount();
+        navigate('/Returns');
+    }
+
     return (
         <div
             ref={slidingLoginRef}
@@ -74,9 +79,12 @@ export const UserAccount: React.FC<UserAccountProps> = ({ isOpen, toggleUserAcco
                 <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
                     <FaRegAddressBook className="mr-2" /><p>Address Book</p>
                 </div>
-                <div className="flex items-center hover:underline cursor-pointer mb-2 text-lg">
-                    <BsArrowReturnLeft className="mr-2" /> <p>Returns & Exchanges</p>
-                </div>
+                <button
+                    onClick={() => handleClickReturns()}
+                    className="flex items-center hover:underline cursor-pointer mb-2 text-lg"
+                >
+                    <BsArrowReturnLeft className="mr-2" /> <p>Returns</p>
+                </button>
                 <div className="flex items-center hover:underline cursor-pointer text-lg">
                     <button
                         onClick={() => handleClickOrderHistory()}

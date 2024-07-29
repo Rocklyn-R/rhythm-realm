@@ -15,6 +15,7 @@ import { WishList } from './features/WishList/WishList';
 import { AccountSettings } from './features/AccountSettings/AccountSettings';
 import { OrderHistory } from './features/OrderHistory/OrderHistory';
 import { useFetchOrderHistory } from './hooks/useFetchOrderHistory';
+import { Returns } from './features/Returns/Returns';
 
 
 export const App = () => {
@@ -47,6 +48,10 @@ export const App = () => {
           <Route
             path="/OrderHistory"
             element={<OrderHistory />}
+          />
+          <Route 
+            path="/Returns"
+            element={<Returns />}
           />
           <Route
             path='/SearchResults'
