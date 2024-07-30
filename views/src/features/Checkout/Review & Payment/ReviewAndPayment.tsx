@@ -7,7 +7,10 @@ import { createOrder, createOrderItems } from "../../../api/order";
 import { generateOrderNumber } from "../../../utilities/utilities";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, selectShippingType, selectTotal, selectTotalWithCoupon, selectTotalWithTax } from "../../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, selectShippingType, selectTotal, selectTotalWithCoupon, selectTotalWithTax, setCart } from "../../../redux-store/CartSlice";
+import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
+import { deleteCart } from "../../../api/cart";
+import { useDispatch } from "react-redux";
 
 interface ReviewAndPaymentProps {
     setOrderComplete: (arg0: boolean) => void;
@@ -34,6 +37,9 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOr
     const shipping_cost = useSelector(selectShippingCost);
     const shipping_type = useSelector(selectShippingType);
     const applied_coupon = useSelector(selectAppliedCoupon);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const handleClickOutside = (event: any) => {
         if (infoMessageRef.current && !infoMessageRef.current.contains(event.target)) {
@@ -99,8 +105,25 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOr
                 setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
                 console.log(newItem);
             })
+            console.log(isAuthenticated);
+            const defaultCartState = {
+                cart: [],
+                total_items: 0,
+                total: "0"
+            };
+            if (isAuthenticated) {
+                const cartDelete = await deleteCart();
+                if (cartDelete) {
+                    dispatch(setCart(defaultCartState));
+                    localStorage.clear();
+                }
+            } else {
+                dispatch(setCart(defaultCartState));
+                localStorage.clear();
+            }
+
         }
-        
+        navigate(`/Checkout?OrderNo=${order_id}`)
         setOrderComplete(true);
     }
 

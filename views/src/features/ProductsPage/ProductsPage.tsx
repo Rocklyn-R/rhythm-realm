@@ -92,7 +92,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             if (productsData) {
                 dispatch(setProducts(productsData));
                 dispatch(setProductsForFilters(productsData))
-                dispatch(setLoadingProducts(false));
+                //dispatch(setLoadingProducts(false));
             }
         };
 
@@ -104,7 +104,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
             if (result) {
                 dispatch(setProducts(result));
                 dispatch(setProductsForFilters(result))
-                setLoadingProducts(false);
+                //dispatch(setLoadingProducts(false));
             }
         }
 
@@ -112,6 +112,8 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
         if (categoryName === 'Featured') {
             fetchDeals();
         } else if (searchTerm) {
+            return;
+        } else if (brand) {
             return;
         } else {
             fetchProducts();

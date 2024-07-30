@@ -25,7 +25,8 @@ export const CartSlice = createSlice({
         total_with_tax: "",
         shipping_type: "Standard Ground",
         shipping_cost: "",
-        total_to_pay: ""
+        total_to_pay: "",
+        orderPlaced: false,
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {

@@ -6,7 +6,7 @@ import { selectTotalItems, selectCart, addToQuantity, subtractFromQuantity, sele
 import { selectAddress, selectSelectedState, setSelectedState } from "../../../redux-store/ShippingSlice";
 import { formatPrice } from "../../../utilities/utilities";
 import { Cart } from "../../../types/types";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { FiftyStates } from "../Shipping/50states";
 import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
 import { addToCart, removeFromCart } from "../../../api/cart";
@@ -29,6 +29,7 @@ export const CartSummary = () => {
     const totalWithCoupon = useSelector(selectTotalWithCoupon);
     const address = useSelector(selectAddress);
     const isAuthenticated = useSelector(selectIsAuthenticated);
+    const { orderNo } = useParams();
 
     const calculateTaxFromState = useCallback((value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
@@ -98,10 +99,10 @@ export const CartSummary = () => {
     }
 
     useEffect(() => {
-        if (cart.length === 0) {
+       if (cart.length === 0 && !orderNo) {
             navigate("/Cart");
         }
-    }, [cart.length, navigate]);
+    }, [cart.length, navigate, orderNo]);
 
     const handleShowEditQuantity = (index: number) => {
         const newShowEditQuantity = [...showEditQuantity];

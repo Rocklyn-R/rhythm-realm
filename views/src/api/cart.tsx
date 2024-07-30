@@ -94,3 +94,19 @@ export const insertMultipleIntoCart = async (cart: Cart[]) => {
         throw error;
     }
 }
+
+export const deleteCart = async () => {
+    try {
+        const response = await fetch(`http://localhost:4000/cart/delete`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        });
+        return response.ok;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}

@@ -67,6 +67,17 @@ const insertMultipleIntoCart = async (req, res) => {
     }
 }
 
+const deleteCart = async (req, res) => {
+    const user_id = req.user.id;
+    try {
+        const deletion = await cartDelete(user_id);
+        if (deletion) {
+            res.status(200).json({ message: "Cart deleted" });
+        }
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
 
 
 module.exports = {
@@ -74,5 +85,6 @@ module.exports = {
     removeItemFromCart,
     getItemsFromCart,
     replaceCart,
-    insertMultipleIntoCart
+    insertMultipleIntoCart,
+    deleteCart
 }

@@ -42,6 +42,7 @@ export const useInitializeCart = () => {
 
     useEffect(() => {
         if (!isAuthenticated) {
+            localStorage.clear();
             const savedCartState = localStorage.getItem('cartState');
             if (savedCartState) {
                 const cartState = JSON.parse(savedCartState);

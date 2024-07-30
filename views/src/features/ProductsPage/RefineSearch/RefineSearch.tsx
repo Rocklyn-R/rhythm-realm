@@ -1,8 +1,8 @@
 import { Input } from "antd";
-import { useEffect, useCallback, useState, ChangeEvent, KeyboardEvent } from "react";
+import { useEffect, useRef, useCallback, useState, ChangeEvent, KeyboardEvent } from "react";
 import { useDispatch } from "react-redux";
 import { getFeaturedDeals, getProducts } from "../../../api/products";
-import { selectProducts, setProducts } from "../../../redux-store/ProductsSlice";
+import { selectProducts, setLoadingProducts, setProducts } from "../../../redux-store/ProductsSlice";
 import { Product, ProductResult } from "../../../types/types";
 import { GoDash } from "react-icons/go";
 import { GoPlus } from "react-icons/go";
@@ -32,6 +32,7 @@ import {
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { selectSearchResultProducts } from "../../../redux-store/SearchSlice";
 import { sortCategoriesArray } from "../../../utilities/utilities";
+
 
 interface RefineSearchProps {
     products: Product[];
@@ -73,6 +74,14 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
     const productsForFilters = useSelector(selectProductsForFilters);
 
 
+    useEffect(() => {
+        // Check if the navigation state has 'fromBrandSelection' set to true
+        if (location.state && location.state.fromBrandSelection) {
+            setShowBrands(true);
+        } else {
+            setShowBrands(false);
+        }
+    }, [location.state]);
 
     useEffect(() => {
         setUpdatingFilters(true);
@@ -145,14 +154,20 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
         setCurrentPage(1);
         setUpdatingFilters(true);
         if (selectedBrands.includes(manufacturer)) {
-            if (brand) {
-                navigate(`/${categoryName}/${subcategoryName}/`)
+          if (brand && manufacturer === brand && selectedBrands.length === 1) {
+            navigate(`/${categoryName}/${subcategoryName}/`, { state: { fromBrandSelection: true } });
+            }
+            if (brand && !selectedBrands.includes(brand) && selectedBrands.length === 1) {
+                navigate(`/${categoryName}/${subcategoryName}/`, { state: { fromBrandSelection: true } });
             }
             dispatch(setSelectedManufacturers(selectedBrands.filter(b => b !== manufacturer)));
         } else {
+          
             dispatch(setSelectedManufacturers([...selectedBrands, manufacturer]));
         }
     }
+
+
 
     useEffect(() => {
         if (allProducts) {
@@ -180,7 +195,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
             )
         ).sort((a, b) => a.localeCompare(b));          
         dispatch(setManufacturers(uniqueBrands));
-        if (brand) {
+        if (brand && selectedBrands.length === 0) {
             dispatch(setSelectedManufacturers([brand]));
         }
     }
@@ -262,13 +277,15 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
             const result = await getProducts(subcategoryName, selectedBrands, priceDrop, priceMin, priceMax);
             if (result) {
                 dispatch(setProducts(result))
+                dispatch(setLoadingProducts(false));
             }
         }
 
         const filteredSaleProductsFetch = async () => {
             const result = await getFeaturedDeals(marketingLabel, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax);
             if (result) {
-                dispatch(setProducts(result))
+                dispatch(setProducts(result));
+                dispatch(setLoadingProducts(false));
             }
         }
         if (!isFeatured && !searchTerm) {
@@ -289,7 +306,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
                 (!priceMax || ((product.sale_price !== null ? parseFloat(product.sale_price) : parseFloat(product.price)) <= parseFloat(priceMax)))
             )
             dispatch(setProducts(filteredProducts));
-
+            dispatch(setLoadingProducts(false));
         }
 
     }, [dispatch, searchTerm, searchResultProducts, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);

@@ -31,8 +31,7 @@ const orderCreate = async (
                 shipping_cost,
                 total_with_tax
             ]);
-
-
+            console.log(orderResult);
         return orderResult.rows[0];
     } catch (error) {
         console.log(error);
@@ -51,13 +50,8 @@ const orderItemsCreate = async (order_id, variant_id, quantity) => {
     FROM inserted_order_item i
     JOIN variants v ON i.variant_id = v.id
     JOIN products p ON v.product_id = p.id`;
-    console.log(order_id);
-    console.log(variant_id);
-    console.log(quantity);
-    console.log(orderItemsQuery);
     try {
         const orderItemsResult = await db.query(orderItemsQuery, [order_id, variant_id, quantity]);
-        console.log(orderItemsResult.rows);
         return orderItemsResult.rows[0];
     } catch (error) {
         throw error;
