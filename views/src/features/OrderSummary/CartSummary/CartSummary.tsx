@@ -96,13 +96,11 @@ export const CartSummary = () => {
         if (isAuthenticated) {
             await removeFromCart(cartItem.id, cartItem.variant_id);
         }
-    }
-
-    useEffect(() => {
-       if (cart.length === 0 && !orderNo) {
+        if (cart.length === 1) {
             navigate("/Cart");
         }
-    }, [cart.length, navigate, orderNo]);
+    }
+
 
     const handleShowEditQuantity = (index: number) => {
         const newShowEditQuantity = [...showEditQuantity];

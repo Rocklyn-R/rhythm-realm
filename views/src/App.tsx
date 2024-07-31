@@ -16,6 +16,7 @@ import { AccountSettings } from './features/AccountSettings/AccountSettings';
 import { OrderHistory } from './features/OrderHistory/OrderHistory';
 import { useFetchOrderHistory } from './hooks/useFetchOrderHistory';
 import { Returns } from './features/Returns/Returns';
+import { OrderComplete } from './features/Checkout/OrderComplete/OrderComplete';
 
 
 export const App = () => {
@@ -44,6 +45,10 @@ export const App = () => {
           <Route
             path="/Checkout"
             element={<Checkout />}
+          />
+          <Route 
+            path="/Checkout/:orderNo"
+            element={<OrderComplete />}
           />
           <Route
             path="/OrderHistory"

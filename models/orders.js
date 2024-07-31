@@ -95,11 +95,32 @@ const orderFind = async (order_id) => {
     }
 }
 
+const orderItemsFind = async (order_id) => {
+    const query = `    SELECT order_items.order_id,
+    order_items.quantity, variants.image1, 
+    variants.id as variant_id, variants.sale_price,
+    products.price FROM order_items
+    JOIN variants ON order_items.variant_id = variants.id
+    JOIN products ON variants.product_id = products.id
+    WHERE order_id = $1`;
+    console.log(query);
+    try {
+        const result = await db.query(query, [order_id]);
+        console.log(result);
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
+
 
 
 module.exports = {
     orderCreate,
     orderItemsCreate,
     orderHistoryGet,
-    orderFind
+    orderFind,
+    orderItemsFind
 }

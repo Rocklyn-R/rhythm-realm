@@ -12,13 +12,13 @@ import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
 import { deleteCart } from "../../../api/cart";
 import { useDispatch } from "react-redux";
 
-interface ReviewAndPaymentProps {
+/*interface ReviewAndPaymentProps {
     setOrderComplete: (arg0: boolean) => void;
     setCurrentOrder: (arg0: any) => void;
     setCurrentOrderItems: (arg0: any) => void;
-}
+}*/
 
-export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOrderItems, setCurrentOrder, setOrderComplete }) => {
+export const ReviewAndPayment = ({ }) => {
     const [selectedPayment, setSelectedPayment] = useState("Credit or Debit");
     const [showCreditOrDebit, setShowCreditOrDebit] = useState(true);
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -98,11 +98,11 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOr
             cost_of_shipping,
             total_with_tax
         );
-        setCurrentOrder(completeOrder);
+        //setCurrentOrder(completeOrder);
         if (completeOrder) {
             cart.forEach(async (item) => {
                 const newItem = await createOrderItems(order_id, item.variant_id, item.quantity);
-                setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
+                //setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
                 console.log(newItem);
             })
             console.log(isAuthenticated);
@@ -123,8 +123,8 @@ export const ReviewAndPayment: React.FC<ReviewAndPaymentProps> = ({ setCurrentOr
             }
 
         }
-        navigate(`/Checkout?OrderNo=${order_id}`)
-        setOrderComplete(true);
+        navigate(`/Checkout/${order_id}`)
+        //setOrderComplete(true);
     }
 
     return (

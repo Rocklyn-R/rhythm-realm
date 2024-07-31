@@ -97,3 +97,23 @@ export const findOrder = async (order_id: string) => {
     }
 }
 
+export const findFullOrder = async (order_id: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/orders/get-order?order_id=${order_id}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+        });
+        const data = await response.json();
+        console.log(data);
+        if (response.ok) {
+            return data;
+        }    
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
+}
+
