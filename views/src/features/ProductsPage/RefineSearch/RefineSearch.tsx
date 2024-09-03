@@ -224,10 +224,10 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
 
     useEffect(() => {
         if (!searchTerm) {
+            console.log(productsForFilters);
             getCategories(productsForFilters);
             getManufacturers(productsForFilters)
             setUpdatingFilters(false);
-
         }
         if (searchTerm) {
             getCategories(searchResultProducts);
@@ -274,11 +274,14 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
     useEffect(() => {
 
         const filteredProductsFetch = async () => {
+            if (selectedBrands.length === 0 && brand) {
+                return;
+            }
             const result = await getProducts(subcategoryName, selectedBrands, priceDrop, priceMin, priceMax);
             if (result) {
                 dispatch(setProducts(result))
                 dispatch(setLoadingProducts(false));
-            }
+            } 
         }
 
         const filteredSaleProductsFetch = async () => {
@@ -290,7 +293,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
         }
         if (!isFeatured && !searchTerm) {
             filteredProductsFetch();
-
         }
         if (isFeatured && !searchTerm) {
             filteredSaleProductsFetch();
@@ -309,7 +311,7 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
             dispatch(setLoadingProducts(false));
         }
 
-    }, [dispatch, searchTerm, searchResultProducts, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName]);
+    }, [dispatch, searchTerm, searchResultProducts, marketingLabel, isFeatured, selectedCategories, selectedSubcategories, selectedBrands, priceDrop, priceMin, priceMax, subcategoryName, brand]);
 
     const handleMinChange = (e: ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value;

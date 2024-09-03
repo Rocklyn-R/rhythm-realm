@@ -477,9 +477,9 @@ export const SearchBar = () => {
 
 
     return (
-        <div className="relative z-40 w-full h-fit">
-            {isFocused && <div className="fixed inset-0 bg-black opacity-50" onClick={handleBlur}></div>}
-            <div className="flex w-full mb-1 relative z-50">
+        <div className="relative z-30 w-full h-fit">
+            {isFocused && <div className="fixed inset-0 bg-black opacity-50 z-20" onClick={handleBlur}></div>}
+            <div className="flex w-full mb-1 relative z-30">
                 <form id="searchbar" className="w-full" onSubmit={(event) => submitSearchForProducts(searchTerms, event, "submit")}>
                     <input
                         name="search"
@@ -488,18 +488,18 @@ export const SearchBar = () => {
                         onBlur={() => (searchTerms.length === 0 || (searchTerms[0] && searchTerms[0].length < 3)) && handleBlur()}
                         onChange={handleChange}
                         placeholder="Enter search term..."
-                        className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-red-900 focus:border-red-900 focus:outline-red-900 h-12 p-2.5 w-full z-40"
+                        className="bg-gray-50 border border-gray-300 text-gray-900 text-md rounded-lg focus:ring-red-900 focus:border-red-900 focus:outline-red-900 h-12 p-2.5 w-full z-30"
                         ref={searchInputRef}
                         autoComplete="off"
                     />
                     <button type="submit" className="self-center absolute top-1 right-0 text-2xl p-2 text-black ml-2">
-                        <IoSearch className="z-50" />
+                        <IoSearch className="z-40" />
                     </button>
                 </form>
 
             </div>
             {searchTerms.length > 0 && searchTerms[0].length >= 3 && isFocused && (
-                <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-30">
+                <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-20">
                     <SearchResults
                         handleBlur={handleBlur}
                         setSearchInput={setSearchInput}

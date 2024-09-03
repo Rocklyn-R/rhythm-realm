@@ -11,7 +11,13 @@ const categoriesGet = async () => {
 }
 
 const subcategoriesGet = async (id) => {
-    const query = 'SELECT * FROM subcategories WHERE category_id = $1 ORDER BY id';
+    const query = `
+    SELECT subcategories.id, subcategories.name, subcategories.category_id,
+    subcategories.image, subcategories.alt_name, categories.name as category_name
+    FROM subcategories
+    JOIN categories ON subcategories.category_id = categories.id
+    WHERE category_id = $1 ORDER BY id
+    `;
     try {
         const result = await db.query(query, [id]);
         return result.rows;

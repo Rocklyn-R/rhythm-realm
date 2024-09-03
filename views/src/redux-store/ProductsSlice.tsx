@@ -91,6 +91,6 @@ export const selectFeaturedDeals = (state: RootState) => state.products.featured
 export const selectNewArrivals = (state: RootState) => state.products.newArrivals;
 export const selectTopSellers = (state: RootState) => state.products.topSellers;
 export const selectReviews = (state: RootState) => state.products.reviews;
-export const selectLoadidngProducts = (state: RootState) => state.products.loadingProducts;
+export const selectLoadingProducts = (state: RootState) => state.products.loadingProducts;
 
 export default ProductsSlice.reducer;
