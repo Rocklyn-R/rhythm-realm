@@ -26,6 +26,8 @@ import {
 } from "../../../redux-store/ShippingSlice";
 import { FiftyStates } from "../../OrderSummary/Shipping/50states";
 import { fetchStateByZipCode } from "../../../api/cart";
+import { addToAddressBook, selectIsAuthenticated, selectUserEmail } from "../../../redux-store/UserSlice";
+import { addNewAddress } from "../../../api/addressBook";
 
 interface DeliveryProps {
     setEditMode: (arg0: boolean) => void;
@@ -40,7 +42,10 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const totalWithCoupon = useSelector(selectTotalWithCoupon);
     const total = useSelector(selectTotal);
     const name = useSelector(selectFullName);
-    const email = useSelector(selectEmail);
+    const isAuthenticated = useSelector(selectIsAuthenticated);
+    const userEmail = useSelector(selectUserEmail);
+    const selectedEmail = useSelector(selectEmail);
+    const email = isAuthenticated ? userEmail : selectedEmail;
     const phone = useSelector(selectPhone);
     const address = useSelector(selectAddress);
     const apt = useSelector(selectApartment);
@@ -48,7 +53,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const zipCode = useSelector(selectZipCode);
     const US_State = useSelector(selectSelectedState);
     const [US_state, setUS_state] = useState<string>(editMode ? US_State : "");
-    const [emailInput, setEmailInput] = useState(editMode ? email : "");
+    const [emailInput, setEmailInput] = useState((editMode && isAuthenticated) ? email : !editMode && isAuthenticated ? email : "");
     const [phoneInput, setPhoneInput] = useState(editMode ? phone : "");
     const [nameInput, setName] = useState(editMode ? name : "");
     const [addressInput, setAddressInput] = useState(editMode ? address : "");
@@ -57,6 +62,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const [zipCodeInput, setZipCode] = useState(editMode ? zipCode : "");
     const [errors, setErrors] = useState<any>({});
     const shipping_cost = useSelector(selectShippingCost);
+    const [saveAddress, setSaveAddress] = useState(true);
 
     const calculateTaxFromState = useCallback((value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
@@ -115,9 +121,23 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleContinueToPayment = () => {
+    const handleContinueToPayment = async () => {
         const validate = validateFields();
         if (validate) {
+            if (isAuthenticated && saveAddress) {
+                const addressAdd = await addNewAddress(nameInput, addressInput, aptSuite, cityInput, US_State, zipCodeInput, phoneInput)
+                if (addressAdd) {
+                    dispatch(addToAddressBook({
+                        name: nameInput,
+                        address: addressInput,
+                        apartment: aptSuite,
+                        city: cityInput,
+                        state: US_State,
+                        zip_code: zipCodeInput,
+                        phone: phoneInput
+                    }))
+                }
+            }
             dispatch(setFullName(nameInput));
             dispatch(setAddress(addressInput));
             dispatch(setApartment(aptSuite));
@@ -156,6 +176,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                             className="mr-2"
                             value={emailInput}
                             onChange={(e) => setEmailInput(e.target.value)}
+                            disabled={isAuthenticated}
                         />
                         {errors.email && <span className="text-red-700 text-xs mt-1">{errors.email}</span>}
                     </div>
@@ -227,6 +248,20 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                     </div>
 
                 </div>
+                {isAuthenticated && nameInput && addressInput && cityInput && US_State && zipCodeInput && phoneInput && (
+                   <div className="flex items-center mt-6">
+                    <input
+                        id="savetoaddressbook"
+                        type="checkbox"
+                        className="mr-3 w-6 h-6 custom-checkbox"
+                        checked={saveAddress}
+                        onChange={() => setSaveAddress(!saveAddress)}
+                    />
+                    <label htmlFor="savetoaddressbook">Save to address book.</label>
+
+                </div> 
+                )}
+                
                 {US_state ?
                     <div className="flex flex-col items-center w-full">
                         <ShippingType

@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { selectEmail, selectFirstName, selectIsAuthenticated, selectIsLoadingAuth, selectLastName, setUserEmail, setUserFirstName, setUserLastName } from "../../redux-store/UserSlice"
+import { selectUserEmail, selectFirstName, selectIsAuthenticated, selectIsLoadingAuth, selectLastName, setUserEmail, setUserFirstName, setUserLastName } from "../../redux-store/UserSlice"
 import { FaEdit, FaCheck } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Input } from "antd";
@@ -15,7 +15,7 @@ import { FaXmark } from "react-icons/fa6";
 export const AccountSettings = () => {
     const userFirstName = useSelector(selectFirstName);
     const userLastName = useSelector(selectLastName);
-    const userEmail = useSelector(selectEmail);
+    const userEmail = useSelector(selectUserEmail);
     const [editName, setEditName] = useState(false);
     const [firstName, setFirstName] = useState(userFirstName);
     const [lastName, setLastName] = useState(userLastName);

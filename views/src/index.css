@@ -260,3 +260,8 @@ select:-webkit-autofill {
     font-size: 3.5rem !important;
 }
 
+:where(.css-dev-only-do-not-override-17seli4).ant-input-outlined.ant-input-disabled, :where(.css-dev-only-do-not-override-17seli4).ant-input-outlined[disabled] {
+    color: black;
+    background-color: white;
+    border-color: #d9d9d9;
+}

@@ -117,3 +117,32 @@ export const findFullOrder = async (order_id: string) => {
     }
 }
 
+export const createOrderShipping = async (
+    order_id: string,
+    name: string,
+    address: string,
+    apartment: string,
+    city: string,
+    state: string,
+    zip_code: string,
+    phone: string,
+    email: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/orders/order-shipping`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ order_id, name, address, apartment, city, state, zip_code, phone, email })
+        });
+
+        //const data = await response.json();
+        if (response.ok) {
+            return true;
+        }
+
+    } catch (error) {
+        throw error;
+    }
+}

@@ -67,6 +67,20 @@ export interface Coupon {
     discount: number;
 }
 
+export interface Address {
+    name: string;
+    address: string;
+    apartment: string;
+    city: string;
+    selectedState: string;
+    zip_code: string;
+    phone: string;
+}
+
+export interface Shipping extends Address {
+    email: string;
+}
+
 export interface User {
     isAuthenticated: boolean,
     firstName: string,
@@ -74,6 +88,7 @@ export interface User {
     email: string;
     headerIsOpen: boolean;
     wish_list: Product[];
+    address_book: Address[],
     cartMode: "current" | "previous" | "combine" | "";
     cartQuestion: boolean;
     isLoadingAuth: boolean;

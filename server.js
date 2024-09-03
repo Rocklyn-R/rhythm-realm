@@ -41,6 +41,7 @@ const cartRouter = require('./routes/cart');
 const wishListRouter = require('./routes/wishList');
 const searchRouter = require('./routes/search');
 const ordersRouter = require('./routes/orders');
+const addressBookRouter = require('./routes/addressBook');
 
 app.use('/categories', categoriesRouter)
 app.use('/products', productsRouter);
@@ -49,6 +50,7 @@ app.use('/cart', cartRouter);
 app.use('/wish-list', wishListRouter);
 app.use('/search', searchRouter);
 app.use('/orders', ordersRouter);
+app.use('/address-book', addressBookRouter);
 
 app.listen(PORT, () => {
     console.log(`Server running on port: ${PORT}`)

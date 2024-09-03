@@ -114,7 +114,27 @@ const orderItemsFind = async (order_id) => {
     }
 }
 
-
+const orderShippingCreate = async (
+    order_id,
+    name,
+    address,
+    apartment,
+    city,
+    state,
+    zip_code,
+    phone,
+    email
+) => {
+    const query = `INSERT INTO order_shipping 
+    (order_id, name, address, apartment, city, state, zip_code, phone, email)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
+    try {
+        const result = await db.query(query, [order_id, name, address, apartment, city, state, zip_code, phone, email]);
+        return result.rows;
+    } catch (error) {
+        throw error;
+    }
+}
 
 
 module.exports = {
@@ -122,5 +142,6 @@ module.exports = {
     orderItemsCreate,
     orderHistoryGet,
     orderFind,
-    orderItemsFind
+    orderItemsFind,
+    orderShippingCreate,
 }

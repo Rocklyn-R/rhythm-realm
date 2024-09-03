@@ -11,6 +11,7 @@ export const UserSlice = createSlice({
         email: '',
         headerIsOpen: false,
         wish_list: [],
+        address_book: [],
         cartMode: "",
         cartQuestion: false,
         isLoadingAuth: true,
@@ -58,6 +59,9 @@ export const UserSlice = createSlice({
         },
         setOrders: (state, action) => {
             state.orders = action.payload;
+        },
+        addToAddressBook: (state, action) => {
+            state.address_book.unshift(action.payload);
         }
     }
 })
@@ -75,18 +79,21 @@ export const {
     setCartMode,
     setCartQuestion,
     setIsLoadingAuth,
-    setOrders
+    setOrders,
+    addToAddressBook
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
 export const selectFirstName = (state: RootState) => state.user.firstName;
 export const selectLastName = (state: RootState) => state.user.lastName;
-export const selectEmail = (state: RootState) => state.user.email;
+export const selectUserEmail = (state: RootState) => state.user.email;
 export const selectHeaderIsOpen = (state: RootState) => state.user.headerIsOpen
 export const selectWishList = (state: RootState) => state.user.wish_list;
 export const selectCartMode = (state: RootState) => state.user.cartMode;
 export const selectCartQuestion = (state: RootState) => state.user.cartQuestion;
 export const selectIsLoadingAuth = (state: RootState) => state.user.isLoadingAuth;
 export const selectOrders = (state: RootState) => state.user.orders;
+export const addressBook = (state: RootState) => state.user.address_book;
+
 
 export default UserSlice.reducer;

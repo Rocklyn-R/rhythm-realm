@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { MdInfoOutline, MdLock } from "react-icons/md";
 import { BillingAddress } from "./BillingAddress/BillingAddress";
 import PayPalLogo from "../../../images/icons/PaypalLogo.png";
-import { createOrder, createOrderItems } from "../../../api/order";
+import { createOrder, createOrderItems, createOrderShipping } from "../../../api/order";
 import { generateOrderNumber } from "../../../utilities/utilities";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -11,6 +11,16 @@ import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, se
 import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
 import { deleteCart } from "../../../api/cart";
 import { useDispatch } from "react-redux";
+import { selectAddress, 
+    selectApartment, 
+    selectCity, 
+    selectFullName, 
+    selectSelectedState,
+    selectZipCode,
+    selectEmail,
+    selectPhone, 
+    clearShippingInfo
+} from "../../../redux-store/ShippingSlice";
 
 /*interface ReviewAndPaymentProps {
     setOrderComplete: (arg0: boolean) => void;
@@ -40,6 +50,14 @@ export const ReviewAndPayment = ({ }) => {
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const fullName = useSelector(selectFullName);
+    const address = useSelector(selectAddress);
+    const apartment = useSelector(selectApartment);
+    const city = useSelector(selectCity);
+    const selectedState  = useSelector(selectSelectedState);
+    const zip_code = useSelector(selectZipCode);
+    const email = useSelector(selectEmail);
+    const phone = useSelector(selectPhone);
 
     const handleClickOutside = (event: any) => {
         if (infoMessageRef.current && !infoMessageRef.current.contains(event.target)) {
@@ -103,14 +121,19 @@ export const ReviewAndPayment = ({ }) => {
             cart.forEach(async (item) => {
                 const newItem = await createOrderItems(order_id, item.variant_id, item.quantity);
                 //setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
-                console.log(newItem);
+                //console.log(newItem);
             })
-            console.log(isAuthenticated);
+            //console.log(isAuthenticated);
             const defaultCartState = {
                 cart: [],
                 total_items: 0,
                 total: "0"
             };
+            const orderShipping = await createOrderShipping(order_id, fullName, address, apartment, city, selectedState, zip_code, phone, email);
+            if (orderShipping) {  // Ensure orderShipping is valid
+                dispatch(clearShippingInfo(""));
+            }
+
             if (isAuthenticated) {
                 const cartDelete = await deleteCart();
                 if (cartDelete) {
@@ -121,7 +144,6 @@ export const ReviewAndPayment = ({ }) => {
                 dispatch(setCart(defaultCartState));
                 localStorage.clear();
             }
-
         }
         navigate(`/Checkout/${order_id}`)
         //setOrderComplete(true);

@@ -37,6 +37,16 @@ export const ShippingSlice = createSlice({
         },
         setPhone: (state, action) => {
             state.phone = action.payload;
+        },
+        clearShippingInfo: (state, action) => {
+            state.full_name = action.payload;
+            state.address = action.payload;
+            state.apartment = action.payload;
+            state.city = action.payload;
+            state.state = action.payload;
+            state.zip_code = action.payload;
+            state.email = action.payload;
+            state.phone = action.payload;
         }
 }})
 
@@ -48,7 +58,8 @@ export const {
     setApartment,
     setCity,
     setEmail,
-    setPhone
+    setPhone,
+    clearShippingInfo
 } = ShippingSlice.actions;
 
 export const selectZipCode = (state: RootState) => state.shipping.zip_code;
