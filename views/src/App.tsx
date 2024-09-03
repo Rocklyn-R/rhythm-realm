@@ -17,6 +17,7 @@ import { OrderHistory } from './features/OrderHistory/OrderHistory';
 import { useFetchOrderHistory } from './hooks/useFetchOrderHistory';
 import { Returns } from './features/Returns/Returns';
 import { OrderComplete } from './features/Checkout/OrderComplete/OrderComplete';
+import { AddressBook } from './features/AddressBook/AddressBook';
 
 
 export const App = () => {
@@ -65,6 +66,10 @@ export const App = () => {
           <Route 
             path="/WishList"
             element={<WishList />}
+          />
+          <Route 
+            path="/AddressBook"
+            element={<AddressBook />}
           />
           <Route 
             path="/AccountSettings"
