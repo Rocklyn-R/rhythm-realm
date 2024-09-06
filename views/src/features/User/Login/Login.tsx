@@ -24,6 +24,8 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         dispatch(setCartMode(""));
+        console.log(password);
+        console.log(email);
         try {
             // Make a POST request to your server's signup endpoint using fetch
             const response = await signInUser(email, password);
@@ -58,7 +60,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
             }
 
         } catch (error: any) {
-            console.error('Error signing up:', error.message);
+            console.log('Error signing up:', error.message);
         }
     }
 
@@ -76,6 +78,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                         name="email"
                         placeholder="Email"
                         className="mb-6"
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                         autoComplete="Email"
@@ -84,6 +87,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                         name="Password"
                         placeholder="Password"
                         className="text-xl"
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
