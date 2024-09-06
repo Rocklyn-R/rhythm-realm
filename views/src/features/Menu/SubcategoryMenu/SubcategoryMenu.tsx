@@ -17,7 +17,6 @@ export const SubcategoryMenu: React.FC<SubcategoryMenuProps> = ({ toggleMenu, ca
                 const subcategoryResults = await getSubcategories(category?.id);
                 if (subcategoryResults) {
                     setSubcategories(subcategoryResults);
-                    console.log(subcategoryResults.category_name)
                 }
             } else return;
         }

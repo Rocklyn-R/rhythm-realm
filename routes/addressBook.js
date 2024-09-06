@@ -1,8 +1,12 @@
 const express = require('express');
-const { addNewAddress } = require("../controllers/addressBook");
+const { addNewAddress, getAddressBook, deleteAddress } = require("../controllers/addressBook");
 
 const addressBookRouter = express.Router();
 
 addressBookRouter.post('/add', addNewAddress);
+
+addressBookRouter.get('/', getAddressBook);
+
+addressBookRouter.delete('/', deleteAddress)
 
 module.exports = addressBookRouter;

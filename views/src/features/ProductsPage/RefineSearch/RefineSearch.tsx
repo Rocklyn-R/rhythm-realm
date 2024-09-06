@@ -224,7 +224,6 @@ export const RefineSearch: React.FC<RefineSearchProps> = ({ setCurrentPage, sear
 
     useEffect(() => {
         if (!searchTerm) {
-            console.log(productsForFilters);
             getCategories(productsForFilters);
             getManufacturers(productsForFilters)
             setUpdatingFilters(false);

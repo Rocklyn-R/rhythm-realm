@@ -62,6 +62,12 @@ export const UserSlice = createSlice({
         },
         addToAddressBook: (state, action) => {
             state.address_book.unshift(action.payload);
+        },
+        setAddressBook: (state, action) => {
+            state.address_book = action.payload;
+        },
+        removeAddress: (state, action) => {
+            state.address_book = state.address_book.filter(address => address.id !== action.payload);
         }
     }
 })
@@ -80,7 +86,9 @@ export const {
     setCartQuestion,
     setIsLoadingAuth,
     setOrders,
-    addToAddressBook
+    addToAddressBook,
+    setAddressBook,
+    removeAddress
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
@@ -93,7 +101,7 @@ export const selectCartMode = (state: RootState) => state.user.cartMode;
 export const selectCartQuestion = (state: RootState) => state.user.cartQuestion;
 export const selectIsLoadingAuth = (state: RootState) => state.user.isLoadingAuth;
 export const selectOrders = (state: RootState) => state.user.orders;
-export const addressBook = (state: RootState) => state.user.address_book;
+export const selectAddressBook = (state: RootState) => state.user.address_book;
 
 
 export default UserSlice.reducer;

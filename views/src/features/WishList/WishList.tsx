@@ -43,9 +43,24 @@ export const WishList = () => {
         }
     }, [isAuthenticated, isLoadingAuth]);
 
+    useEffect(() => {
+        if (showRemoveMessage) {
+            // Prevent scrolling
+            document.body.style.overflow = "hidden";
+        } else {
+            // Restore scrolling
+            document.body.style.overflow = "auto";
+        }
+
+        return () => {
+            document.body.style.overflow = "auto";
+        };
+    }, [showRemoveMessage]);
+
     if (isLoadingAuth) {
         return <div></div>
     }
+
 
     return (
         

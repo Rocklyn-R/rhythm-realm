@@ -72,13 +72,15 @@ export interface Address {
     address: string;
     apartment: string;
     city: string;
-    selectedState: string;
+    state: string;
     zip_code: string;
     phone: string;
+    id: number;
 }
 
 export interface Shipping extends Address {
     email: string;
+    selectedState: string;
 }
 
 export interface User {

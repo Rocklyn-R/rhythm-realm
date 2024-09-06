@@ -125,9 +125,10 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         const validate = validateFields();
         if (validate) {
             if (isAuthenticated && saveAddress) {
-                const addressAdd = await addNewAddress(nameInput, addressInput, aptSuite, cityInput, US_State, zipCodeInput, phoneInput)
-                if (addressAdd) {
+                const addressId = await addNewAddress(nameInput, addressInput, aptSuite, cityInput, US_State, zipCodeInput, phoneInput)
+                if (addressId) {
                     dispatch(addToAddressBook({
+                        id: addressId,
                         name: nameInput,
                         address: addressInput,
                         apartment: aptSuite,

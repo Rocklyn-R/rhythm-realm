@@ -15,7 +15,6 @@ export const useFetchOrderHistory = () => {
         } 
         if (isAuthenticated) {
             const orderHistoryFetch = async () => {
-                console.log("RUNNING NOW")
                const result = await getOrderHistory();
                if (result) {
                 dispatch(setOrders(result));

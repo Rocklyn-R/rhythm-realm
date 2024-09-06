@@ -18,12 +18,14 @@ import { useFetchOrderHistory } from './hooks/useFetchOrderHistory';
 import { Returns } from './features/Returns/Returns';
 import { OrderComplete } from './features/Checkout/OrderComplete/OrderComplete';
 import { AddressBook } from './features/AddressBook/AddressBook';
+import { useFetchAddressBook } from './hooks/useFetchAddressBook';
 
 
 export const App = () => {
   useUserFetch();
   useInitializeCart();
   useFetchWishList();
+  useFetchAddressBook();
   useFetchOrderHistory();
 
   return (

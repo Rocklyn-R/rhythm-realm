@@ -13,21 +13,24 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
     const [lastName, setLastName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [repeatPassword, setRepeatPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState('');
     const dispatch = useDispatch();
 
 
     const handleCreateUser = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (password !== repeatPassword) {
+            setErrorMessage("Passwords don't match.")
+            return;
+        }
         try {
             const response = await createNewUser(firstName, lastName, email, password);
-            console.log(response);
             if (response.error) {
                 if (response.error === 'User with this email already exists') {
                     setErrorMessage("User with this email already exists. Try a different email.");
                 } else {
                     setErrorMessage('Failed to sign up');
-                    console.error(response.details); // Log details for debugging
                 }
             } else if (response.user) {
                 dispatch(authenticateUser());
@@ -58,6 +61,7 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                         name="First name"
                         placeholder="First name"
                         className="mb-6"
+                        value={firstName}
                         required
                         onChange={(e) => setFirstName(e.target.value)}
                     />
@@ -65,6 +69,7 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                         name="Last name"
                         placeholder="Last name"
                         className="mb-6"
+                        value={lastName}
                         required
                         onChange={(e) => setLastName(e.target.value)}
                     />
@@ -72,6 +77,7 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                         name="Email"
                         placeholder="Email"
                         className="mb-6"
+                        value={email}
                         required
                         onChange={(e) => setEmail(e.target.value)}
                     />
@@ -79,8 +85,17 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                         name="Password"
                         placeholder="Password"
                         className="mb-6 text-xl"
+                        value={password}
                         required
                         onChange={(e) => setPassword(e.target.value)}
+                    />
+                     <Input.Password
+                        name="Password-repeat"
+                        placeholder="Repeat Password"
+                        className="mb-6 text-xl"
+                        value={repeatPassword}
+                        required
+                        onChange={(e) => setRepeatPassword(e.target.value)}
                     />
                 </div>
                 <p className="text-xs pt-4 w-5/6 font-light text-center">By creating an account, you have agreed to Rhythm Realm's Purchase Terms and Conditions, and you have reviewed Rhythm Realm's Privacy Policy.

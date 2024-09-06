@@ -96,7 +96,7 @@ export const CartSummary = () => {
         if (isAuthenticated) {
             await removeFromCart(cartItem.id, cartItem.variant_id);
         }
-        if (cart.length === 1) {
+        if (cart.length === 1 && cart[0].quantity === 1) {
             navigate("/Cart");
         }
     }
