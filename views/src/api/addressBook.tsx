@@ -73,3 +73,40 @@ export const deleteAddress = async (id: number) => {
         throw error;
     }
 }
+
+export const editAddress = async (
+    id: number,
+    name: string,
+    address: string,
+    apartment: string,
+    city: string,
+    state: string,
+    zip_code: string,
+    phone: string
+) => {
+    try {
+        const response = await fetch(`http://localhost:4000/address-book/`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include',
+            body: JSON.stringify({ 
+                id,
+                name,
+                address,
+                apartment,
+                city,
+                state,
+                zip_code,
+                phone 
+            })
+        });
+    
+      
+        return response.ok;
+
+    } catch (error) {
+        throw error;
+    }
+}

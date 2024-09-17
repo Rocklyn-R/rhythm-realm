@@ -8,13 +8,14 @@ import {
     removeAddress,
     addToAddressBook
 } from "../../redux-store/UserSlice";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
 import { Input } from "antd";
 import { FiPlus } from "react-icons/fi";
 import { SelectState } from "../OrderSummary/Shipping/SelectState";
 import { SelectProps } from "antd";
 import { fetchStateByZipCode } from "../../api/cart";
+import { formatPhoneNumber } from "../../utilities/utilities";
 
 export const AddressBook = () => {
     const dispatch = useDispatch();
@@ -162,23 +163,21 @@ export const AddressBook = () => {
             <h2 className="text-3xl text-center font-bold mb-6">Address Book</h2>
 
             {!showAddressForm && (
-                <div className="flex flex-col w-full items-center justify-center">
+                <div className="flex flex-col w-2/3 items-center justify-center">
                     <div className="space-y-4 w-full flex flex-col justify-center items-center">
                         {addressBook.map(address => (
-                            <div className="flex space-x-6">
-                                <div className="flex flex-col bg-white shadow-md p-4">
+                            <div className="flex space-x-20 bg-white shadow-md p-4">
+                                <div className="flex flex-col">
                                     <p>{address.name}</p>
-                                    <p>{address.address}</p>
-                                    <div className="flex">
-                                        <p>{address.city},</p>
-                                        <p>{address.state}</p>
-                                    </div>
-                                    <p>{address.zip_code}</p>
+                                    <p>{address.address}{address.apartment ? `, ${address.apartment}` : ""}</p>
+                                    <p>{address.city}, {address.state} {address.zip_code}</p>
+                                    <p>{formatPhoneNumber(address.phone)}</p>
                                 </div>
-                                <button onClick={() => clickDelete(address.id)} className="flex flex-col items-center self-center"><FaRegTrashAlt className="text-xl" /></button>
-
+                                <div className="flex space-x-4">
+                                    <button><FaRegEdit className="text-xl" /></button>
+                                    <button onClick={() => clickDelete(address.id)} className="flex flex-col items-center self-center"><FaRegTrashAlt className="text-xl" /></button>
+                                </div>
                             </div>
-
                         ))}
                         {addressBook.length == 0 && (
                             <div className="flex flex-col items-center justify-center space-y-4">

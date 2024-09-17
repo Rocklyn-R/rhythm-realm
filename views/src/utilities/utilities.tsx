@@ -73,3 +73,21 @@ export const formatDateString = (isoString: string) => {
 
   return `${month}/${day}/${year}`;
 }
+
+
+export const formatPhoneNumber = (phone: string) => {
+  // Remove all non-digit characters
+  const cleaned = ('' + phone).replace(/\D/g, '');
+
+  // Format for 11 digits with country code (starting with '1')
+  if (cleaned.length === 11 && cleaned.startsWith('1')) {
+    return cleaned.replace(/^1(\d{3})(\d{3})(\d{4})$/, '1-$1-$2-$3');
+  }
+  // Format for 10 digits (without country code)
+  else if (cleaned.length === 10) {
+    return cleaned.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+  }
+  // Return the original if it doesn't match 10 or 11 digits
+  return phone;
+};
+

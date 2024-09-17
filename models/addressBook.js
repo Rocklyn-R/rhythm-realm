@@ -50,8 +50,39 @@ const addressDelete = async (user_id, id) => {
     }
 }
 
+const addressEdit = async (
+    user_id, 
+    id,
+    name,
+    address,
+    apartment,
+    city,
+    state,
+    zip_code,
+    phone) => {
+        const query = `UPDATE address_book 
+        SET name = $1, 
+        address = $2, 
+        apartment = $3,
+        city = $4,
+        state = $5,
+        zip_code = $6,
+        phone = $7
+        WHERE user_id = $8 AND id = $9`
+        try {
+            const result = await db.query(query, [name, address, apartment, city, state, zip_code, phone, user_id, id]);
+            if (result) {
+                return result;
+            }
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+}
+
 module.exports = {
     newAddressAdd,
     addressBookGet,
-    addressDelete
+    addressDelete,
+    addressEdit
 }

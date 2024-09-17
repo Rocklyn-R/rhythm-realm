@@ -8,10 +8,9 @@ import { FaRegEdit } from "react-icons/fa";
 import { ReviewAndPayment } from "./Review & Payment/ReviewAndPayment";
 import { selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
-import { OrderComplete } from "./OrderComplete/OrderComplete";
-import { Order, OrderItem } from "../../types/types";
 import { useNavigate } from "react-router-dom";
 import { selectCart } from "../../redux-store/CartSlice";
+import { selectAddressBook, selectIsAuthenticated } from "../../redux-store/UserSlice";
 
 export const Checkout = () => {
     const name = useSelector(selectFullName);
@@ -26,11 +25,9 @@ export const Checkout = () => {
     const shippingCost = useSelector(selectShippingCost);
     const [editMode, setEditMode] = useState(address ? true : false);
     const [showReviewAndPayment, setShowReviewAndPayment] = useState(false);
-    const [orderComplete, setOrderComplete] = useState(false);
-    //const [currentOrder, setCurrentOrder] = useState<Order | undefined>();
-    //const [currentOrderItems, setCurrentOrderItems] = useState<OrderItem[]>([]);
     const navigate = useNavigate();
     const cart = useSelector(selectCart);
+
 
     const handleEditDelivery = () => {
         setEditMode(true);
@@ -79,22 +76,14 @@ export const Checkout = () => {
                                 <p>{phone}</p>
                             </div>
                         </div>
-                    ) : (
-                        editMode ? (
+                    ) : 
                             <Delivery
                                 setEditMode={setEditMode}
                                 editMode={editMode}
                                 setShowReviewAndPayment={setShowReviewAndPayment}
                             />
-                        ) : (
-                            <Delivery
-                                setEditMode={setEditMode}
-                                editMode={editMode}
-                                setShowReviewAndPayment={setShowReviewAndPayment}
-                            // Additional props can be added here if needed
-                            />
-                        )
-                    )}
+    
+                    }
 
                 </div>
 

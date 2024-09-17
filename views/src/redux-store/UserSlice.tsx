@@ -61,13 +61,19 @@ export const UserSlice = createSlice({
             state.orders = action.payload;
         },
         addToAddressBook: (state, action) => {
-            state.address_book.unshift(action.payload);
+            state.address_book.push(action.payload);
         },
         setAddressBook: (state, action) => {
             state.address_book = action.payload;
         },
         removeAddress: (state, action) => {
             state.address_book = state.address_book.filter(address => address.id !== action.payload);
+        },
+        updateAddress: (state, action) => {
+            const addressIndex = state.address_book.findIndex(address => address.id === action.payload.id);
+            if (addressIndex !== -1) {
+                state.address_book[addressIndex] = action.payload;
+            }
         }
     }
 })
@@ -88,7 +94,8 @@ export const {
     setOrders,
     addToAddressBook,
     setAddressBook,
-    removeAddress
+    removeAddress,
+    updateAddress
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
