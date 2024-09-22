@@ -54,7 +54,7 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
                     <div className="">
                         <Link
                             className="hover:underline mr-2 w-full"
-                            to={`/${item.category_name}/${item.subcategory_name}/${item.name}/${item.variant_name}`}
+                            to={`/${item.category_name}/${item.subcategory_name}/${item.name}/${item.variant_name ? `/${item.variant_name}` : ''}`}
                         >
                             <img
                                 width="180"
@@ -70,7 +70,7 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
                         <Link
                             onClick={() => toggleCart()}
                             className="hover:underline"
-                            to={`/${item.category_name}/${item.subcategory_name}/${item.name}/${item.variant_name}`}
+                            to={`/${item.category_name}/${item.subcategory_name}/${item.name}/${item.variant_name ? `/${item.variant_name}` : ''}`}
                         >
                             {item.name} {item.variant_name}
                         </Link>
