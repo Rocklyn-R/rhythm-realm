@@ -32,7 +32,7 @@ export const ShippingSlice = createSlice({
         setCity: (state, action) => {
             state.city = action.payload;
         },
-        setEmail: (state, action) => {
+        setShippingEmail: (state, action) => {
             state.email = action.payload;
         },
         setPhone: (state, action) => {
@@ -57,7 +57,7 @@ export const {
     setAddress,
     setApartment,
     setCity,
-    setEmail,
+    setShippingEmail,
     setPhone,
     clearShippingInfo
 } = ShippingSlice.actions;
@@ -70,6 +70,6 @@ export const selectApartment = (state: RootState) => state.shipping.apartment;
 export const selectCity = (state: RootState) => state.shipping.city;
 export const selectEmail = (state: RootState) => state.shipping.email;
 export const selectPhone = (state: RootState) => state.shipping.phone;
-
+export const shippingState = (state: RootState) => state.shipping;
 
 export default ShippingSlice.reducer;

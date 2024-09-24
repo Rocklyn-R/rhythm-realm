@@ -49,7 +49,7 @@ export const Subcategories: React.FC = () => {
   return (
     <div className="flex flex-col items-center mb-14">
       <h2 className="text-center text-2xl font-bold mb-6">{categoryNameCapitalized}:</h2>
-      <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
+      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
         {categoryName && subcategories.map((subcategory, index) => (
           <Link
           onClick={() => dispatch(setLoadingProducts(true))}

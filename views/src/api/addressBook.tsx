@@ -14,17 +14,17 @@ export const addNewAddress = async (
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 name,
                 address,
                 apartment,
                 city,
                 state,
                 zip_code,
-                phone 
+                phone
             })
         });
-    
+
         const data = await response.json();
         if (response.ok) {
             return data.id.id;
@@ -65,7 +65,7 @@ export const deleteAddress = async (id: number) => {
             credentials: 'include',
             body: JSON.stringify({ id })
         });
-   
+
         return response.ok;
 
     } catch (error) {
@@ -91,7 +91,7 @@ export const editAddress = async (
                 'Content-Type': 'application/json',
             },
             credentials: 'include',
-            body: JSON.stringify({ 
+            body: JSON.stringify({
                 id,
                 name,
                 address,
@@ -99,12 +99,13 @@ export const editAddress = async (
                 city,
                 state,
                 zip_code,
-                phone 
+                phone
             })
         });
-    
-      
-        return response.ok;
+
+
+        return response.ok
+
 
     } catch (error) {
         throw error;

@@ -10,7 +10,7 @@ import {
     setAddress,
     setApartment,
     setCity,
-    setEmail,
+    setShippingEmail,
     setFullName,
     setPhone,
     setSelectedState,
@@ -26,8 +26,8 @@ import {
 } from "../../../redux-store/ShippingSlice";
 import { FiftyStates } from "../../OrderSummary/Shipping/50states";
 import { fetchStateByZipCode } from "../../../api/cart";
-import { addToAddressBook, selectAddressBook, selectIsAuthenticated, selectUserEmail, updateAddress } from "../../../redux-store/UserSlice";
-import { addNewAddress, editAddress } from "../../../api/addressBook";
+import { addToAddressBook, removeAddress, selectAddressBook, selectIsAuthenticated, selectUserEmail, updateAddress } from "../../../redux-store/UserSlice";
+import { addNewAddress, deleteAddress, editAddress } from "../../../api/addressBook";
 import { formatPhoneNumber } from "../../../utilities/utilities";
 import { Address } from "../../../types/types";
 import { FaRegEdit } from "react-icons/fa";
@@ -36,9 +36,12 @@ interface DeliveryProps {
     setEditMode: (arg0: boolean) => void;
     editMode: boolean;
     setShowReviewAndPayment: (arg0: boolean) => void;
+    editSavedMode: boolean;
+    setEditSavedMode: (arg0: boolean) => void;
+    scrollToDelivery: () => void;
 }
 
-export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, editMode, setEditMode }) => {
+export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, editMode, setEditMode, editSavedMode, setEditSavedMode, scrollToDelivery }) => {
     const [showAptInput, setShowAptInput] = useState(false);
     const dispatch = useDispatch();
     const appliedCoupon = useSelector(selectAppliedCoupon);
@@ -46,9 +49,8 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const total = useSelector(selectTotal);
     const name = useSelector(selectFullName);
     const isAuthenticated = useSelector(selectIsAuthenticated);
-    const userEmail = useSelector(selectUserEmail);
+    //const userEmail = useSelector(selectUserEmail);
     const selectedEmail = useSelector(selectEmail);
-    const email = isAuthenticated ? userEmail : selectedEmail;
     const phone = useSelector(selectPhone);
     const address = useSelector(selectAddress);
     const apt = useSelector(selectApartment);
@@ -56,7 +58,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const zipCode = useSelector(selectZipCode);
     const US_State = useSelector(selectSelectedState);
     const [US_state, setUS_state] = useState<string>(editMode ? US_State : "");
-    const [emailInput, setEmailInput] = useState((editMode && isAuthenticated) ? email : !editMode && isAuthenticated ? email : "");
+    const [emailInput, setEmailInput] = useState(selectedEmail);
     const [phoneInput, setPhoneInput] = useState(editMode ? phone : "");
     const [nameInput, setName] = useState(editMode ? name : "");
     const [addressInput, setAddressInput] = useState(editMode ? address : "");
@@ -65,11 +67,11 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const [zipCodeInput, setZipCode] = useState(editMode ? zipCode : "");
     const [errors, setErrors] = useState<any>({});
     const shipping_cost = useSelector(selectShippingCost);
-    const [saveAddress, setSaveAddress] = useState(true);
+    const [saveAddress, setSaveAddress] = useState(editMode ? false : true);
     const addressBook = useSelector(selectAddressBook);
     const [selectedAddressId, setSelectedAddressId] = useState<number>();
-    const [showDeliveryForm, setShowDeliveryForm] = useState(isAuthenticated && addressBook.length > 0 ? false : true)
-    const [editSavedMode, setEditSavedMode] = useState(false);
+    const [showDeliveryForm, setShowDeliveryForm] = useState(isAuthenticated && addressBook.length > 0 && !editSavedMode && !editMode ? false : true)
+    const disabledContinueButton = isAuthenticated && editSavedMode ? true : false;
 
     const calculateTaxFromState = useCallback((value: string, totalWithCoupon: string, total: string, shippingCost: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === value)?.tax_rate;
@@ -128,37 +130,69 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         return Object.keys(newErrors).length === 0;
     };
 
+    const checkExistingAddress = () => {
+        const matchingAddress = addressBook.find((existingAddress) => {
+            return (
+                existingAddress.name === nameInput.trim() &&
+                existingAddress.address === addressInput.trim() &&
+                (existingAddress.apartment || "") === aptSuite.trim() && // Handle empty apartment values
+                existingAddress.city === cityInput.trim() &&
+                existingAddress.state === US_state.trim() &&
+                existingAddress.zip_code === zipCodeInput.trim() &&
+                existingAddress.phone === phoneInput.trim()
+            );
+        });
+    
+        return matchingAddress ? matchingAddress.id : null;
+    };
+
     const handleContinueToPayment = async () => {
-        console.log(aptSuite);
         const validate = validateFields();
         if (validate) {
             if (isAuthenticated && saveAddress && showDeliveryForm) {
-                const addressId = await addNewAddress(nameInput, addressInput, aptSuite, cityInput, US_State, zipCodeInput, phoneInput)
-                if (addressId) {
-                    dispatch(addToAddressBook({
-                        id: addressId,
-                        name: nameInput,
-                        address: addressInput,
-                        apartment: aptSuite,
-                        city: cityInput,
-                        state: US_State,
-                        zip_code: zipCodeInput,
-                        phone: phoneInput
-                    }))
+                const addressExists = checkExistingAddress();
+                if (!addressExists) {
+                    const addressId: number = await addNewAddress(nameInput, addressInput, aptSuite, cityInput, US_State, zipCodeInput, phoneInput)
+                    if (addressId) {
+                        const foundId = addressBook.find(address => address.id === addressId);
+                        console.log(addressId);
+                        console.log(foundId);
+                        if (!foundId) {
+                            dispatch(addToAddressBook({
+                                id: addressId,
+                                name: nameInput,
+                                address: addressInput,
+                                apartment: aptSuite,
+                                city: cityInput,
+                                state: US_State,
+                                zip_code: zipCodeInput,
+                                phone: phoneInput
+                            }))
+                        } else {
+                            console.log("RUNS NOW TGA");
+                            console.log(addressId);
+                            setSelectedAddressId(foundId.id);
+                        }
+                    }
+                } else {
+                    setSelectedAddressId(addressExists);
                 }
+
             }
             dispatch(setFullName(nameInput));
             dispatch(setAddress(addressInput));
             dispatch(setApartment(aptSuite));
             dispatch(setCity(cityInput));
-            dispatch(setEmail(emailInput));
+            dispatch(setShippingEmail(emailInput));
             dispatch(setPhone(phoneInput));
             dispatch(setSelectedZipCode(zipCodeInput));
             setShowReviewAndPayment(true);
             setEditMode(false);
         }
     }
-
+    useEffect(() => {
+        console.log(selectedAddressId);
+    }, [selectedAddressId])
 
 
     useEffect(() => {
@@ -196,6 +230,10 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         setCityInput("");
         setZipCode("");
         handleSelectState("");
+        setEditMode(false);
+        setEditSavedMode(false);
+        setSaveAddress(true);
+        scrollToDelivery();
     }
 
     const editSavedAddress = (address: Address) => {
@@ -213,34 +251,36 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         }
     }
 
-   useEffect(() => {
-    if (editMode && isAuthenticated && addressBook.length > 0) {
-        const foundAddress = addressBook.find(address =>
-            address.address === addressInput &&
-            address.name === nameInput &&
-            address.city === cityInput &&
-            address.phone === phoneInput &&
-            address.apartment === aptSuite &&
-            address.zip_code === zipCodeInput &&
-            address.state === US_state
-        );
+    useEffect(() => {
+        if (editMode && isAuthenticated && addressBook.length > 0) {
+            const foundAddress = addressBook.find(address =>
+                address.address === addressInput &&
+                address.name === nameInput &&
+                address.city === cityInput &&
+                address.phone === phoneInput &&
+                address.apartment === aptSuite &&
+                address.zip_code === zipCodeInput &&
+                address.state === US_state
+            );
             if (foundAddress) {
-               setSelectedAddressId(foundAddress.id) 
+                setSelectedAddressId(foundAddress.id)
             }
-    }
+        }
     }, [editMode, isAuthenticated, addressBook]);
 
     const saveAddressEdits = async () => {
+        console.log(selectedAddressId);
+        const duplicateAddressId = checkExistingAddress();
         if (selectedAddressId) {
-           const editsSaved = await editAddress(
-            selectedAddressId, 
-            nameInput, 
-            addressInput, 
-            aptSuite, 
-            cityInput, 
-            US_state, 
-            zipCodeInput, 
-            phoneInput); 
+            const editsSaved = await editAddress(
+                selectedAddressId,
+                nameInput,
+                addressInput,
+                aptSuite,
+                cityInput,
+                US_state,
+                zipCodeInput,
+                phoneInput);
             if (editsSaved) {
                 dispatch(updateAddress({
                     id: selectedAddressId,
@@ -256,9 +296,17 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                 setShowDeliveryForm(false);
                 setEditSavedMode(false);
             }
+            if (editsSaved && duplicateAddressId && (selectedAddressId !== duplicateAddressId)) {
+                const duplicateAddressDelete = await deleteAddress(duplicateAddressId);
+                if (duplicateAddressDelete) {
+                    dispatch(removeAddress(duplicateAddressId));
+                }
+            }
         }
-        
+
     }
+
+
 
 
     return (
@@ -275,10 +323,10 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                                 <p>{formatPhoneNumber(address.phone)}</p>
                             </div>
                             <div>
-                            <button className="flex items-center text-gray-600" onClick={() => editSavedAddress(address)}>
-                                <FaRegEdit />
-                                <p className="m-2 font-semibold">Edit</p>
-                            </button>
+                                <button className="flex items-center text-gray-600" onClick={() => editSavedAddress(address)}>
+                                    <FaRegEdit />
+                                    <p className="m-2 font-semibold">Edit</p>
+                                </button>
                             </div>
 
                         </div>
@@ -376,30 +424,30 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             )}
 
             {isAuthenticated && nameInput && addressInput && cityInput && US_State && zipCodeInput && phoneInput && showDeliveryForm && (
-                editSavedMode ? 
+                editSavedMode ?
                     <div className="flex items-center mt-6 w-full justify-center space-x-4">
-                        <button 
-                        onClick={() => {
-                            setShowDeliveryForm(false)
-                            setEditSavedMode(false)
-                        }}
-                        className="hover:bg-red-800 transition-colors duration-300 ease p-4 mx-4 rounded-md bg-black text-white text-xl">Cancel</button>
-                        <button 
-                        onClick={saveAddressEdits}
-                        className="hover:bg-red-800 transition-colors duration-300 ease p-4 mx-4 rounded-md bg-black text-white text-xl">Save & Continue</button>
+                        <button
+                            onClick={() => {
+                                setShowDeliveryForm(false)
+                                setEditSavedMode(false)
+                            }}
+                            className="hover:bg-red-800 transition-colors duration-300 ease p-4 mx-4 rounded-md bg-black text-white text-xl">Cancel</button>
+                        <button
+                            onClick={saveAddressEdits}
+                            className="hover:bg-red-800 transition-colors duration-300 ease p-4 mx-4 rounded-md bg-black text-white text-xl">Save & Continue</button>
                     </div>
-                 : <div className="flex items-center mt-6">
-                    <input
-                        id="savetoaddressbook"
-                        type="checkbox"
-                        className="mr-3 w-6 h-6 custom-checkbox"
-                        checked={saveAddress}
-                        onChange={() => setSaveAddress(!saveAddress)}
-                    />
-                    <label htmlFor="savetoaddressbook">Save to address book.</label>
+                    : <div className="flex items-center mt-6">
+                        <input
+                            id="savetoaddressbook"
+                            type="checkbox"
+                            className="mr-3 w-6 h-6 custom-checkbox"
+                            checked={saveAddress}
+                            onChange={() => setSaveAddress(!saveAddress)}
+                        />
+                        <label htmlFor="savetoaddressbook">Save to address book.</label>
 
-                </div>
-                
+                    </div>
+
             )}
 
             {US_state ?
@@ -409,13 +457,12 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                         calculateTaxFromState={calculateTaxFromState}
                     />
                     <button
-                         className={`p-4 mx-4 rounded-md text-white text-xl transition-colors duration-300 ease ${
-                            editSavedMode 
-                                ? 'bg-gray-600 cursor-not-allowed'
-                                : 'bg-black hover:bg-red-800 cursor-pointer'
-                        }`}
+                        className={`p-4 mx-4 rounded-md text-white text-xl transition-colors duration-300 ease ${disabledContinueButton
+                            ? 'bg-gray-600 cursor-not-allowed'
+                            : 'bg-black hover:bg-red-800 cursor-pointer'
+                            }`}
                         onClick={() => handleContinueToPayment()}
-                        disabled={editSavedMode}
+                        disabled={disabledContinueButton}
                     >
                         Continue to Payment
                     </button>

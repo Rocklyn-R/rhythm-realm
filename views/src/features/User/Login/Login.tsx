@@ -7,6 +7,7 @@ import { signInUser } from "../../../api/user";
 import { selectCart } from "../../../redux-store/CartSlice";
 import { authenticateUser, setCartMode, setCartQuestion, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
 import _ from 'lodash';
+import { setShippingEmail } from "../../../redux-store/ShippingSlice";
 
 interface LoginProps {
     toggleLogin: () => void;
@@ -40,6 +41,7 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                 dispatch(setUserFirstName(response.user.first_name));
                 dispatch(setUserLastName(response.user.last_name));
                 dispatch(setUserEmail(response.user.email));
+                dispatch(setShippingEmail(response.user.email));
                 if (cart.length === 0) {
                     dispatch(setCartMode("previous"));
                     toggleLogin();

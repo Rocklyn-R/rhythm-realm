@@ -1,5 +1,5 @@
 import { OrderSummary } from "../OrderSummary/OrderSummary"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Delivery } from "./Delivery/Delivery";
 import { useSelector } from "react-redux";
 import { selectAddress, selectApartment, selectCity, selectEmail, selectFullName, selectPhone, selectSelectedState, selectZipCode } from "../../redux-store/ShippingSlice";
@@ -27,11 +27,41 @@ export const Checkout = () => {
     const [showReviewAndPayment, setShowReviewAndPayment] = useState(false);
     const navigate = useNavigate();
     const cart = useSelector(selectCart);
+    const addressBook = useSelector(selectAddressBook);
+    const [editSavedMode, setEditSavedMode] = useState(false);
+    const deliveryRef = useRef<HTMLHeadingElement>(null);
 
+    const scrollToDelivery = () => {
+        if (deliveryRef.current) {
+            deliveryRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    };
+
+    const checkExistingAddress = () => {
+        const doesExist = addressBook.some((existingAddress) => {
+            return (
+                existingAddress.name === name.trim() &&
+                existingAddress.address === address.trim() &&
+                (existingAddress.apartment || "") === apt.trim() && // Handle empty apartment values
+                existingAddress.city === city.trim() &&
+                existingAddress.state === US_State.trim() &&
+                existingAddress.zip_code === zipCode.trim() &&
+                existingAddress.phone === phone.trim()
+            );
+        });
+
+        return doesExist;
+    };
 
     const handleEditDelivery = () => {
         setEditMode(true);
         setShowReviewAndPayment(false);
+        const addressExists = checkExistingAddress();
+        if (addressExists) {
+            setEditSavedMode(true);
+        } else {
+            setEditSavedMode(false);
+        }
     }
 
     useEffect(() => {
@@ -51,7 +81,7 @@ export const Checkout = () => {
             <div className="flex flex-col lg:w-2/3">
                 <div className="h-fit bg-white rounded-md shadow-lg p-6">
                     <div className="flex items-end">
-                        <h1 className="text-3xl w-full mr-1 font-bold">Delivery</h1>
+                        <h1 ref={deliveryRef} className="text-3xl w-full mr-1 font-bold">Delivery</h1>
                         {showReviewAndPayment && !editMode && (
                             <button className="flex items-center text-gray-600" onClick={() => handleEditDelivery()}>
                                 <FaRegEdit />
@@ -81,6 +111,9 @@ export const Checkout = () => {
                                 setEditMode={setEditMode}
                                 editMode={editMode}
                                 setShowReviewAndPayment={setShowReviewAndPayment}
+                                editSavedMode={editSavedMode}
+                                setEditSavedMode={setEditSavedMode}
+                                scrollToDelivery={scrollToDelivery}
                             />
     
                     }

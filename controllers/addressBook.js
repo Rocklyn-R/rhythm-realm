@@ -72,8 +72,8 @@ const editAddress = async (req, res) => {
   try {
     const result = await addressEdit(user_id, id, name, address, apartment, city, state, zip_code, phone);
     if (result) {
-      res.status(200).json({ message: "Address successfully updated" });
-    }
+      res.status(200).json({ message: "Address successfully updated." })
+    } 
   } catch {
     res.status(500).json({ message: "Internal Server Error" })
   }

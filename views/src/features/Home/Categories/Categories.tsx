@@ -25,7 +25,7 @@ export const Categories = () => {
     <div className="flex flex-col items-center mb-14">
       <h1 className="mb-8 text-3xl text-center font-bold">Rhythm Realm - Online Shop for Musical Instruments</h1>
       <h2 className="text-center text-xl mb-6">Shop by category:</h2>
-      <div className="grid xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
+      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
         {filteredCategories.map((category) => (
           <Link
             to={`/${category.name}`}
