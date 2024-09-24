@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux"
-import { deleteAddress, getAddressBook, addNewAddress } from "../../api/addressBook"
+import { deleteAddress, addNewAddress, editAddress } from "../../api/addressBook"
 import {
     selectAddressBook,
-    setAddressBook,
     removeAddress,
     addToAddressBook,
-    selectLoadingAddressBook
+    selectLoadingAddressBook,
+    updateAddress
 } from "../../redux-store/UserSlice";
 import { FaRegEdit, FaRegTrashAlt } from "react-icons/fa";
 import { FaX } from "react-icons/fa6";
@@ -18,6 +18,7 @@ import { SelectProps } from "antd";
 import { fetchStateByZipCode } from "../../api/cart";
 import { formatPhoneNumber } from "../../utilities/utilities";
 import { Loading } from "../Loading/Loading";
+import { Address } from "../../types/types";
 
 export const AddressBook = () => {
     const dispatch = useDispatch();
@@ -36,6 +37,8 @@ export const AddressBook = () => {
     const [addressIdToRemove, setAddressIdToRemove] = useState<number>();
     const [addressExists, setAddressExists] = useState(false);
     const loadingAddressBook = useSelector(selectLoadingAddressBook);
+    const [editMode, setEditMode] = useState(false);
+    const [selectedAddressId, setSelectedAddressId] = useState<number>();
 
     const clickDelete = (id: number) => {
         setShowDeleteMessage(true);
@@ -53,6 +56,7 @@ export const AddressBook = () => {
     }
 
     const toggleAddressForm = () => {
+        setEditMode(false);
         setShowAddressForm(!showAddressForm);
         setNameInput("");
         setAddressInput("");
@@ -96,8 +100,9 @@ export const AddressBook = () => {
         getState();
     }, [dispatch, zipCodeInput]);
 
+
     const checkExistingAddress = () => {
-        const doesExist = addressBook.some((existingAddress) => {
+        const matchingAddress = addressBook.find((existingAddress) => {
             return (
                 existingAddress.name === nameInput.trim() &&
                 existingAddress.address === addressInput.trim() &&
@@ -108,8 +113,8 @@ export const AddressBook = () => {
                 existingAddress.phone === phoneInput.trim()
             );
         });
-
-        return doesExist;
+    
+        return matchingAddress ? matchingAddress.id : null;
     };
 
     const handleSaveAddress = async () => {
@@ -161,6 +166,56 @@ export const AddressBook = () => {
     }, [showDeleteMessage]);
 
 
+    const handleClickEditAddress = (address: Address) => {
+        setSelectedAddressId(address.id);
+        setEditMode(true);
+        setNameInput(address.name);
+        setAddressInput(address.address);
+        setAptSuite(address.apartment);
+        setCityInput(address.city);
+        setUS_state(address.state);
+        setZipCodeInput(address.zip_code);
+        setPhoneInput(address.phone);
+        setShowAddressForm(true);
+    }
+
+    const saveAddressEdits = async () => {
+        const duplicateAddressId = checkExistingAddress();
+        if (selectedAddressId) {
+            const editsSaved = await editAddress(
+                selectedAddressId,
+                nameInput,
+                addressInput,
+                aptSuite,
+                cityInput,
+                US_state,
+                zipCodeInput,
+                phoneInput);
+            if (editsSaved) {
+                dispatch(updateAddress({
+                    id: selectedAddressId,
+                    name: nameInput,
+                    address: addressInput,
+                    apartment: aptSuite,
+                    city: cityInput,
+                    state: US_state,
+                    zip_code: zipCodeInput,
+                    phone: phoneInput
+                }))
+                setEditMode(false);
+                toggleAddressForm();
+            }
+            if (editsSaved && duplicateAddressId && (selectedAddressId !== duplicateAddressId)) {
+                const duplicateAddressDelete = await deleteAddress(duplicateAddressId);
+                if (duplicateAddressDelete) {
+                    dispatch(removeAddress(duplicateAddressId));
+                }
+            }
+        }
+
+    }
+
+
     return (
         <div className="flex flex-col mb-14 px-4 w-full items-center">
             <h2 className="text-3xl text-center font-bold mb-6">Address Book</h2>
@@ -169,8 +224,8 @@ export const AddressBook = () => {
                     {!showAddressForm && (
                         <div className="flex flex-col w-2/3 items-center justify-center">
                             <div className="space-y-4 w-1/2 flex flex-col justify-center items-center">
-                                {addressBook.map(address => (
-                                    <div className="flex space-x-20 bg-white shadow-md p-4 w-full justify-between">
+                                {addressBook.map((address, index) => (
+                                    <div key={index} className="flex space-x-20 bg-white shadow-md p-4 w-full justify-between">
                                         <div className="flex flex-col">
                                             <p>{address.name}</p>
                                             <p>{address.address}{address.apartment ? `, ${address.apartment}` : ""}</p>
@@ -178,7 +233,7 @@ export const AddressBook = () => {
                                             <p>{formatPhoneNumber(address.phone)}</p>
                                         </div>
                                         <div className="flex space-x-4">
-                                            <button><FaRegEdit className="text-xl" /></button>
+                                            <button onClick={() => handleClickEditAddress(address)}><FaRegEdit className="text-xl" /></button>
                                             <button onClick={() => clickDelete(address.id)} className="flex flex-col items-center self-center"><FaRegTrashAlt className="text-xl" /></button>
                                         </div>
                                     </div>
@@ -269,7 +324,13 @@ export const AddressBook = () => {
                                     <p className="text-red-800">The address you entered is already in your address book.</p>
                                 )}
                                 <div className="flex w-full justify-center mt-6 mb-2">
-                                    <button onClick={handleSaveAddress} className="bg-black hover:bg-red-800 transition-colors duration-300 ease w-fit p-4 rounded-md text-white text-xl">Save address</button>
+                                    <button onClick={() => {
+                                        if (editMode) {
+                                            saveAddressEdits();
+                                        } else {
+                                            handleSaveAddress();
+                                        }
+                                    }} className="bg-black hover:bg-red-800 transition-colors duration-300 ease w-fit p-4 rounded-md text-white text-xl">Save address</button>
                                 </div>
                             </div>
                         </div>
