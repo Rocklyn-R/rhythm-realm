@@ -12,9 +12,6 @@ export const Header = () => {
                 <div className="ml-4 mr-4 border rounded-md border-black p-2">
                     <img alt="Rhythm Realm logo" src={logo} width="160" />
                 </div>
-                <div className="mr-4">
-                    <Menu />
-                </div>
                 <div className="1md:flex w-2/3 justify-center hidden items-center z-30 -mb-1">
                     <SearchBar />
                 </div>
