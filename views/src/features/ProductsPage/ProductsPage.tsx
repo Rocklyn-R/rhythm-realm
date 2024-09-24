@@ -14,7 +14,7 @@ import { IoCaretBack, IoCaretForward } from "react-icons/io5";
 import {
     setProductsForFilters
 } from "../../redux-store/FiltersSlice";
-import { LoadingProducts } from "./Loading/Loading";
+import { Loading } from "../Loading/Loading";
 
 
 interface ProductsPageProps {
@@ -204,7 +204,7 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({ searchTerm, brand })
                         !loadingProducts && zeroProducts && <p className="w-full flex justify-center p-6">No products found.</p>
                     )}
 
-                    {loadingProducts ? <LoadingProducts /> :
+                    {loadingProducts ? <Loading /> :
 
                         <Products
                             uniqueProducts={currentProducts} // Render current page products

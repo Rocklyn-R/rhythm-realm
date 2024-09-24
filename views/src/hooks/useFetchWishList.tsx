@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getWishList } from "../api/wishList";
-import { selectIsAuthenticated, setWishList } from "../redux-store/UserSlice";
+import { selectIsAuthenticated, setLoadingWishList, setWishList } from "../redux-store/UserSlice";
 
 export const useFetchWishList = () => {
     const dispatch = useDispatch();
@@ -16,6 +16,7 @@ export const useFetchWishList = () => {
                 const result = await getWishList();
                 if (result) {
                     dispatch(setWishList(result));
+                    dispatch(setLoadingWishList(false));
                 }
             }
             wishListFetch();

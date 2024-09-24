@@ -15,7 +15,10 @@ export const UserSlice = createSlice({
         cartMode: "",
         cartQuestion: false,
         isLoadingAuth: true,
-        orders: []
+        loadingWishList: true,
+        loadingAddressBook: true,
+        orders: [],
+        loadingOrderHistory: true,
     } as User,
     reducers: {
         authenticateUser: (state) => {
@@ -74,6 +77,15 @@ export const UserSlice = createSlice({
             if (addressIndex !== -1) {
                 state.address_book[addressIndex] = action.payload;
             }
+        },
+        setLoadingWishList: (state, action) => {
+            state.loadingWishList = action.payload;
+        },
+        setLoadingAddressBook: (state, action) => {
+            state.loadingAddressBook = action.payload;
+        },
+        setLoadingOrderHistory: (state, action) => {
+            state.loadingOrderHistory = action.payload;
         }
     }
 })
@@ -95,7 +107,10 @@ export const {
     addToAddressBook,
     setAddressBook,
     removeAddress,
-    updateAddress
+    updateAddress,
+    setLoadingWishList,
+    setLoadingAddressBook,
+    setLoadingOrderHistory
 } = UserSlice.actions;
 
 export const selectIsAuthenticated = (state: RootState) => state.user.isAuthenticated;
@@ -109,6 +124,8 @@ export const selectCartQuestion = (state: RootState) => state.user.cartQuestion;
 export const selectIsLoadingAuth = (state: RootState) => state.user.isLoadingAuth;
 export const selectOrders = (state: RootState) => state.user.orders;
 export const selectAddressBook = (state: RootState) => state.user.address_book;
-
+export const selectLoadingWishList = (state: RootState) => state.user.loadingWishList;
+export const selectLoadingAddressBook = (state: RootState) => state.user.loadingAddressBook;
+export const selectLoadingOrderHistory = (state: RootState) => state.user.loadingOrderHistory;
 
 export default UserSlice.reducer;

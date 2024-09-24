@@ -4,7 +4,7 @@ import { formatPrice } from "../../../utilities/utilities";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import { findFullOrder } from "../../../api/order";
-import { LoadingProducts } from "../../ProductsPage/Loading/Loading";
+import { Loading } from "../../Loading/Loading";
 
 
 
@@ -35,7 +35,7 @@ export const OrderComplete = () => {
             navigate('/');
             return <div></div>;
         } else {
-            return <div><LoadingProducts /></div>
+            return <div><Loading /></div>
         }
         // Render a fallback if currentOrder is undefined
     }

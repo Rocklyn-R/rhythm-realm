@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch } from "react-redux"
 import { checkAuthentication } from "../api/user";
+import { setShippingEmail } from "../redux-store/ShippingSlice";
 import { authenticateUser, unauthenticateUser, setUserFirstName, setUserLastName, setUserEmail, setCartMode, setIsLoadingAuth } from "../redux-store/UserSlice";
 
 export const useUserFetch = () => {
@@ -16,6 +17,7 @@ export const useUserFetch = () => {
                 dispatch(setUserLastName(response.user.last_name));
                 dispatch(setUserEmail(response.user.email));
                 dispatch(setCartMode("previous"));
+                dispatch(setShippingEmail(response.user.email));
             }
             else if (response.error) {
                 dispatch(setIsLoadingAuth(false));

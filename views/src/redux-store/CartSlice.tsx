@@ -27,6 +27,7 @@ export const CartSlice = createSlice({
         shipping_cost: "",
         total_to_pay: "",
         orderPlaced: false,
+        loadingCart: true,
     },
     reducers: {
         addItemToCart: (state, action: PayloadAction<Cart>) => {
@@ -36,10 +37,10 @@ export const CartSlice = createSlice({
                 if (sameVariantAlreadyInCart) {
                     state.cart[foundItemIndex].quantity += action.payload.quantity;
                 } else {
-                    state.cart.unshift(action.payload);
+                    state.cart.push(action.payload);
                 }
             } else {
-                state.cart.unshift(action.payload);
+                state.cart.push(action.payload);
             }
             const pricePerItem = action.payload.sale_price
                 ? parseFloat(action.payload.sale_price)
@@ -117,6 +118,9 @@ export const CartSlice = createSlice({
         setTotalToPay: (state, action) => {
             state.total_to_pay = action.payload;
         },
+        setLoadingCart: (state, action) => {
+            state.loadingCart = action.payload;
+        }
     }
 });
 
@@ -129,7 +133,8 @@ export const {
     removeCoupon,
     setSalesTax,
     setTotalWithTax,
-    setShipping
+    setShipping,
+    setLoadingCart
 } = CartSlice.actions;
 
 export const selectCart = (state: RootState) => state.cart.cart;
@@ -143,6 +148,6 @@ export const selectSalesTax = (state: RootState) => state.cart.sales_tax;
 export const selectShippingType = (state: RootState) => state.cart.shipping_type;
 export const selectShippingCost = (state: RootState) => state.cart.shipping_cost;
 export const selectTotalToPay = (state: RootState) => state.cart.total_to_pay;
-
+export const selectLoadingCart = (state: RootState) => state.cart.loadingCart;
 
 export default CartSlice.reducer;

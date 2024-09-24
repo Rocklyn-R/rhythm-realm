@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAddressBook } from "../api/addressBook";
 import { getWishList } from "../api/wishList";
-import { selectIsAuthenticated, setAddressBook, setWishList } from "../redux-store/UserSlice";
+import { selectIsAuthenticated, setAddressBook, setLoadingAddressBook, setWishList } from "../redux-store/UserSlice";
 
 export const useFetchAddressBook = () => {
     const dispatch = useDispatch();
@@ -17,6 +17,7 @@ export const useFetchAddressBook = () => {
                 const result = await getAddressBook();
                 if (result) {
                     dispatch(setAddressBook(result));
+                    dispatch(setLoadingAddressBook(false));
                 }
             }
             addressBookFetch();

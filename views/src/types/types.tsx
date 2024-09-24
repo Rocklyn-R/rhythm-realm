@@ -95,6 +95,9 @@ export interface User {
     cartQuestion: boolean;
     isLoadingAuth: boolean;
     orders: OrderHistory[];
+    loadingWishList: boolean;
+    loadingAddressBook: boolean;
+    loadingOrderHistory: boolean;
 }
 
 export interface FilterState {

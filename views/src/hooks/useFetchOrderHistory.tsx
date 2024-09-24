@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectIsAuthenticated, setOrders } from "../redux-store/UserSlice";
+import { selectIsAuthenticated, setLoadingOrderHistory, setOrders } from "../redux-store/UserSlice";
 import { useEffect } from "react";
 import { getOrderHistory } from "../api/order";
 
@@ -18,6 +18,7 @@ export const useFetchOrderHistory = () => {
                const result = await getOrderHistory();
                if (result) {
                 dispatch(setOrders(result));
+                dispatch(setLoadingOrderHistory(false));
                }
             }
             orderHistoryFetch();

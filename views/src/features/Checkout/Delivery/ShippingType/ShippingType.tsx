@@ -37,7 +37,6 @@ export const ShippingType: React.FC<ShippingTypeProps> = ({ US_state, calculateT
                 type: "2 Day Express",
                 cost: shippingCost
             }))
-            console.log("THIS RAN BITCH");
             
             calculateTaxFromState(US_state, totalWithCoupon, totalPrice, shippingCost);
         } else if (selectedShipping === 'Next-Day') {
