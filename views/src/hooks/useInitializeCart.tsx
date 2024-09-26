@@ -36,7 +36,6 @@ export const useInitializeCart = () => {
                 total: totalPrice
             };
             dispatch(setCart(cartState));
-            dispatch(setLoadingCart(false));
             localStorage.clear();
         }
     } 
@@ -54,6 +53,7 @@ export const useInitializeCart = () => {
                cartFetch(); 
                dispatch(removeCoupon());
                dispatch(setCartMode(""));
+               dispatch(setLoadingCart(false));
         }
         if (isAuthenticated && cartMode === "current") {
        
