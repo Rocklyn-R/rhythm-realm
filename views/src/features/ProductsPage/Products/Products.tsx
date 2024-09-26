@@ -66,10 +66,22 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     }
 
     const findProduct = (product: Product) => {
+        //console.log(productsForSelection);
         const foundProduct = productsForSelection.find(item => item.id === product.id);
+        //console.log(foundProduct);
         const productToUse = productsForSelection.length === 0 ? product : foundProduct;
         return productToUse;
     }
+
+    const findRightProduct = (product: Product) => {
+        //console.log(productsForSelection);
+        const foundProduct = productsForSelection.find(item => item.id === product.id);
+        //console.log(foundProduct);
+        const productToUse = productsForSelection.length === 0 ? product : foundProduct;
+        console.log(productToUse);
+        return productToUse;
+    }
+
 
 
     return (
@@ -151,10 +163,11 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                 <StarRating
                                     rating={product.avg_rating}
                                 />
-                                {findProduct(product)?.sale_price ? (
+                                
+                                {findRightProduct(product)?.sale_price ? (
                                     <div>
                                         <p className="pt-2 font-bold line-through">${formatPrice(product.price)}</p>
-                                        <p className="pt-2 font-bold text-red-800">${formatPrice(product.sale_price)}</p>
+                                        <p className="pt-2 font-bold text-red-800">${formatPrice(findRightProduct(product)!.sale_price)}</p>
                                     </div>
                                 ) : <p className="pt-2 font-bold">${formatPrice(product.price)}</p>}
                             </div>

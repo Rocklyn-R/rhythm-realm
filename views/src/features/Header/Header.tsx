@@ -9,7 +9,7 @@ export const Header = () => {
     return (
         <div className="flex flex-col items-end justify-between bg-red-800 pt-2 pb-5 w-full">
             <div className="flex w-full sm:flex-row flex-col items-center sm:items-end justify-between">
-                <div className="ml-4 mr-4 border rounded-md border-black p-2">
+                <div className="ml-4 mr-4 rounded-md p-2">
                     <img alt="Rhythm Realm logo" src={logo} width="160" />
                 </div>
                 <div className="1md:flex w-2/3 justify-center hidden items-center z-30 -mb-1">
