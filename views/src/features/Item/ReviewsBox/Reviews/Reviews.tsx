@@ -54,8 +54,8 @@ export const Reviews: React.FC<ReviewsProps> = ({ sortByValue, filterValue, filt
             )}
 
             {sortedReviews.map((review, index) => (
-                <div className="border-b border-gray-300 py-8">
-                    <div key={index} className="flex lg:flex-row flex-col justify-start w-full lg:space-x-40">
+                <div key={index} className="border-b border-gray-300 py-8">
+                    <div className="flex lg:flex-row flex-col justify-start w-full lg:space-x-40">
                         <div className="w-3/4">
                             <h2 className="font-semibold mb-2">{review.title}</h2>
                             <StarRating rating={review.rating} />

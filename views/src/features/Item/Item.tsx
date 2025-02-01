@@ -13,6 +13,7 @@ import { StarRating } from "./StarRating/StarRating";
 import { AddToWishList } from "../ProductsPage/Products/AddToWishList/AddToWishList";
 import { LuShieldCheck } from "react-icons/lu";
 import { ReviewsBox } from "./ReviewsBox/ReviewsBox";
+import { formatPrice } from "../../utilities/utilities";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -61,8 +62,6 @@ export const Item = () => {
 
     return (
         <div className="flex flex-col w-full">
-
-
             <div className="flex justify-center mb-14 w-full">
                 <div className="mt-4 w-full flex lg:flex-row flex-col justify-center lg:items-stretch">
                     <ImageGallery />
@@ -96,10 +95,10 @@ export const Item = () => {
                             {selectedProduct.sale_price ? (
                                 <div className="flex md:items-center md:space-x-2 md:flex-row flex-col items-start">
                                     <h2 className="text-3xl mt-2 mb-2 line-through">
-                                        ${selectedProduct.price}
+                                        ${formatPrice(selectedProduct.price)}
                                     </h2>
                                     <h2 className="text-3xl text-red-800 font-semibold">
-                                        ${selectedProduct.sale_price}
+                                        ${formatPrice(selectedProduct.sale_price)}
                                     </h2>
                                 </div>
                             ) : (

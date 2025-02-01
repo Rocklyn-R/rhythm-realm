@@ -34,10 +34,10 @@ export const ImageGallery = () => {
 
             <div className='lg:w-full md:w-5/6 flex flex-row lg:overflow-x-hidden pb-8'>
 
-                {galleryImages.map(url => (
+                {galleryImages.map((url, index) => (
                     <img
                         alt="Product"
-                        key={url}
+                        key={index}
                         src={url}
                         className="w-full h-full flex-shrink-0 flex-grow-0 px-12"
                         style={{
@@ -70,7 +70,7 @@ export const ImageGallery = () => {
             <div className='flex'>
                 {galleryImages.map((src, index) => (
                     <button
-                        key={src}
+                        key={index}
                         className={`${imageIndex === index ? 'border-red-800 border-2' : 'border-gray-400 border'} w-16 mx-2 rounded-sm cursor-pointer block hover:scale-125 focus-visible:scale-125 transition duration-100 ease-in-out`}
                         onClick={() => setImageIndex(index)}
                     >

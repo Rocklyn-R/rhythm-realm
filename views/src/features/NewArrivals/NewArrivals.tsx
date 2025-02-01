@@ -181,11 +181,13 @@ export const NewArrivals = () => {
     }, []);
 
     const handleClickProduct = (product: Product) => {
-        if (!dragComplete) {
+        setTimeout(() => {
+        if (!dragComplete && isDragging) {
             return;
         }
         dispatch(setSelectedProduct(product));
         navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+    }, 60); // 50ms delay
     }
 
     const handleViewAll = () => {

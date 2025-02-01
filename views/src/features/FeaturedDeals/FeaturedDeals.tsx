@@ -50,9 +50,9 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
 
     const scrollLeft = () => {
         if (scrollContainerRef.current && !isScrolling) {
-            setIsScrolling(true); // Start scrolling
             const buttons = scrollContainerRef.current.querySelectorAll(".featured-product-button");
             if (buttons.length > 0) {
+                setIsScrolling(true); // Start scrolling
                 const firstButtonWidth = buttons[0].getBoundingClientRect().width + 16;
                 scrollContainerRef.current.scrollBy({
                     left: -firstButtonWidth,
@@ -65,9 +65,9 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
 
     const scrollRight = () => {
         if (scrollContainerRef.current && !isScrolling) {
-            setIsScrolling(true); // Start scrolling
             const buttons = scrollContainerRef.current.querySelectorAll(".featured-product-button");
             if (buttons.length > 0) {
+                setIsScrolling(true); // Start scrolling
                 const firstButtonWidth = buttons[0].getBoundingClientRect().width + 16;
                 scrollContainerRef.current.scrollBy({
                     left: firstButtonWidth,
@@ -83,15 +83,12 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     const [scrollLeftMouse, setScrollLeftMouse] = useState(0);
     const [dragComplete, setDragComplete] = useState(true);
 
-   /* const disableTextSelection = () => {
-        if (document) {
-            document.body.style.userSelect = 'none';
-        }
-    };*/
+
 
 
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        console.log("Handle Mouse Down Called")
         setIsDragging(true);
         setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0));
         setScrollLeftMouse(scrollContainerRef.current?.scrollLeft ?? 0);
@@ -101,8 +98,14 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     };
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isDragging || !scrollContainerRef.current) return;
+
+        if (!isDragging || !scrollContainerRef.current) {
+            console.log("THIS TOO")
+            setDragComplete(true);
+            return;
+        }
         setDragComplete(false);
+        console.log("THIS TOO NOW")
         const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
         const walk = (x - startX) * 0.8; // Adjust scroll sensitivity
         scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
@@ -140,11 +143,12 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
 
 
     const handleMouseUp = () => {
+        console.log("Handle Mouse Up called")
         document.removeEventListener("mouseup", handleMouseUp);
         document.removeEventListener("mouseleave", handleMouseUp);
-        setIsDragging(false)
-        adjustWheel();
+        setIsDragging(false);
         setTimeout(() => { setDragComplete(true) }, 50)
+        adjustWheel();
     };
 
 
@@ -171,13 +175,16 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     }
 
     const handleClickProduct = (product: Product) => {
-        if (!dragComplete) {
-            return;
-        }
-        const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers"
-        dispatch(setSelectedProduct(product));
-        navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
-    }
+        setTimeout(() => {
+            if (!dragComplete && isDragging) {
+                console.log("THIS IS WHY");
+                return;
+            }
+            const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers";
+            dispatch(setSelectedProduct(product));
+            navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`);
+        }, 60); // 50ms delay
+    };
     const featuredWheelRef = useRef<HTMLDivElement>(null);
 
     const [wheelItemWidth, setWheelItemWidth] = useState("");
