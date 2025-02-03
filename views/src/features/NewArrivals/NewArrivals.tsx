@@ -22,7 +22,10 @@ export const NewArrivals = () => {
     const [dragComplete, setDragComplete] = useState(true);
     const navigate = useNavigate();
     const [uniqueProducts, setUniqueProducts] = useState<Product[]>([]);
-
+    const dragCompleteRef = useRef(false);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+    const isDraggingRef = useRef(false);
 
     useEffect(() => {
         const fetchDeals = async () => {
@@ -83,20 +86,41 @@ export const NewArrivals = () => {
     };
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+        console.log("Handle Mouse Down Called");
+
+        isDraggingRef.current = false; // Assume it's not a drag at the start
+        startXRef.current = e.clientX;
+        startYRef.current = e.clientY;
+
         setIsDragging(true);
         setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0));
         setScrollLeftMouse(scrollContainerRef.current?.scrollLeft ?? 0);
-        //disableTextSelection();
-        document.addEventListener('mouseup', handleMouseUp);
-        document.addEventListener('mouseleave', handleMouseUp);
+
+        document.addEventListener("mouseup", handleMouseUp);
+        document.addEventListener("mouseleave", handleMouseUp);
     };
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-        if (!isDragging || !scrollContainerRef.current) return;
-        setDragComplete(false);
-        const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
-        const walk = (x - startX) * 0.8; // Adjust scroll sensitivity
-        scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
+        if (!isDragging || !scrollContainerRef.current) {
+            dragCompleteRef.current = true;
+            return;
+        }
+        const distanceX = Math.abs(e.clientX - startXRef.current);
+        const distanceY = Math.abs(e.clientY - startYRef.current);
+
+        // If the movement is larger than a threshold, mark it as a drag
+        if (distanceX > 5 || distanceY > 5) {
+            isDraggingRef.current = true;
+        }
+
+        if (isDraggingRef.current) {
+            dragCompleteRef.current = false;
+            console.log("Dragging detected");
+
+            const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
+            const walk = (x - startX) * 0.8;
+            scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
+        }
     };
 
     const adjustWheel = () => {
@@ -129,17 +153,33 @@ export const NewArrivals = () => {
         }
     }
 
-    const handleMouseUp = () => {
+    const handleMouseUp = (e: MouseEvent) => {
+        console.log("Handle Mouse Up called");
         document.removeEventListener("mouseup", handleMouseUp);
         document.removeEventListener("mouseleave", handleMouseUp);
-        setIsDragging(false);
-        adjustWheel();
-        setTimeout(() => {
-            setDragComplete(true);
-        }, 50)
 
+        setIsDragging(false);
+
+        setTimeout(() => {
+            dragCompleteRef.current = true;
+        }, 30);
+
+        adjustWheel();
+    };
+
+    const handleClickProduct = (product: Product) => {
+        setTimeout(() => {
+            if (isDraggingRef.current) {
+                console.log("THIS IS WHY (Click ignored because of dragging)");
+                return;
+            }
+            console.log("HANDLE CLICK PRODUCT CALLED");
+            dispatch(setSelectedProduct(product));
+        navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+        }, 70);
     };
     const [wheelItemWidth, setWheelItemWidth] = useState("");
+
     useEffect(() => {
         const calculateWheelItemWidth = () => {
             if (wheelRef.current) {
@@ -180,15 +220,6 @@ export const NewArrivals = () => {
         };
     }, []);
 
-    const handleClickProduct = (product: Product) => {
-        setTimeout(() => {
-        if (!dragComplete && isDragging) {
-            return;
-        }
-        dispatch(setSelectedProduct(product));
-        navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
-    }, 60); // 50ms delay
-    }
 
     const handleViewAll = () => {
         window.scrollTo(0, 0);
@@ -217,8 +248,6 @@ export const NewArrivals = () => {
                 ref={wheelRef}
                 onMouseDown={handleMouseDown}
                 onMouseMove={isDragging ? handleMouseMove : undefined}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
             >
                 <div
                     ref={scrollContainerRef}

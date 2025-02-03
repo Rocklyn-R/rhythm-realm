@@ -14,15 +14,18 @@ interface FeaturedDealsProps {
     marketingLabel: "On Sale" | "Top Seller";
 }
 
-export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) => {
+export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({ marketingLabel }) => {
     const dispatch = useDispatch();
     const featuredDeals = useSelector(selectFeaturedDeals);
     const [isScrolling, setIsScrolling] = useState(false);
     const topSellers = useSelector(selectTopSellers);
     const [uniqueProducts, setUniqueProducts] = useState<Product[]>([]);
-
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const navigate = useNavigate();
+    const dragCompleteRef = useRef(false);
+    const startXRef = useRef(0);
+    const startYRef = useRef(0);
+    const isDraggingRef = useRef(false);
 
     useEffect(() => {
         if (featuredDeals && marketingLabel === "On Sale") {
@@ -81,35 +84,49 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeftMouse, setScrollLeftMouse] = useState(0);
-    const [dragComplete, setDragComplete] = useState(true);
 
 
 
 
 
     const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-        console.log("Handle Mouse Down Called")
+        console.log("Handle Mouse Down Called");
+
+        isDraggingRef.current = false; // Assume it's not a drag at the start
+        startXRef.current = e.clientX;
+        startYRef.current = e.clientY;
+
         setIsDragging(true);
         setStartX(e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0));
         setScrollLeftMouse(scrollContainerRef.current?.scrollLeft ?? 0);
-        //disableTextSelection();
-        document.addEventListener('mouseup', handleMouseUp);
-        document.addEventListener('mouseleave', handleMouseUp);
+
+        document.addEventListener("mouseup", handleMouseUp);
+        document.addEventListener("mouseleave", handleMouseUp);
     };
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-
         if (!isDragging || !scrollContainerRef.current) {
-            console.log("THIS TOO")
-            setDragComplete(true);
+            dragCompleteRef.current = true;
             return;
         }
-        setDragComplete(false);
-        console.log("THIS TOO NOW")
-        const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
-        const walk = (x - startX) * 0.8; // Adjust scroll sensitivity
-        scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
+        const distanceX = Math.abs(e.clientX - startXRef.current);
+        const distanceY = Math.abs(e.clientY - startYRef.current);
+
+        // If the movement is larger than a threshold, mark it as a drag
+        if (distanceX > 5 || distanceY > 5) {
+            isDraggingRef.current = true;
+        }
+
+        if (isDraggingRef.current) {
+            dragCompleteRef.current = false;
+            console.log("Dragging detected");
+
+            const x = e.pageX - (scrollContainerRef.current?.offsetLeft ?? 0);
+            const walk = (x - startX) * 0.8;
+            scrollContainerRef.current.scrollLeft = scrollLeftMouse - walk;
+        }
     };
+
 
     const adjustWheel = () => {
         if (scrollContainerRef.current) {
@@ -142,22 +159,39 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     }
 
 
-    const handleMouseUp = () => {
-        console.log("Handle Mouse Up called")
+    const handleMouseUp = (e: MouseEvent) => {
+        console.log("Handle Mouse Up called");
         document.removeEventListener("mouseup", handleMouseUp);
         document.removeEventListener("mouseleave", handleMouseUp);
+
         setIsDragging(false);
-        setTimeout(() => { setDragComplete(true) }, 50)
+
+        setTimeout(() => {
+            dragCompleteRef.current = true;
+        }, 30);
+
         adjustWheel();
     };
 
+    const handleClickProduct = (product: Product) => {
+        setTimeout(() => {
+            if (isDraggingRef.current) {
+                console.log("THIS IS WHY (Click ignored because of dragging)");
+                return;
+            }
+            console.log("HANDLE CLICK PRODUCT CALLED");
+            const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers";
+            dispatch(setSelectedProduct(product));
+            navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`);
+        }, 70);
+    };
 
     useEffect(() => {
         const fetchDeals = async () => {
             const result = await getFeaturedDeals(marketingLabel);
             if (result) {
                 if (marketingLabel === "On Sale") {
-                      dispatch(setFeaturedDeals(result));
+                    dispatch(setFeaturedDeals(result));
                 }
                 if (marketingLabel === "Top Seller") {
                     dispatch(setTopSellers(result));
@@ -167,6 +201,8 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
         fetchDeals();
     }, [dispatch]);
 
+
+
     const handleViewAll = () => {
         window.scrollTo(0, 0);
         dispatch(clearFilters());
@@ -174,17 +210,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
         navigate(`/Featured/${deal}`)
     }
 
-    const handleClickProduct = (product: Product) => {
-        setTimeout(() => {
-            if (!dragComplete && isDragging) {
-                console.log("THIS IS WHY");
-                return;
-            }
-            const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers";
-            dispatch(setSelectedProduct(product));
-            navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`);
-        }, 60); // 50ms delay
-    };
+
     const featuredWheelRef = useRef<HTMLDivElement>(null);
 
     const [wheelItemWidth, setWheelItemWidth] = useState("");
@@ -213,8 +239,8 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
                     const itemWidthWithoutMargin = itemWidth - 16;
                     setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
                 }
-            }                   
-        
+            }
+
 
         };
 
@@ -231,7 +257,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
     }, []);
 
     useEffect(() => {
-        adjustWheel(); 
+        adjustWheel();
     }, [wheelItemWidth])
 
     return (
@@ -247,8 +273,8 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
                 ref={featuredWheelRef}
                 onMouseDown={handleMouseDown}
                 onMouseMove={isDragging ? handleMouseMove : undefined}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseUp}
+            //onMouseUp={handleMouseUp}
+            //onMouseLeave={handleMouseUp}
             >
                 <div ref={scrollContainerRef} className="flex overflow-x-hidden w-full">
                     <button
@@ -270,7 +296,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({marketingLabel}) =>
                                 <h3 className="text-lg font-semibold text-center">{product.name}</h3>
                                 <div>
                                     <p className={`text-gray-700 text-xl font-bold ${product.sale_price ? "line-through" : ""}`}>${formatPrice(product.price)}</p>
-                                   {product.sale_price &&  <p className="text-red-800 font-bold text-lg">${formatPrice(product.sale_price)}</p>}
+                                    {product.sale_price && <p className="text-red-800 font-bold text-lg">${formatPrice(product.sale_price)}</p>}
                                 </div>
                             </div>
                         </button>
