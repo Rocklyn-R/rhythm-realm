@@ -19,7 +19,7 @@ import { Returns } from './features/Returns/Returns';
 import { OrderComplete } from './features/Checkout/OrderComplete/OrderComplete';
 import { AddressBook } from './features/AddressBook/AddressBook';
 import { useFetchAddressBook } from './hooks/useFetchAddressBook';
-
+import { ResetPassword } from './features/User/ResetPassword/ResetPassword';
 
 export const App = () => {
   useUserFetch();
@@ -40,6 +40,10 @@ export const App = () => {
           <Route
             index
             element={<Home />}
+          />
+          <Route 
+           path={'/reset-password/:token'}
+           element={<ResetPassword />}
           />
           <Route
             path="/Cart"

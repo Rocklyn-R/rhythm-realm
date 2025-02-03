@@ -8,13 +8,15 @@ import { selectCart } from "../../../redux-store/CartSlice";
 import { authenticateUser, setCartMode, setCartQuestion, setUserEmail, setUserFirstName, setUserLastName } from "../../../redux-store/UserSlice";
 import _ from 'lodash';
 import { setShippingEmail } from "../../../redux-store/ShippingSlice";
+import { Link } from "react-router-dom";
 
 interface LoginProps {
     toggleLogin: () => void;
+    setShowResetPassword: (arg0: boolean) => void;
 }
 
 
-export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
+export const Login: React.FC<LoginProps> = ({ toggleLogin, setShowResetPassword }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
@@ -94,10 +96,10 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin }) => {
                         required
                     />
                 </div>
-
+                <button type="button" onClick={() => setShowResetPassword(true)} className='m-4 underline'>Forgot password?</button>
                 <button
                     type="submit"
-                    className="hover:bg-red-800 transition-colors duration-300 ease p-4 w-5/6 rounded-md bg-black text-white text-xl mt-6"
+                    className="hover:bg-red-800 transition-colors duration-300 ease p-4 w-5/6 rounded-md bg-black text-white text-xl"
                 >
                     Sign in
                 </button>

@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Product } from "../../types/types";
 import { useNavigate } from "react-router-dom";
-import { shuffleArray } from "../../utilities/utilities";
 import { clearFilters } from "../../redux-store/FiltersSlice";
 import { formatPrice } from "../../utilities/utilities";
 import ReactPlayer from "react-player";
@@ -19,7 +18,6 @@ export const NewArrivals = () => {
     const [scrollLeftMouse, setScrollLeftMouse] = useState(0);
     const [isDragging, setIsDragging] = useState(false);
     const wheelRef = useRef<HTMLDivElement>(null);
-    const [dragComplete, setDragComplete] = useState(true);
     const navigate = useNavigate();
     const [uniqueProducts, setUniqueProducts] = useState<Product[]>([]);
     const dragCompleteRef = useRef(false);

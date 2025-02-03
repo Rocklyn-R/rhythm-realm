@@ -159,3 +159,61 @@ export const updateUserPassword = async (oldPassword: string, newPassword: strin
         console.log(error)
     }
 }
+
+export const checkForUserEmail = async (email: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/user/reset-password/email-check?email=${email}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            credentials: 'include'
+        });
+        const data = await response.json();
+        return data.message;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const sendResetEmail = async (email: string) => {
+    try {
+    const response = await fetch(`http://localhost:4000/user/send-reset-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+    });
+    if (response.ok) {
+        return true;
+    }
+    } catch (error) {
+        console.error(error)
+    }
+};
+
+export const checkToken = async (token: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/user/reset-password/check-token?token=${token}`);
+        const data = await response.json();
+        console.log(data);
+        return data;
+        } catch (error) {
+            console.error(error)
+        }
+}
+
+export const createNewPasswordWithToken = async (password: string, user_id: string) => {
+    try {
+        const response = await fetch(`http://localhost:4000/user/reset-password`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ password, user_id }),
+        });
+        if (response.ok) {
+            return true;
+        }
+        } catch (error) {
+            console.log(error);
+            console.error(error)
+        }
+}
