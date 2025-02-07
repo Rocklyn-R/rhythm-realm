@@ -60,7 +60,7 @@ export const ForgotPassword: React.FC<ForgotPasswordProps> = ({ toggleLogin }) =
                                 autoComplete="Email"
                             />
                         </div>
-                        {pending ? <Loading /> :
+                        {pending ? <Loading size="h-12 w-12" /> :
                             <button
                                 type="submit"
                                 className="hover:bg-red-800 transition-colors duration-300 ease p-4 w-5/6 rounded-md bg-black text-white text-xl"

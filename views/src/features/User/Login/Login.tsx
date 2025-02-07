@@ -106,6 +106,5 @@ export const Login: React.FC<LoginProps> = ({ toggleLogin, setShowResetPassword 
                 {errorMessage && <p className="mt-6 text-red-800">{errorMessage}</p>}
             </form>
         </div>
-
     )
 }

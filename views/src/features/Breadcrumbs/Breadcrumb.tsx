@@ -1,4 +1,5 @@
 import { Link, useParams, useLocation } from "react-router-dom";
+import { formatNameForDisplay } from "../../utilities/utilities";
 
 
 
@@ -14,7 +15,9 @@ export const Breadcrumbs = () => {
         // Check if the decoded segment matches the last segment in the path
         return decodedLastSegment === segment;
     };
-
+    const formattedVariant = variantName ? formatNameForDisplay(variantName) : undefined;
+    const formattedProductName = productName ? formatNameForDisplay(productName) : undefined;
+    
     return (
         <div className="flex m-4 self-start space-x-2 flex-wrap">
             {location.pathname !== "/" && (
@@ -74,10 +77,10 @@ export const Breadcrumbs = () => {
                 <>
                     <span>/</span>
                     {isLastSegment(productName) ? (
-                        <span>{productName}</span>
+                        <span>{formattedProductName}</span>
                     ) : (
                         <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
-                            {productName} {variantName}
+                            {formattedProductName} {formattedVariant}
                         </Link>
                     )}
                 </>
@@ -86,10 +89,10 @@ export const Breadcrumbs = () => {
                 <>
                     <span>/</span>
                     {isLastSegment(variantName) ? (
-                        <span>{productName} {variantName}</span>
+                        <span>{formattedProductName} {formattedVariant}</span>
                     ) : (
                         <Link to={`/${categoryName}/${subcategoryName}/${productName}/${variantName}`} className="underline hover:no-underline">
-                            {productName} {variantName}
+                            {formattedProductName} {formattedVariant}
                         </Link>
                     )}
                 </>

@@ -13,7 +13,7 @@ import { StarRating } from "./StarRating/StarRating";
 import { AddToWishList } from "../ProductsPage/Products/AddToWishList/AddToWishList";
 import { LuShieldCheck } from "react-icons/lu";
 import { ReviewsBox } from "./ReviewsBox/ReviewsBox";
-import { formatPrice } from "../../utilities/utilities";
+import { formatPrice, formatNameForDisplay } from "../../utilities/utilities";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -24,11 +24,13 @@ export const Item = () => {
     const itemDescriptionRef = useRef<HTMLDivElement>(null);
     const [showReviews, setShowReviews] = useState(true);
     const reviewsRef = useRef<HTMLDivElement>(null);
-   
+    const formattedVariant = variantName ? formatNameForDisplay(variantName) : undefined;
+    const formattedProductName = productName ? formatNameForDisplay(productName) : undefined;
+
     useEffect(() => {
         dispatch(setVariants([]));
         const fetchSelectedProduct = async () => {
-            const selectedProductData = await getSelectedProduct(productName!, variantName!);
+            const selectedProductData = await getSelectedProduct(formattedProductName!, formattedVariant!);
             if (selectedProductData) {
                 dispatch(setSelectedProduct(selectedProductData));
                 const variantData = await getAllVariants(selectedProductData.id);
@@ -45,7 +47,7 @@ export const Item = () => {
         }
 
         fetchSelectedProduct();
-    }, [dispatch, variantName, productName]);
+    }, [dispatch, formattedVariant, formattedProductName]);
 
     const scrollToItemDescription = () => {
         if (itemDescriptionRef.current) {
@@ -77,7 +79,7 @@ export const Item = () => {
                             </p>
                         )}
                         <h2 className="text-2xl font-bold">
-                            {productName} {variantName && variantName}
+                            {formattedProductName} {variantName && formattedVariant}
                         </h2>
                         <div className="flex items-center mb-3">
                             {selectedProduct && (
@@ -102,7 +104,7 @@ export const Item = () => {
                                     </h2>
                                 </div>
                             ) : (
-                                <h2 className="text-3xl mt-1 font-semibold">${selectedProduct.price}</h2>
+                                <h2 className="text-3xl mt-1 font-semibold">${formatPrice(selectedProduct.price)}</h2>
                             )}
                         </div>
                         <div className="flex flex-col border-gray-400 border-b pb-6 mb-4 w-full space-y-3">
@@ -165,3 +167,4 @@ export const Item = () => {
         </div>
     )
 }
+

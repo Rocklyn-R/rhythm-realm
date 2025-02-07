@@ -1,5 +1,5 @@
 import { Product } from "../../../types/types"
-import { formatPrice } from "../../../utilities/utilities"
+import { formatPrice, formatName } from "../../../utilities/utilities"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { useNavigate, useParams } from "react-router-dom"
@@ -57,10 +57,13 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const handleClickProduct = (product: Product) => {
         dispatch(setSelectedProduct(product));
         const variant = productsForSelection.length === 0 ? product.variant_name : productsForSelection.find(item => item.id === product.id)?.variant_name;
+        console.log(variant);
+        const formattedVariant = variant ? formatName(variant) : undefined;
+        const formattedProductName = formatName(product.name);
         if (categoryName && subcategoryName) {
-            navigate(`/${categoryName}/${subcategoryName}/${product.name}${variant ? `/${variant}` : ''}`)
+            navigate(`/${categoryName}/${subcategoryName}/${formattedProductName}${formattedVariant ? `/${formattedVariant}` : ''}`)
         } else {
-            navigate(`/${product.category_name}/${product.subcategory_name}/${product.name}${variant ? `/${variant}` : ''}`)
+            navigate(`/${product.category_name}/${product.subcategory_name}/${formattedProductName}${formattedVariant ? `/${formattedVariant}` : ''}`)
         }
 
     }

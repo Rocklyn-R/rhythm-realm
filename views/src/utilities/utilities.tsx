@@ -91,3 +91,10 @@ export const formatPhoneNumber = (phone: string) => {
   return phone;
 };
 
+export const formatName = (variant: string) => {
+  return variant.replace(/\//g, '_');
+};
+
+export const formatNameForDisplay = (variant: string) => {
+  return variant.replace(/_/g, '/');
+}
