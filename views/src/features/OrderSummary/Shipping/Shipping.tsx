@@ -4,6 +4,7 @@ import { FiftyStates } from "./50states";
 import { Input } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import { useSelector } from "react-redux";
+import { DefaultOptionType } from 'antd/es/select';
 import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectShippingCost, setSalesTax } from "../../../redux-store/CartSlice";
 import { useDispatch } from "react-redux";
 import { fetchStateByZipCode } from "../../../api/cart";
@@ -39,9 +40,10 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
         setUS_stateInput("");
     }
 
-    const handleSelectState: SelectProps['onChange'] = (value) => {
+    const handleSelectState: SelectProps['onChange'] = (value, option) => {
         setUS_stateInput(value as string);
-    }
+    };
+    
     const calculateTaxRate = useCallback((USStateAbbrev: string) => {
         const taxRate = FiftyStates.find(state => state.abbreviation === USStateAbbrev)?.tax_rate;
         if (taxRate) {

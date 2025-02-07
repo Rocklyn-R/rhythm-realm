@@ -3,7 +3,7 @@ import { FiftyStates } from "./50states";
 import { DefaultOptionType } from "antd/es/select";
 
 interface SelectStateProps {
-    handleSelectState: (value: any, option: DefaultOptionType | DefaultOptionType[]) => void;
+    handleSelectState: (value: any, option?: DefaultOptionType | DefaultOptionType[]) => void;
     missingStateMessage: string;
     page: "Checkout" | "Cart";
     US_state: string;
