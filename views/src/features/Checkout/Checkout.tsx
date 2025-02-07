@@ -5,12 +5,12 @@ import { useSelector } from "react-redux";
 import { selectAddress, selectApartment, selectCity, selectEmail, selectFullName, selectPhone, selectSelectedState, selectZipCode } from "../../redux-store/ShippingSlice";
 import { TbTruck } from "react-icons/tb";
 import { FaRegEdit } from "react-icons/fa";
-import { ReviewAndPayment } from "./Review & Payment/ReviewAndPayment";
+import { ReviewAndPayment } from "./ReviewAndPayment/ReviewAndPayment";
 import { selectShippingCost, selectShippingType } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
 import { useNavigate } from "react-router-dom";
 import { selectCart } from "../../redux-store/CartSlice";
-import { selectAddressBook, selectIsAuthenticated } from "../../redux-store/UserSlice";
+import { selectAddressBook } from "../../redux-store/UserSlice";
 
 export const Checkout = () => {
     const name = useSelector(selectFullName);
@@ -68,7 +68,8 @@ export const Checkout = () => {
         if (cart.length === 0) {
             navigate('/Cart')
         }
-    }, [])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate])
 
     return (
 

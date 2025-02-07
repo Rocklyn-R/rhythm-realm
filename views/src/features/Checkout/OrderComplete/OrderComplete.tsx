@@ -28,8 +28,8 @@ export const OrderComplete = () => {
 
         }
         getCurrentOrder();
-    }, [])
-    //console.log(currentOrder);
+    }, [orderNo])
+
     if (!currentOrder) {
         if (!isLoading) {
             navigate('/');
@@ -37,7 +37,6 @@ export const OrderComplete = () => {
         } else {
             return <div><Loading /></div>
         }
-        // Render a fallback if currentOrder is undefined
     }
 
     return (
@@ -48,7 +47,7 @@ export const OrderComplete = () => {
                 <div className="w-full max-w-xs">
                     {currentOrderItems.map(item => (
                         <div className="flex justify-center items-center p-4 mb-4">
-                            <img src={item.image1} width={100} className="rounded-lg shadow-sm" />
+                            <img alt="item" src={item.image1} width={100} className="rounded-lg shadow-sm" />
 
                             <div className="flex flex-col items-end ml-4">
                                 {item.quantity > 1 && (

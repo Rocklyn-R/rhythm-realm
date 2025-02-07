@@ -3,7 +3,6 @@ import { Input } from "antd"
 import { SelectState } from "../../OrderSummary/Shipping/SelectState"
 import { FiPlus } from "react-icons/fi";
 import { ShippingType } from "./ShippingType/ShippingType";
-import { SelectProps } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAppliedCoupon, selectTotalWithCoupon, setSalesTax, setTotalWithTax, selectTotal, setShipping, selectShippingCost } from "../../../redux-store/CartSlice";
 import {
@@ -26,7 +25,7 @@ import {
 } from "../../../redux-store/ShippingSlice";
 import { FiftyStates } from "../../OrderSummary/Shipping/50states";
 import { fetchStateByZipCode } from "../../../api/cart";
-import { addToAddressBook, removeAddress, selectAddressBook, selectIsAuthenticated, selectUserEmail, updateAddress } from "../../../redux-store/UserSlice";
+import { addToAddressBook, removeAddress, selectAddressBook, selectIsAuthenticated, updateAddress } from "../../../redux-store/UserSlice";
 import { addNewAddress, deleteAddress, editAddress } from "../../../api/addressBook";
 import { formatPhoneNumber } from "../../../utilities/utilities";
 import { Address } from "../../../types/types";
@@ -49,7 +48,6 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
     const total = useSelector(selectTotal);
     const name = useSelector(selectFullName);
     const isAuthenticated = useSelector(selectIsAuthenticated);
-    //const userEmail = useSelector(selectUserEmail);
     const selectedEmail = useSelector(selectEmail);
     const phone = useSelector(selectPhone);
     const address = useSelector(selectAddress);
@@ -251,6 +249,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
         }
     }
 
+
     useEffect(() => {
         if (editMode && isAuthenticated && addressBook.length > 0) {
             const foundAddress = addressBook.find(address =>
@@ -266,6 +265,7 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
                 setSelectedAddressId(foundAddress.id)
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [editMode, isAuthenticated, addressBook]);
 
     const saveAddressEdits = async () => {

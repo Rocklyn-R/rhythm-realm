@@ -22,13 +22,8 @@ import { selectAddress,
     clearShippingInfo
 } from "../../../redux-store/ShippingSlice";
 
-/*interface ReviewAndPaymentProps {
-    setOrderComplete: (arg0: boolean) => void;
-    setCurrentOrder: (arg0: any) => void;
-    setCurrentOrderItems: (arg0: any) => void;
-}*/
 
-export const ReviewAndPayment = ({ }) => {
+export const ReviewAndPayment = () => {
     const [selectedPayment, setSelectedPayment] = useState("Credit or Debit");
     const [showCreditOrDebit, setShowCreditOrDebit] = useState(true);
     const [billingSameAsShipping, setBillingSameAsShipping] = useState(true);
@@ -58,6 +53,8 @@ export const ReviewAndPayment = ({ }) => {
     const zip_code = useSelector(selectZipCode);
     const email = useSelector(selectEmail);
     const phone = useSelector(selectPhone);
+    const [billingValidated, setBillingValidated] = useState(true);
+    const [showBillingErrors, setShowBillingErrors] = useState(false);
 
     const handleClickOutside = (event: any) => {
         if (infoMessageRef.current && !infoMessageRef.current.contains(event.target)) {
@@ -89,7 +86,7 @@ export const ReviewAndPayment = ({ }) => {
 
     useEffect(() => {
         if (showCreditOrDebit && !showPaypal) {
-            setCreditContentHeight(`${creditRef.current.scrollHeight}px`);
+            setCreditContentHeight(`${creditRef.current.scrollHeight + 100}px`);
         } else {
             setCreditContentHeight('0px');
         }
@@ -104,6 +101,10 @@ export const ReviewAndPayment = ({ }) => {
     }, [showPaypal]);
 
     const handleCompleteOrder = async () => {
+        if (!billingValidated) {
+            setShowBillingErrors(true);
+            return;
+        }
         const order_id = generateOrderNumber();
         const discount = applied_coupon ? applied_coupon.discount.toFixed(2) : null;
         const cost_of_shipping = shipping_cost ? shipping_cost : null;
@@ -217,6 +218,8 @@ export const ReviewAndPayment = ({ }) => {
                     <BillingAddress
                         billingSameAsShipping={billingSameAsShipping}
                         setBillingSameAsShipping={setBillingSameAsShipping}
+                        setBillingValidated={setBillingValidated}
+                        showBillingErrors={showBillingErrors}
                     />
                 </div>
 

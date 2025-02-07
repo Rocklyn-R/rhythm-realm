@@ -85,7 +85,7 @@ export const AccountSettings = () => {
         if (!isAuthenticated && !isLoadingAuth) {
             navigate("/");
         }
-    }, [isAuthenticated, isLoadingAuth]);
+    }, [isAuthenticated, isLoadingAuth, navigate]);
 
     if (isLoadingAuth) {
         return <div></div>

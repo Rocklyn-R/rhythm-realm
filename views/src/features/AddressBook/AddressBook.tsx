@@ -238,7 +238,7 @@ export const AddressBook = () => {
                                         </div>
                                     </div>
                                 ))}
-                                {addressBook.length == 0 && (
+                                {addressBook.length === 0 && (
                                     <div className="flex flex-col items-center justify-center space-y-4">
                                         <p>No addresses saved.</p>
                                     </div>
