@@ -4,7 +4,6 @@ import { FiftyStates } from "./50states";
 import { Input } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import { useSelector } from "react-redux";
-import { DefaultOptionType } from 'antd/es/select';
 import { selectAppliedCoupon, selectTotal, selectTotalWithCoupon, setTotalWithTax, selectShippingCost, setSalesTax } from "../../../redux-store/CartSlice";
 import { useDispatch } from "react-redux";
 import { fetchStateByZipCode } from "../../../api/cart";
@@ -45,6 +44,7 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
     };
     
     const calculateTaxRate = useCallback((USStateAbbrev: string) => {
+        console.log("reruns");
         const taxRate = FiftyStates.find(state => state.abbreviation === USStateAbbrev)?.tax_rate;
         if (taxRate) {
             let totalTax;
@@ -95,7 +95,8 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
 
    useEffect(() => {
         if ((page === "Cart" && zipCode) || (page === "Checkout" && selectedState)) {
-            calculateTaxRate(US_state)
+            calculateTaxRate(US_state);
+            console.log("reruns again");
         }
     }, [total, US_state, calculateTaxRate, page, selectedState, zipCode]);
 
@@ -107,7 +108,9 @@ export const Shipping: React.FC<ShippingProps> = ({ page, setTotal_With_Tax, sal
         }
         if (page === "Cart") {
             calculateTaxRate(US_state);
+            console.log("reruns");
         } else {
+            console.log('reruns');
             calculateTaxRate(selectedState);
         }
     }, [appliedCoupon, calculateTaxRate, US_state, page, selectedState])

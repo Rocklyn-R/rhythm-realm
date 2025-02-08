@@ -67,12 +67,14 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
     }
 
     useEffect(() => {
-        if (showSuccessMessage) {
-            setTimeout(() => {
-                setShowSuccessMessage(false);
-                setShowWriteReview(false);
-            }, 5000);
-        }
+        if (!showSuccessMessage) return; 
+
+        const timeout = setTimeout(() => {
+            setShowSuccessMessage(false);
+            setShowWriteReview(false);
+        }, 5000);
+    
+        return () => clearTimeout(timeout); 
     }, [showSuccessMessage, setShowSuccessMessage, setShowWriteReview]);
 
 

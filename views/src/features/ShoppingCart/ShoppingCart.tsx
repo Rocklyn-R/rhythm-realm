@@ -57,8 +57,8 @@ export const ShoppingCart = () => {
                         <div className="w-full">
                             
                             {cart.map((item, index) => (
-                                <div className="flex flex-col">
-                                    <div key={index} className="flex border-t-2 md:flex-row flex-col md:justify-between border-gray-300 w-full">
+                                <div key={index} className="flex flex-col">
+                                    <div className="flex border-t-2 md:flex-row flex-col md:justify-between border-gray-300 w-full">
                                         <div className="flex">
                                             <div className="w-fit h-40 mt-6 min-w-20">
                                                 <img alt="Item" src={item.image1} width="160" className="cursor-pointer" onClick={() => selectItem(item)} />

@@ -11,14 +11,15 @@ import { selectAppliedCoupon, selectCart, selectSalesTax, selectShippingCost, se
 import { selectIsAuthenticated } from "../../../redux-store/UserSlice";
 import { deleteCart } from "../../../api/cart";
 import { useDispatch } from "react-redux";
-import { selectAddress, 
-    selectApartment, 
-    selectCity, 
-    selectFullName, 
+import {
+    selectAddress,
+    selectApartment,
+    selectCity,
+    selectFullName,
     selectSelectedState,
     selectZipCode,
     selectEmail,
-    selectPhone, 
+    selectPhone,
     clearShippingInfo
 } from "../../../redux-store/ShippingSlice";
 
@@ -49,7 +50,7 @@ export const ReviewAndPayment = () => {
     const address = useSelector(selectAddress);
     const apartment = useSelector(selectApartment);
     const city = useSelector(selectCity);
-    const selectedState  = useSelector(selectSelectedState);
+    const selectedState = useSelector(selectSelectedState);
     const zip_code = useSelector(selectZipCode);
     const email = useSelector(selectEmail);
     const phone = useSelector(selectPhone);
@@ -120,7 +121,7 @@ export const ReviewAndPayment = () => {
         //setCurrentOrder(completeOrder);
         if (completeOrder) {
             cart.forEach(async (item) => {
-                const newItem = await createOrderItems(order_id, item.variant_id, item.quantity);
+                 await createOrderItems(order_id, item.variant_id, item.quantity);
                 //setCurrentOrderItems((prevItems: any) => [...prevItems, newItem]);
                 //console.log(newItem);
             })
@@ -166,7 +167,7 @@ export const ReviewAndPayment = () => {
                         value="Credit or Debit"
                         className="mr-3 custom-radio"
                         checked={showCreditOrDebit}
-                        onClick={() => handleSelectPayment('Credit or Debit', showCreditOrDebit, setShowCreditOrDebit)}
+                        onChange={() => handleSelectPayment('Credit or Debit', showCreditOrDebit, setShowCreditOrDebit)}
                     />
                     <p>Credit or Debit</p>
                 </div>
@@ -236,7 +237,7 @@ export const ReviewAndPayment = () => {
                         value="Credit or Debit"
                         className="mr-3 custom-radio"
                         checked={showPaypal}
-                        onClick={() => handleSelectPayment('Paypal', showPaypal, setShowPaypal)}
+                        onChange={() => handleSelectPayment('Paypal', showPaypal, setShowPaypal)}
                     />
                     <p>Paypal</p>
                 </div>

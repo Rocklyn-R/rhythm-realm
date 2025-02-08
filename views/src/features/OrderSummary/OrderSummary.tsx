@@ -1,14 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectShippingCost, selectTotalWithTax } from "../../redux-store/CartSlice";
+import { selectAppliedCoupon, selectSalesTax, selectTotal, selectTotalWithCoupon, selectShippingCost } from "../../redux-store/CartSlice";
 import { formatPrice } from "../../utilities/utilities";
 import { MdInfoOutline } from "react-icons/md";
 import { Shipping } from "./Shipping/Shipping";
 import { CheckoutOrPaypal } from "./CheckoutOrPaypal/CheckoutOrPaypal";
 import { CouponCode } from "./CouponCode/CouponCode";
 import { CartSummary } from "./CartSummary/CartSummary";
-import { FaAngleDown, FaArrowDown } from "react-icons/fa";
+import { FaAngleDown } from "react-icons/fa";
 
 interface OrderSummaryProps {
     page: "Cart" | "Checkout" | "Checkout SM"
@@ -61,7 +61,7 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({ page }) => {
 
     useEffect(() => {
         if (page === "Checkout" && estimated_tax) {
-            
+            console.log("Reruns")
             const newTotalWithTax = (parseFloat(total_to_render) + parseFloat(estimated_tax)).toFixed(2);
             setTotal_With_Tax(newTotalWithTax);
             if (shippingCost) {

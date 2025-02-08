@@ -166,24 +166,33 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({ marketingLabel }) 
 
         setIsDragging(false);
 
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             dragCompleteRef.current = true;
         }, 30);
-
         adjustWheel();
+        // Cleanup in case component unmounts before timeout completes
+        return () => clearTimeout(timeout);
+
+
     };
 
+    const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const handleClickProduct = (product: Product) => {
-        setTimeout(() => {
+        // Clear any existing timeout before setting a new one
+        if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+        }
+
+        clickTimeoutRef.current = setTimeout(() => {
             if (isDraggingRef.current) {
-                console.log("THIS IS WHY (Click ignored because of dragging)");
                 return;
             }
-            console.log("HANDLE CLICK PRODUCT CALLED");
             const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers";
             dispatch(setSelectedProduct(product));
             navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`);
         }, 70);
+
     };
 
     useEffect(() => {
@@ -199,7 +208,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({ marketingLabel }) 
             }
         }
         fetchDeals();
-    }, [dispatch]);
+    }, [dispatch, marketingLabel]);
 
 
 

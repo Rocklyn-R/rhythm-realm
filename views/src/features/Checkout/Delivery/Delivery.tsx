@@ -188,9 +188,6 @@ export const Delivery: React.FC<DeliveryProps> = ({ setShowReviewAndPayment, edi
             setEditMode(false);
         }
     }
-    useEffect(() => {
-        console.log(selectedAddressId);
-    }, [selectedAddressId])
 
 
     useEffect(() => {

@@ -48,8 +48,8 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
 
             ) : <h2 className="text-xl m-6">Recently Added</h2>}
 
-            {cart.map(item => (
-                <div className="flex mb-6 m-6 justify-center">
+            {cart.map((item, index) => (
+                <div key={index} className="flex mb-6 m-6 justify-center">
 
                     <div className="">
                         <Link

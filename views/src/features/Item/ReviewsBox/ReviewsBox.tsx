@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useState, useRef } from "react"
 import { useSelector } from "react-redux"
 import { selectReviews, selectSelectedProduct } from "../../../redux-store/ProductsSlice"
 import { StarRating } from "../StarRating/StarRating";
@@ -49,12 +49,13 @@ export const ReviewsBox = () => {
                     <button
                         onClick={() => {
                             setShowWriteReview(true);
-                            setTimeout(() => {
+                            const timeout = setTimeout(() => {
                                 if (reviewFormRef.current) {
                                     reviewFormRef.current.scrollIntoView({ behavior: 'smooth' });
                                 }
 
                             }, 100);
+                            return () => clearTimeout(timeout);
                         }}
                         className="py-2 px-4 bg-red-700 text-white rounded-sm">Write Review
                     </button>
@@ -77,11 +78,12 @@ export const ReviewsBox = () => {
                             <button
                                 onClick={() => {
                                     setShowWriteReview(true);
-                                    setTimeout(() => {
+                                    const timeout = setTimeout(() => {
                                         if (reviewFormRef.current) {
                                             reviewFormRef.current.scrollIntoView({ behavior: 'smooth' });
                                         }
                                     }, 100);
+                                    return () => clearTimeout(timeout);
                                 }}
                                 className="py-2 px-4 bg-red-700 text-white rounded-sm">Write Review
                             </button>

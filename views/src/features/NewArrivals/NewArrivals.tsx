@@ -59,9 +59,10 @@ export const NewArrivals = () => {
                     left: -firstButtonWidth,
                     behavior: "smooth"
                 });
-                setTimeout(() => {
+                const timeout = setTimeout(() => {
                     setIsScrolling(false);
                 }, 500); // Adjust the timeout as needed based on your scroll animation duration
+                return () => clearTimeout(timeout);
             }
         }
     };
@@ -76,9 +77,10 @@ export const NewArrivals = () => {
                     left: firstButtonWidth,
                     behavior: "smooth"
                 });
-                setTimeout(() => {
+                const timeout = setTimeout(() => {
                     setIsScrolling(false);
                 }, 500); // Adjust the timeout as needed based on your scroll animation duration
+                return () => clearTimeout(timeout);
             }
         }
     };
@@ -158,27 +160,37 @@ export const NewArrivals = () => {
 
         setIsDragging(false);
 
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             dragCompleteRef.current = true;
         }, 30);
 
         adjustWheel();
+        return () => clearTimeout(timeout);
     };
 
+    const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
     const handleClickProduct = (product: Product) => {
-        setTimeout(() => {
+        // Clear any existing timeout before setting a new one
+        if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+        }
+        clickTimeoutRef.current = setTimeout(() => {
             if (isDraggingRef.current) {
                 console.log("THIS IS WHY (Click ignored because of dragging)");
                 return;
             }
             console.log("HANDLE CLICK PRODUCT CALLED");
             dispatch(setSelectedProduct(product));
-        navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+            navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
         }, 70);
+
     };
     const [wheelItemWidth, setWheelItemWidth] = useState("");
 
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
     useEffect(() => {
+
         const calculateWheelItemWidth = () => {
             if (wheelRef.current) {
                 const wheelWidth = wheelRef.current.offsetWidth;
@@ -200,7 +212,7 @@ export const NewArrivals = () => {
                     setWheelItemWidth(itemWidthWithoutMargin.toFixed(2));
                 }
             }
-            setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 adjustWheel();
             }, 500)
 
@@ -215,6 +227,9 @@ export const NewArrivals = () => {
         // Clean up event listener on component unmount
         return () => {
             window.removeEventListener('resize', calculateWheelItemWidth);
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
         };
     }, []);
 
@@ -240,7 +255,7 @@ export const NewArrivals = () => {
                 </div>
                 <div className="lg:w-fit sm:w-2/3 w-full flex flex-col items-center justify-center">
                     <Link to="/Audio/Audio%20Interfaces/Focusrite%20Scarlett%202i2%20USB-C%20Audio%20Interface%20Gen%204" className="text-xl mb-2 text-white">Focusrite Scarlett 2i2 USB-C Audio Interface Gen 4</Link>
-            
+
                 </div>
 
             </div>

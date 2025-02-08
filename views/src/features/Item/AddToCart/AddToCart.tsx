@@ -3,7 +3,6 @@ import { Select, MenuItem } from '@mui/material';
 import { SelectChangeEvent } from '@mui/material/Select';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
-import { selectSelectedProduct, selectVariants } from '../../../redux-store/ProductsSlice';
 import { addItemToCart } from '../../../redux-store/CartSlice';
 import { selectIsAuthenticated } from '../../../redux-store/UserSlice';
 import { addToCart } from '../../../api/cart';
@@ -37,9 +36,10 @@ export const AddToCart: React.FC<AddToCartProps> = ({product}) => {
 
         }
         setAddedToCart(true);
-        setTimeout(() => {
+        const timeout = setTimeout(() => {
             setAddedToCart(false)
         }, 900);
+        return () => clearTimeout(timeout);
     }
 
 
