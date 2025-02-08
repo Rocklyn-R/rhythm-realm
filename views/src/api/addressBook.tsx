@@ -1,3 +1,8 @@
+export const BASE_URL = process.env.NODE_ENV === 'production'
+    ? 'https://rhythm-realm-backend.onrender.com'
+    : 'http://localhost:4000';
+
+
 export const addNewAddress = async (
     name: string,
     address: string,
@@ -8,7 +13,7 @@ export const addNewAddress = async (
     phone: string
 ) => {
     try {
-        const response = await fetch(`http://localhost:4000/address-book/add`, {
+        const response = await fetch(`${BASE_URL}/address-book/add`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -38,7 +43,7 @@ export const addNewAddress = async (
 
 export const getAddressBook = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/address-book/`, {
+        const response = await fetch(`${BASE_URL}/address-book/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -57,7 +62,7 @@ export const getAddressBook = async () => {
 
 export const deleteAddress = async (id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/address-book/`, {
+        const response = await fetch(`${BASE_URL}/address-book/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +90,7 @@ export const editAddress = async (
     phone: string
 ) => {
     try {
-        const response = await fetch(`http://localhost:4000/address-book/`, {
+        const response = await fetch(`${BASE_URL}/address-book/`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

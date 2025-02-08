@@ -1,3 +1,5 @@
+import { BASE_URL } from "./addressBook";
+
 export const createOrder = async (
     order_id: string,
     total: string,
@@ -8,7 +10,7 @@ export const createOrder = async (
     shipping_cost: string | null,
     total_with_tax: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/`, {
+        const response = await fetch(`${BASE_URL}/orders/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +42,7 @@ export const createOrderItems = async (
     variant_id: number,
     quantity: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/order-items`, {
+        const response = await fetch(`${BASE_URL}/orders/order-items`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -61,7 +63,7 @@ export const createOrderItems = async (
 
 export const getOrderHistory = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/order-history`, {
+        const response = await fetch(`${BASE_URL}/orders/order-history`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -80,7 +82,7 @@ export const getOrderHistory = async () => {
 
 export const findOrder = async (order_id: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/return?order_id=${order_id}`, {
+        const response = await fetch(`${BASE_URL}/orders/return?order_id=${order_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -99,7 +101,7 @@ export const findOrder = async (order_id: string) => {
 
 export const findFullOrder = async (order_id: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/get-order?order_id=${order_id}`, {
+        const response = await fetch(`${BASE_URL}/orders/get-order?order_id=${order_id}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -128,7 +130,7 @@ export const createOrderShipping = async (
     phone: string,
     email: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/orders/order-shipping`, {
+        const response = await fetch(`${BASE_URL}/orders/order-shipping`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

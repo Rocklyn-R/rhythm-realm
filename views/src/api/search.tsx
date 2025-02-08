@@ -1,6 +1,8 @@
+import { BASE_URL } from "./addressBook";
+
 export const getSearchSubcategories = async (searchTerm: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/search/?searchTerm=${searchTerm}`);
+        const response = await fetch(`${BASE_URL}/search/?searchTerm=${searchTerm}`);
         const data = await response.json();
         if (response.ok) {
             return data.subcategories;
@@ -12,7 +14,7 @@ export const getSearchSubcategories = async (searchTerm: string) => {
 
 export const getSearchByBrand = async (searchTerm: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/search/bybrand?searchTerm=${searchTerm}`);
+        const response = await fetch(`${BASE_URL}/search/bybrand?searchTerm=${searchTerm}`);
         const data = await response.json();
         if (response.ok) {
             return data.subcategoriesByBrand;
@@ -25,7 +27,7 @@ export const getSearchByBrand = async (searchTerm: string) => {
 export const getSearchByProduct = async (searchTerm: string) => {
     try {
 
-        const response = await fetch(`http://localhost:4000/search/byproduct?searchTerm=${searchTerm}`);
+        const response = await fetch(`${BASE_URL}/search/byproduct?searchTerm=${searchTerm}`);
         const data = await response.json();
         if (response.ok) {
             return data.productsResults;
@@ -37,7 +39,7 @@ export const getSearchByProduct = async (searchTerm: string) => {
 
 export const getRecommendedProducts = async (subcategories: string[], brand?: string) => {
     try {
-        let url = `http://localhost:4000/search/recommended-products?brand=${brand}`;
+        let url = `${BASE_URL}/search/recommended-products?brand=${brand}`;
         // Append categories to the URL if provided
         if (subcategories && subcategories.length > 0) {
             const subcategoriesParam = subcategories.join(',');
@@ -60,7 +62,7 @@ export const getRecommendedProducts = async (subcategories: string[], brand?: st
 export const getProductSearchResults = async (subcategories: string[], brand?: string) => {
     try {
 
-        let url = `http://localhost:4000/search/search-results?brand=${brand}`;
+        let url = `${BASE_URL}/search/search-results?brand=${brand}`;
         // Append categories to the URL if provided
         if (subcategories && subcategories.length > 0) {
             const subcategoriesParam = subcategories.join(',');

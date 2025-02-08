@@ -1,6 +1,8 @@
+import { BASE_URL } from "./addressBook";
+
 export const addItemToWishList = async (product_id: number, variant_id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/wish-list/`, {
+        const response = await fetch(`${BASE_URL}/wish-list/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -17,7 +19,7 @@ export const addItemToWishList = async (product_id: number, variant_id: number) 
 export const removeItemFromWishList = async (product_id: number, variant_id: number) => {
 
     try {
-        const response = await fetch(`http://localhost:4000/wish-list/`, {
+        const response = await fetch(`${BASE_URL}/wish-list/`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -33,7 +35,7 @@ export const removeItemFromWishList = async (product_id: number, variant_id: num
 
 export const getWishList = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/wish-list/`, {
+        const response = await fetch(`${BASE_URL}/wish-list/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

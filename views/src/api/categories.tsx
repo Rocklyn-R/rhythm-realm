@@ -1,6 +1,8 @@
+import { BASE_URL } from "./addressBook";
+
 export const getCategories = async () => {
     try {
-        const response = await fetch('http://localhost:4000/categories/', {
+        const response = await fetch(`${BASE_URL}/categories/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
@@ -17,7 +19,7 @@ export const getCategories = async () => {
 
 export const getSubcategories = async (id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/categories/subcategories?id=${id}`);
+        const response = await fetch(`${BASE_URL}/categories/subcategories?id=${id}`);
         const data = await response.json();
         if (response.ok) {
             return data.subcategories;
@@ -34,7 +36,7 @@ export const getFeaturedCategories = async (
     priceMax?: string
     ) => {
     try {
-        let url = (`http://localhost:4000/categories/featured-categories?marketingLabel=${marketingLabel}`);
+        let url = (`${BASE_URL}/categories/featured-categories?marketingLabel=${marketingLabel}`);
         if (manufacturers && manufacturers.length > 0) {
             const manufacturersParam = manufacturers.join(',');
             url += `&manufacturers=${manufacturersParam}`;
@@ -68,7 +70,7 @@ export const getFeaturedSubcategories = async (
     priceMax?: string
     ) => {
     try {
-        let url = `http://localhost:4000/categories/featured-subcategories?marketingLabel=${marketingLabel}`;
+        let url = `${BASE_URL}/categories/featured-subcategories?marketingLabel=${marketingLabel}`;
 
         if (categories && categories.length > 0) {
             const categoriesParam = categories.join(',');

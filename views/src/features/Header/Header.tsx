@@ -1,5 +1,4 @@
 import logo from "../../images/logo/rhythm-realm-nobg.png";
-import { Menu } from "../Menu/Menu";
 import { SearchBar } from "../Search/SearchBar";
 import { ShoppingCartHeader } from "../ShoppingCart/ShoppingCartHeader/ShoppingCartHeader";
 import { UserHeader } from "../User/UserHeader";

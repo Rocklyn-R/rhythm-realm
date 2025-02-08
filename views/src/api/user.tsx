@@ -1,6 +1,8 @@
+import { BASE_URL } from "./addressBook";
+
 export const createNewUser = async (name: string, lastName: string, email: string, password: string) => {
     try {
-        const response = await fetch('http://localhost:4000/user/signup', {
+        const response = await fetch(`${BASE_URL}/user/signup`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +33,7 @@ export const createNewUser = async (name: string, lastName: string, email: strin
 
 export const signInUser = async (email: string, password: string) => {
     try {
-        const response = await fetch('http://localhost:4000/user/login', {
+        const response = await fetch(`${BASE_URL}/user/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +57,7 @@ export const signInUser = async (email: string, password: string) => {
 
 export const checkAuthentication = async () => {
     try {
-        const response = await fetch('http://localhost:4000/user/auth', {
+        const response = await fetch(`${BASE_URL}/user/auth`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -76,7 +78,7 @@ export const checkAuthentication = async () => {
 
 export const logoutUser = async () => {
     try {
-        const response = await fetch('http://localhost:4000/user/logout', {
+        const response = await fetch(`${BASE_URL}/user/logout`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -92,7 +94,7 @@ export const logoutUser = async () => {
 
 export const updateUserName = async (first_name: string, last_name: string) => {
     try {
-        const response = await fetch('http://localhost:4000/user/user-name', {
+        const response = await fetch(`${BASE_URL}/user/user-name`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,7 +117,7 @@ export const updateUserName = async (first_name: string, last_name: string) => {
 
 export const updateUserEmail = async (email: string) => {
     try {
-        const response = await fetch('http://localhost:4000/user/email', {
+        const response = await fetch(`${BASE_URL}/user/email`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -135,7 +137,7 @@ export const updateUserEmail = async (email: string) => {
 
 export const updateUserPassword = async (oldPassword: string, newPassword: string) => {
     try {
-        const response = await fetch('http://localhost:4000/user/update-password', {
+        const response = await fetch(`${BASE_URL}/user/update-password`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +164,7 @@ export const updateUserPassword = async (oldPassword: string, newPassword: strin
 
 export const checkForUserEmail = async (email: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/user/reset-password/email-check?email=${email}`, {
+        const response = await fetch(`${BASE_URL}/user/reset-password/email-check?email=${email}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -178,7 +180,7 @@ export const checkForUserEmail = async (email: string) => {
 
 export const sendResetEmail = async (email: string) => {
     try {
-    const response = await fetch(`http://localhost:4000/user/send-reset-email`, {
+    const response = await fetch(`${BASE_URL}/user/send-reset-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -193,7 +195,7 @@ export const sendResetEmail = async (email: string) => {
 
 export const checkToken = async (token: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/user/reset-password/check-token?token=${token}`);
+        const response = await fetch(`${BASE_URL}/user/reset-password/check-token?token=${token}`);
         const data = await response.json();
         console.log(data);
         return data;
@@ -204,7 +206,7 @@ export const checkToken = async (token: string) => {
 
 export const createNewPasswordWithToken = async (password: string, user_id: string) => {
     try {
-        const response = await fetch(`http://localhost:4000/user/reset-password`, {
+        const response = await fetch(`${BASE_URL}/user/reset-password`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ password, user_id }),

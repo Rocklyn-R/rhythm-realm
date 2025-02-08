@@ -1,3 +1,5 @@
+import { BASE_URL } from "./addressBook";
+
 export const getProducts = async (
     subcategory: string,
     manufacturers?: string[],
@@ -6,7 +8,7 @@ export const getProducts = async (
     priceMax?: string
 ) => {
     try {
-        let url = `http://localhost:4000/products?subcategory=${subcategory}`;
+        let url = `${BASE_URL}/products?subcategory=${subcategory}`;
 
         // Append manufacturers to the URL if it's provided
         if (manufacturers && manufacturers.length > 0) {
@@ -42,7 +44,7 @@ export const getProducts = async (
 export const getSelectedProduct = async (name: string, variant?: string) => {
     try {
         
-        const response = await fetch(`http://localhost:4000/products/selected-product?name=${name}&variant=${variant}`);
+        const response = await fetch(`${BASE_URL}/products/selected-product?name=${name}&variant=${variant}`);
         const data = await response.json();
         if (response.ok) {
             return data.selectedProduct[0];
@@ -54,7 +56,7 @@ export const getSelectedProduct = async (name: string, variant?: string) => {
 
 export const getAllVariants = async (id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/variants?id=${id}`);
+        const response = await fetch(`${BASE_URL}/products/variants?id=${id}`);
         const data = await response.json();
         if (response.ok) {
             return data.variants;
@@ -71,7 +73,7 @@ export const getManufacturers = async (
     priceMax?: string
 ) => {
     try {
-        let url = (`http://localhost:4000/products/manufacturers?subcategory=${subcategory}`);
+        let url = (`${BASE_URL}/products/manufacturers?subcategory=${subcategory}`);
 
         if (sale) {
             url += `&sale=${sale}`;
@@ -106,7 +108,7 @@ export const getFeaturedDeals = async (
     priceMax?: string
 ) => {
     try {
-        let url = `http://localhost:4000/products/featured-products?marketingLabel=${marketingLabel}`;
+        let url = `${BASE_URL}/products/featured-products?marketingLabel=${marketingLabel}`;
         // Append categories to the URL if provided
         if (categories && categories.length > 0) {
             const categoriesParam = categories.join(',');
@@ -158,7 +160,7 @@ export const getFeaturedItemManufacturers = async (
     priceMax?: string
 ) => {
     try {
-        let url = (`http://localhost:4000/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
+        let url = (`${BASE_URL}/products/manufacturers-featured?marketingLabel=${marketingLabel}`);
         if (categories && categories.length > 0) {
             const categoriesParam = categories.join(',');
             url += `&categories=${categoriesParam}`;
@@ -191,7 +193,7 @@ export const getFeaturedItemManufacturers = async (
 
 export const getReviews = async (product_id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/reviews?product_id=${product_id}`);
+        const response = await fetch(`${BASE_URL}/products/reviews?product_id=${product_id}`);
         const data = await response.json();
         if (response.ok) {
             return data.reviews;
@@ -211,7 +213,7 @@ export const postReview = async (
     order_id: string | null
 ) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/review`, {
+        const response = await fetch(`${BASE_URL}/products/review`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -231,7 +233,7 @@ export const postReview = async (
 
 export const getAverageRating = async (product_id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/products/review/avg-rating?product_id=${product_id}`);
+        const response = await fetch(`${BASE_URL}/products/review/avg-rating?product_id=${product_id}`);
         const data = await response.json();
         if (response.ok) {
             return data.avg_rating[0].avg_rating;

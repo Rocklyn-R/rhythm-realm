@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Cart } from '../types/types';
+import { BASE_URL } from './addressBook';
 
 export const fetchStateByZipCode = async (zipCode: string) => {
     try {
@@ -13,7 +14,7 @@ export const fetchStateByZipCode = async (zipCode: string) => {
 
 export const addToCart = async (product_id: number, variant_id: number, quantity: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/add-to-cart`, {
+        const response = await fetch(`${BASE_URL}/cart/add-to-cart`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -31,7 +32,7 @@ export const addToCart = async (product_id: number, variant_id: number, quantity
 
 export const removeFromCart = async (product_id: number, variant_id: number) => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/remove-from-cart`, {
+        const response = await fetch(`${BASE_URL}/cart/remove-from-cart`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -47,7 +48,7 @@ export const removeFromCart = async (product_id: number, variant_id: number) => 
 
 export const getItemsFromCart = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/`, {
+        const response = await fetch(`${BASE_URL}/cart/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -65,7 +66,7 @@ export const getItemsFromCart = async () => {
 
 export const replaceCart = async (cart: Cart[]) => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/replace-cart`, {
+        const response = await fetch(`${BASE_URL}/cart/replace-cart`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -81,7 +82,7 @@ export const replaceCart = async (cart: Cart[]) => {
 
 export const insertMultipleIntoCart = async (cart: Cart[]) => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/insert-multiple`, {
+        const response = await fetch(`${BASE_URL}/cart/insert-multiple`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -97,7 +98,7 @@ export const insertMultipleIntoCart = async (cart: Cart[]) => {
 
 export const deleteCart = async () => {
     try {
-        const response = await fetch(`http://localhost:4000/cart/delete`, {
+        const response = await fetch(`${BASE_URL}/cart/delete`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
