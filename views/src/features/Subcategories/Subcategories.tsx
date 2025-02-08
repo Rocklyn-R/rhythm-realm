@@ -6,6 +6,7 @@ import { getSubcategories } from "../../api/categories"
 import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
 import { setLoadingProducts } from "../../redux-store/ProductsSlice"
+import { Loading } from "../Loading/Loading"
 
 
 export interface BreadcrumbPaths {
@@ -17,39 +18,38 @@ export interface BreadcrumbPaths {
 export const Subcategories: React.FC = () => {
   const { categoryName } = useParams<{ categoryName: string }>()
   const allCategories = useSelector(selectCategories);
-  const [id, setId] = useState(allCategories.find(item => item.name === categoryName)!.id);
   const dispatch = useDispatch();
   const subcategories = useSelector(selectSubcategories);
-
+  const [loading, setLoading] = useState(true);
   const categoryNameCapitalized = categoryName
     ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1)
     : '';
 
-  useEffect(() => {
-    if (allCategories) {
-      setId(allCategories.find(item => item.name === categoryName)!.id)
-    }
-  }, [allCategories, categoryName, id])
 
   useEffect(() => {
-    dispatch(setSubcategories([]));
+    setLoading(true);
     const fetchSubcategories = async () => {
+      const id = allCategories.find(item => item.name === categoryName)!.id;
       const subcategoryData = await getSubcategories(id);
       if (subcategoryData) {
         dispatch(setSubcategories(subcategoryData));
+        setLoading(false);
       }
     }
-    if (allCategories && id) {
+    if (allCategories) {
+      
       fetchSubcategories();
     }
 
-  }, [dispatch, categoryName, allCategories, id]);
+  }, [dispatch, categoryName, allCategories, setLoading]);
+  
 
 
   return (
     <div className="flex flex-col items-center mb-14">
       <h2 className="text-center text-2xl font-bold mb-6">{categoryNameCapitalized}:</h2>
-      <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
+      {loading ? <Loading/> : (
+            <div className="grid grid-cols-1 xs:grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8 w-fit max-w-7xl">
         {categoryName && subcategories.map((subcategory, index) => (
           <Link
           onClick={() => dispatch(setLoadingProducts(true))}
@@ -68,6 +68,8 @@ export const Subcategories: React.FC = () => {
           </Link>
         ))}
       </div>
+      )}
+  
     </div>
   )
 }
