@@ -42,7 +42,7 @@ export const BillingAddress: React.FC<BillingAddressProps> = ({billingSameAsShip
         } else {
             setBillingValidated(true);
         }
-    }, [nameInput, addressInput, cityInput, US_state, zipCodeInput, phoneInput])
+    }, [setBillingValidated, nameInput, addressInput, cityInput, US_state, zipCodeInput, phoneInput])
 
 
 

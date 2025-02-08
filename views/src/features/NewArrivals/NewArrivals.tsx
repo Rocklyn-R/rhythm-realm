@@ -8,7 +8,7 @@ import { Product } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { clearFilters } from "../../redux-store/FiltersSlice";
 import { formatPrice } from "../../utilities/utilities";
-import ReactPlayer from "react-player";
+//import ReactPlayer from "react-player";
 
 export const NewArrivals = () => {
     const dispatch = useDispatch();
@@ -224,6 +224,12 @@ export const NewArrivals = () => {
         dispatch(clearFilters());
         navigate("/Featured/New Arrivals")
     }
+    /*        <ReactPlayer
+                        url="https://www.youtube.com/embed/G02KlTmTcSg?si=s77MBKHnTzh5_ac8"
+                        controls={true}
+                    >
+
+                    </ReactPlayer> */
 
     return (
         <div className="p-10 m-4 flex flex-col bg-gradient-to-b from-darkred to-red-600">
@@ -234,12 +240,7 @@ export const NewArrivals = () => {
                 </div>
                 <div className="lg:w-fit sm:w-2/3 w-full flex flex-col items-center justify-center">
                     <Link to="/Audio/Audio%20Interfaces/Focusrite%20Scarlett%202i2%20USB-C%20Audio%20Interface%20Gen%204" className="text-xl mb-2 text-white">Focusrite Scarlett 2i2 USB-C Audio Interface Gen 4</Link>
-                    <ReactPlayer
-                        url="https://www.youtube.com/embed/G02KlTmTcSg?si=s77MBKHnTzh5_ac8"
-                        controls={true}
-                    >
-
-                    </ReactPlayer>
+            
                 </div>
 
             </div>
