@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { selectCart, selectTotal } from "../../../redux-store/CartSlice";
 import { GiShoppingCart } from "react-icons/gi";
 import { useEffect, useRef } from "react";
-import { formatPrice } from "../../../utilities/utilities";
+import { formatImage, formatPrice } from "../../../utilities/utilities";
 
 interface SlidingCartProps {
     toggleCart: () => void;
@@ -58,7 +58,7 @@ export const SlidingCart: React.FC<SlidingCartProps> = ({ toggleCart, isOpen }) 
                         >
                             <img
                                 width="180"
-                                src={item.image1}
+                                src={formatImage(item.image1, "m")}
                                 className="border flex justify-center border-black p-2  object-cover"
                                 alt={`${item.name} ${item.variant_name}`}
                             />

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useSelector } from "react-redux"
 import { selectSelectedProduct } from "../../../redux-store/ProductsSlice"
 import { ChevronLeftCircle, ChevronRightCircle } from "lucide-react";
+import { formatImage } from "../../../utilities/utilities";
 
 export const ImageGallery = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -76,7 +77,7 @@ export const ImageGallery = () => {
                     >
                         <img
                             alt="Product"
-                            src={src}
+                            src={formatImage(src, "b")}
                         />
                     </button>
                 ))}

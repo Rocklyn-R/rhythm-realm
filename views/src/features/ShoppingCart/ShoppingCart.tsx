@@ -6,7 +6,7 @@ import { FiMinus, FiPlus } from "react-icons/fi";
 import { addToQuantity, subtractFromQuantity } from "../../redux-store/CartSlice";
 import { useDispatch } from "react-redux";
 import { Cart } from "../../types/types";
-import { formatPrice } from "../../utilities/utilities";
+import { formatImage, formatPrice } from "../../utilities/utilities";
 import { OrderSummary } from "../OrderSummary/OrderSummary";
 import { addToCart, removeFromCart } from "../../api/cart";
 import { selectIsAuthenticated } from "../../redux-store/UserSlice";
@@ -61,7 +61,7 @@ export const ShoppingCart = () => {
                                     <div className="flex border-t-2 md:flex-row flex-col md:justify-between border-gray-300 w-full">
                                         <div className="flex">
                                             <div className="w-fit h-40 mt-6 min-w-20">
-                                                <img alt="Item" src={item.image1} width="160" className="cursor-pointer" onClick={() => selectItem(item)} />
+                                                <img alt="Item" src={formatImage(item.image1, "m")} width="160" className="cursor-pointer" onClick={() => selectItem(item)} />
                                             </div>
                                             <div className="flex flex-col ml-6 m-6 items-start">
                                                 <span className="font-semibold mb-4 cursor-pointer hover:underline" onClick={() => selectItem(item)}>{item.name} {item.variant_name}</span>

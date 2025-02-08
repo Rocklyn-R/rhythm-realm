@@ -98,3 +98,12 @@ export const formatName = (variant: string) => {
 export const formatNameForDisplay = (variant: string) => {
   return variant.replace(/_/g, '/');
 }
+
+export const formatImage = (url: string, size: "s" | "t" | "m" | "b" | "l") => {
+  if (!url) return "";
+  
+  const match = url.match(/(https:\/\/i\.imgur\.com\/[^.]+)(\..+)/);
+  if (!match) return url; // Return original if URL format is unexpected
+  console.log(`${match[1]}${size}${match[2]}`)
+  return `${match[1]}${size}${match[2]}`; // Inserts the size before extension
+}

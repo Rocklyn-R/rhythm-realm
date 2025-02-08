@@ -6,7 +6,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { setSelectedProduct } from "../../../redux-store/ProductsSlice"
 import { AddToWishList } from "./AddToWishList/AddToWishList"
 import { StarRating } from "../../Item/StarRating/StarRating"
-
+import { formatImage } from "../../../utilities/utilities"
 
 interface ProductsProps {
     uniqueProducts: Product[]
@@ -22,7 +22,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
     const [productsForSelection, setProductsForSelection] = useState<Product[]>([]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-
+    
     const handleThumbnailClick = (product: Product, variant: Product, index: number, event: React.MouseEvent) => {
         event.stopPropagation();
         setCurrentSlide(prev => ({
@@ -98,7 +98,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                     <div className="flex custom-slider" style={{ transform: `translateX(-${(currentSlide[product.id] || 0) * 100}%)` }}>
                                         {productVariantsMap[product.id].map((variant, index) => (
                                             <div className="min-w-full relative" key={variant.variant_id}>
-                                                <img className="w-full p-2" src={variant.image1} alt={`${variant.name} ${variant.variant_name}`} />
+                                                <img className="w-full p-2" src={formatImage(variant.image1, "m")} alt={`${variant.name} ${variant.variant_name}`} />
                                                 <AddToWishList
                                                     variant={variant}
                                                     key={variant.variant_id}
@@ -121,7 +121,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                                     >
                                                         <img
                                                             className="w-full h-full object-cover p-1"
-                                                            src={variant.image1}
+                                                            src={formatImage(variant.image1, "s")}
                                                             alt={`${variant.name} ${variant.variant_name}`}
                                                         />
                                                     </div>
@@ -136,7 +136,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                                                         >
                                                             <img
                                                                 className="w-full h-full object-cover p-1"
-                                                                src={variant.image1}
+                                                                src={formatImage(variant.image1, "s")}
                                                                 alt={`${variant.name} ${variant.variant_name}`}
                                                             />
                                                         </div>

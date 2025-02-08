@@ -13,7 +13,7 @@ import { StarRating } from "./StarRating/StarRating";
 import { AddToWishList } from "../ProductsPage/Products/AddToWishList/AddToWishList";
 import { LuShieldCheck } from "react-icons/lu";
 import { ReviewsBox } from "./ReviewsBox/ReviewsBox";
-import { formatPrice, formatNameForDisplay } from "../../utilities/utilities";
+import { formatPrice, formatNameForDisplay, formatImage } from "../../utilities/utilities";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -148,9 +148,9 @@ export const Item = () => {
                     <div>
                         <p className="px-14 py-10">{selectedProduct.description}</p>
                         <div className="flex justify-around">
-                            <img alt="Image1" src={selectedProduct.image1} className="w-1/3" />
-                            <img alt="Image2" src={selectedProduct.image2} className="w-1/3" />
-                            {selectedProduct.image3 && <img alt="Image3" src={selectedProduct.image3} className="w-1/3" />}
+                            <img alt="Image1" src={formatImage(selectedProduct.image1, "l")} className="w-1/3" />
+                            <img alt="Image2" src={formatImage(selectedProduct.image2, "l")} className="w-1/3" />
+                            {selectedProduct.image3 && <img alt="Image3" src={formatImage(selectedProduct.image3, "l")} className="w-1/3" />}
                         </div>
                     </div>) : ""}
             </div>

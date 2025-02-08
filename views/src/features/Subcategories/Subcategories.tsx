@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux"
 import { useParams } from "react-router-dom"
 import { setLoadingProducts } from "../../redux-store/ProductsSlice"
 import { Loading } from "../Loading/Loading"
+import { formatImage } from "../../utilities/utilities"
 
 
 export interface BreadcrumbPaths {
@@ -58,7 +59,7 @@ export const Subcategories: React.FC = () => {
             className="relative group block bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out w-60"
           >
             <img
-              src={subcategory.image}
+              src={formatImage(subcategory.image, "m")}
               alt={subcategory.name}
               className="w-60 h-60 transition-transform duration-300 ease-in-out group-hover:scale-110"
             />

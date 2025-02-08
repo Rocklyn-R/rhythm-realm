@@ -7,7 +7,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Product } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { clearFilters } from "../../redux-store/FiltersSlice";
-import { formatPrice } from "../../utilities/utilities";
+import { formatImage, formatPrice } from "../../utilities/utilities";
 //import ReactPlayer from "react-player";
 
 export const NewArrivals = () => {
@@ -280,7 +280,7 @@ export const NewArrivals = () => {
                             key={product.variant_id}
                             className="product-button flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black mt-8 bg-white rounded-md flex-none p-2 mr-4"
                         >
-                            <img src={product.image1} className="w-full h-auto" alt={product.name} draggable="false" />
+                            <img src={formatImage(product.image1, "l")} className="w-full h-auto" alt={product.name} draggable="false" />
                             <div className="flex flex-col items-center">
                                 <h3 className="mb-2 text-lg font-semibold text-center">{product.name}</h3>
                                 <div>

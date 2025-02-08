@@ -12,7 +12,7 @@ import {
     setSubcategoryResults,
 } from "../../../redux-store/SearchSlice"
 import { ProductResult, SubcategoryByBrand, SubcategoryResult } from "../../../types/types";
-import { formatPrice } from "../../../utilities/utilities";
+import { formatImage, formatPrice } from "../../../utilities/utilities";
 import { StarRating } from "../../Item/StarRating/StarRating";
 
 interface SearchResultsProps {
@@ -75,7 +75,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
                             <div className="space-y-4 flex flex-col px-4 pb-4">
                                 {subcategoryResults.map((subcategory, index) => (
                                     <button key={index} onClick={() => handleSelectSubcategory(subcategory)} className="flex hover:shadow-lg items-center bg-white rounded-md p-4" >
-                                        <img src={subcategory.image} width={50} alt={subcategory.subcategory_name} />
+                                        <img src={formatImage(subcategory.image, "s")} width={50} alt={subcategory.subcategory_name} />
                                         <p className="mx-2 w-3/4">{subcategory.subcategory_name}</p>
                                     </button>
                                 ))}
@@ -106,7 +106,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
                     <div className="space-y-4 pb-4">
                         {recommendedProducts.map((product, index) => (
                             <div className="flex p-4 bg-white mx-4 rounded-md shadow-sm" key={index}>
-                                <img onClick={() => handleSelectProduct(product)} src={product.image1} className="cursor-pointer w-1/4 sm:w-1/3 h-full p-2 bg-white" alt={product.name} />
+                                <img onClick={() => handleSelectProduct(product)} src={formatImage(product.image1, "m")} className="cursor-pointer w-1/4 sm:w-1/3 h-full p-2 bg-white" alt={product.name} />
                                 <div className="flex flex-col mx-2 lg:w-3/4">
                                     <p className="hover:underline cursor-pointer" onClick={() => handleSelectProduct(product)}>{product.name}</p>
                                     <StarRating rating={product.rating} />
@@ -123,7 +123,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
                 <div className="flex flex-col w-full">
                     {productsResults.map((product, index) => (
                         <button onClick={() => handleSelectProduct(product)} key={index} className="flex items-center w-full rounded-b-md rounded-t-md border-b border-t p-2 bg-white">
-                            <img src={product.image1} width={50} alt={product.name} />
+                            <img src={formatImage(product.image1, "b")} width={50} alt={product.name} />
                             <p className="mx-2 hover:underline">{product.name} {product.variant_name}</p>
                         </button>
                     ))}

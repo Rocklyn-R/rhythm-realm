@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getCategories } from "../../../api/categories";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCategories, setCategories } from "../../../redux-store/ProductsSlice";
+import { formatImage } from "../../../utilities/utilities";
 
 
 export const Categories = () => {
@@ -33,7 +34,7 @@ export const Categories = () => {
             className="relative group block bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out"
           >
             <img
-              src={category.image}
+              src={formatImage(category.image, "l")}
               alt={category.name}
               className="w-60 h-60 transition-transform duration-300 ease-in-out group-hover:scale-110"
             />

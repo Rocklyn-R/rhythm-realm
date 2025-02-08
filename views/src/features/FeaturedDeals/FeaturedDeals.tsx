@@ -7,7 +7,7 @@ import { getFeaturedDeals } from "../../api/products";
 import { clearFilters } from "../../redux-store/FiltersSlice";
 import { selectFeaturedDeals, selectTopSellers, setFeaturedDeals, setSelectedProduct, setTopSellers } from "../../redux-store/ProductsSlice";
 import { Product } from "../../types/types";
-import { shuffleArray } from "../../utilities/utilities";
+import { formatImage, shuffleArray } from "../../utilities/utilities";
 import { formatPrice } from "../../utilities/utilities";
 
 interface FeaturedDealsProps {
@@ -300,7 +300,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({ marketingLabel }) 
                             key={product.id}
                             className="mx-2 featured-product-button max-h-90 flex flex-col cursor-pointer justify-between items-center shadow-sm hover:shadow-xl border border-black mt-8 bg-white rounded-md flex-none p-2"
                         >
-                            <img src={product.image1} className="w-full h-auto" alt={product.name} draggable="false" />
+                            <img src={formatImage(product.image1, "l")} className="w-full h-auto" alt={product.name} draggable="false" />
                             <div className="p-4 flex flex-col items-center">
                                 <h3 className="text-lg font-semibold text-center">{product.name}</h3>
                                 <div>
