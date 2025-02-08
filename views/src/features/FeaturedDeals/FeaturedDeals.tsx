@@ -7,7 +7,7 @@ import { getFeaturedDeals } from "../../api/products";
 import { clearFilters } from "../../redux-store/FiltersSlice";
 import { selectFeaturedDeals, selectTopSellers, setFeaturedDeals, setSelectedProduct, setTopSellers } from "../../redux-store/ProductsSlice";
 import { Product } from "../../types/types";
-import { formatImage, shuffleArray } from "../../utilities/utilities";
+import { formatImage, formatName, shuffleArray } from "../../utilities/utilities";
 import { formatPrice } from "../../utilities/utilities";
 
 interface FeaturedDealsProps {
@@ -190,7 +190,7 @@ export const FeaturedDeals: React.FC<FeaturedDealsProps> = ({ marketingLabel }) 
             }
             const deal = marketingLabel === "On Sale" ? "Sale" : "Top Sellers";
             dispatch(setSelectedProduct(product));
-            navigate(`/Featured/${deal}/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`);
+            navigate(`/Featured/${deal}/${formatName(product.name)}${product.variant_name ? `/${formatName(product.variant_name)}` : ''}`);
         }, 70);
 
     };

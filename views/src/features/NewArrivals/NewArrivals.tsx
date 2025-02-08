@@ -7,7 +7,7 @@ import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { Product } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { clearFilters } from "../../redux-store/FiltersSlice";
-import { formatImage, formatPrice } from "../../utilities/utilities";
+import { formatImage, formatName, formatPrice } from "../../utilities/utilities";
 import ReactPlayer from "react-player";
 
 export const NewArrivals = () => {
@@ -182,7 +182,7 @@ export const NewArrivals = () => {
             }
             console.log("HANDLE CLICK PRODUCT CALLED");
             dispatch(setSelectedProduct(product));
-            navigate(`/Featured/Sale/${product.name}${product.variant_name ? `/${product.variant_name}` : ''}`)
+            navigate(`/Featured/Sale/${formatName(product.name)}${product.variant_name ? `/${formatName(product.variant_name)}` : ''}`)
         }, 70);
 
     };
