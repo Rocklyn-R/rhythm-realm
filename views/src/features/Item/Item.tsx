@@ -149,7 +149,7 @@ export const Item = () => {
                         <p className="px-14 py-10">{selectedProduct.description}</p>
                         <div className="flex justify-around">
                             <img alt="Image1" src={formatImage(selectedProduct.image1, "l")} className="w-1/3" />
-                            <img alt="Image2" src={formatImage(selectedProduct.image2, "l")} className="w-1/3" />
+                            {selectedProduct.image2 && <img alt="Image2" src={formatImage(selectedProduct.image2, "l")} className="w-1/3" />}
                             {selectedProduct.image3 && <img alt="Image3" src={formatImage(selectedProduct.image3, "l")} className="w-1/3" />}
                         </div>
                     </div>) : ""}
