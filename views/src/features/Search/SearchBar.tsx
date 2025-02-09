@@ -24,6 +24,7 @@ export const SearchBar = () => {
     const searchParams = new URLSearchParams(location.search);
     const searchParameter = searchParams.get('searchTerm');
     const searchInputRef = useRef<HTMLInputElement>(null);
+    const [isTyping, setIsTyping] = useState(true);
 
     useEffect(() => {
         if (!searchInput) {
@@ -104,6 +105,7 @@ export const SearchBar = () => {
         searchTermIndex: number,
         termsToUse: string[],
         reducerToUse: (results: SubcategoryByBrand[]) => { type: string; payload: SubcategoryByBrand[] }) => {
+            setIsTyping(true);
         const byBrandResults: SubcategoryByBrand[] = await getSearchByBrand(termsToUse[searchTermIndex]);
         if (byBrandResults && byBrandResults.length > 0) {
             if (termsToUse.length > 1) {
@@ -144,27 +146,34 @@ export const SearchBar = () => {
                     if (filteredResults.length !== byBrandResults.length && searchType === "searchbar") {
                         clearOtherResults('bybrand');
                         dispatch(reducerToUse(filteredResults));
+                        setIsTyping(false);
                     }
                     if (searchType === "keywords") {
                         clearOtherResults("none");
+                        setIsTyping(false);
                         return filteredResults;
                     }
+                    setIsTyping(false);
                     return true;
                 } else {
+                    setIsTyping(false);
                     return false;
                 }
             } else {
                 if (searchType === "searchbar") {
                     clearOtherResults('bybrand');
                     dispatch(reducerToUse(byBrandResults));
+                    setIsTyping(false);
                     return true;
                 } else {
                     clearOtherResults("none");
+                    setIsTyping(false);
                     return byBrandResults;
                 }
             }
         } else {
             brandNonmatchingTerm = termsToUse[termsToUse.length - 1];
+            setIsTyping(false);
             return false;
         }
     }
@@ -174,6 +183,7 @@ export const SearchBar = () => {
         searchTermIndex: number,
         termsToUse: string[],
         reducerToUse: (results: ProductResult[]) => PayloadAction<ProductResult[]>) => {
+            setIsTyping(true);
         const productsResults: ProductResult[] = await getSearchByProduct(termsToUse[searchTermIndex]);
         if (productsResults.length > 0) {
             if (termsToUse.length > 1) {
@@ -221,12 +231,15 @@ export const SearchBar = () => {
                 if (((filteredResults.length !== productsResults.length) || (filteredResults.length !== newResults.length)) && searchType === "searchbar") {
                     clearOtherResults('products');
                     dispatch(reducerToUse(filteredResults));
+                    setIsTyping(false);
                     return true;
                 } else {
                     if (searchType === "searchbar") {
                         clearOtherResults('products');
+                        setIsTyping(false);
                         return true;
                     } else {
+                        setIsTyping(false);
                         return filteredResults;
                     }
 
@@ -235,12 +248,15 @@ export const SearchBar = () => {
                 if (searchType === "searchbar") {
                     clearOtherResults('products');
                     dispatch(reducerToUse(productsResults));
+                    setIsTyping(false);
                     return true;
                 } else {
+                    setIsTyping(false);
                     return productsResults;
                 }
             }
         } else {
+            setIsTyping(false);
             return false;
         }
     }
@@ -251,6 +267,7 @@ export const SearchBar = () => {
         searchType: "keywords" | "searchbar",
         termsToUse: string[],
         reducerToUse: (results: SubcategoryResult[]) => { type: string; payload: SubcategoryResult[] }) => {
+            setIsTyping(true);
         const subcategoryResults: SubcategoryResult[] = await getSearchSubcategories(termsToUse[0]);
 
         if (subcategoryResults && subcategoryResults.length > 0) {
@@ -285,35 +302,43 @@ export const SearchBar = () => {
                 if (searchType === "searchbar") {
                     clearOtherResults("subcategories");
                     dispatch(reducerToUse(filteredResults));
+                    setIsTyping(false);
                 }
 
 
                 if (filteredResults.length > 0) {
                     if (searchType === "searchbar") {
+                        setIsTyping(false);
                         return true;
                     } else {
+                        setIsTyping(false);
                         return filteredResults;
                     }
                 } else {
+                    setIsTyping(false);
                     return false;
                 }
             } else {
                 if (searchType === "searchbar") {
                     clearOtherResults('subcategories');
                     dispatch(reducerToUse(subcategoryResults));
+                    setIsTyping(false);
                     return true;
                 } else {
                     clearOtherResults("none");
+                    setIsTyping(false);
                     return subcategoryResults;
                 }
             }
         } else {
             nonmatchingTerm = termsToUse[0];
+            setIsTyping(false);
             return false;
         }
     }
 
     const searchRecommendedProducts = async (results: SubcategoryByBrand[] | SubcategoryResult[]) => {
+        setIsTyping(true);
         const brand = ('manufacturer' in results[0]) ? (results as SubcategoryByBrand[])[0].manufacturer : undefined;
         const subcategories = results.map(result => result.subcategory_name);
 
@@ -347,6 +372,7 @@ export const SearchBar = () => {
 
         //Perform Search
         const performSearch = async () => {
+            setIsTyping(true);
             if (debouncedSearchTerms.length > 0) {
                 const brandSearch = await searchByManufacturer("searchbar", 0, debouncedSearchTerms, setSubcategoryByBrandResults);
                 if (!brandSearch) {
@@ -356,7 +382,10 @@ export const SearchBar = () => {
                         const newBrandSearch = await searchByManufacturer("searchbar", nonmatchingIndex, debouncedSearchTerms, setSubcategoryByBrandResults);
                         if (!newBrandSearch) {
                             const brandNonmatchingIndex = debouncedSearchTerms.indexOf(brandNonmatchingTerm!);
-                            await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
+                            const productSearch = await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
+                            if(!productSearch) {
+                                dispatch(setProductsResults([]));
+                            }
                         }
                     }
                 }
@@ -364,6 +393,7 @@ export const SearchBar = () => {
                 dispatch(setSubcategoryResults([]));
                 dispatch(setSubcategoryByBrandResults([]));
                 dispatch(setProductsResults([]));
+                setIsTyping(false);
             }
         }
 
@@ -499,8 +529,19 @@ export const SearchBar = () => {
 
             </div>
             {searchTerms.length > 0 && searchTerms[0].length >= 3 && isFocused && (
-                <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-20">
+                <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-20"
+                onWheel={(e) => {
+                    const target = e.currentTarget;
+                    const isAtTop = target.scrollTop === 0;
+                    const isAtBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+              
+                    if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+                        e.preventDefault(); // Stop main page from scrolling
+                    }
+                }}
+              >
                     <SearchResults
+                        isTyping={isTyping}
                         handleBlur={handleBlur}
                         setSearchInput={setSearchInput}
                         debouncedSearchTerms={debouncedSearchTerms}

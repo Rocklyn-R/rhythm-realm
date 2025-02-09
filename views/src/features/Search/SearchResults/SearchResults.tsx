@@ -20,9 +20,10 @@ interface SearchResultsProps {
     setSearchInput: (arg0: string) => void;
     debouncedSearchTerms: string[];
     searchInput: string;
+    isTyping: boolean;
 }
 
-export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debouncedSearchTerms, setSearchInput, handleBlur }) => {
+export const SearchResults: React.FC<SearchResultsProps> = ({ isTyping, searchInput, debouncedSearchTerms, setSearchInput, handleBlur }) => {
     const subcategoryResults = useSelector(selectSubcategoryResults);
     const navigate = useNavigate();
     const byBrandResults = useSelector(selectSubcategoryByBrandResults);
@@ -54,13 +55,13 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
         handleBlur();
     }
 
-
+    const noResults = debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && !isTyping;
 
     return (
-        <div className="flex flex-col z-20 sm:flex-row w-full h-full overflow-y-auto sm:overflow-hidden justify-between" style={{ maxHeight: '600px' }}>
+        <div className="flex rounded-md md:h-[70vh] h-[50vh] flex-col z-20 sm:flex-row w-full overflow-y-auto justify-between" style={{ maxHeight: '600px' }}>
             {/* Left Side - Categories or By Brand Section */}
             {/* No Results Found */}
-            {debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && (
+            {noResults && (
                 <div className="w-full flex justify-center p-6 text-lg font-semibold z-20">
                     <p>No results found.</p>
                 </div>
@@ -70,7 +71,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ searchInput, debou
 
                     {/* Categories Section */}
                     {subcategoryResults.length > 0 && (
-                        <div>
+                        <div className="">
                             <h1 className="font-semibold text-lg p-4 self-center">Categories:</h1>
                             <div className="space-y-4 flex flex-col px-4 pb-4">
                                 {subcategoryResults.map((subcategory, index) => (
