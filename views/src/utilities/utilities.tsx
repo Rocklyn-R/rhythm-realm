@@ -104,6 +104,5 @@ export const formatImage = (url: string, size: "s" | "t" | "m" | "b" | "l") => {
   
   const match = url.match(/(https:\/\/i\.imgur\.com\/[^.]+)(\..+)/);
   if (!match) return url; // Return original if URL format is unexpected
-  console.log(`${match[1]}${size}${match[2]}`)
   return `${match[1]}${size}${match[2]}`; // Inserts the size before extension
 }

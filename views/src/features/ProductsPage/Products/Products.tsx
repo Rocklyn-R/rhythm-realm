@@ -154,7 +154,7 @@ export const Products: React.FC<ProductsProps> = ({ sortedProducts, uniqueProduc
                             </div>
 
 
-                            <div className="flex flex-col flex-grow w-1/2 md:w-full justify-center md:justify-end mt-2">
+                            <div className="flex flex-col flex-grow w-full sm:w-1/2 md:w-full justify-center md:justify-end mt-2">
                                 <p className="p-1 text-gray-700">{product.name}</p>
                                 <StarRating
                                     rating={product.avg_rating}

@@ -245,14 +245,15 @@ export const NewArrivals = () => {
         <div className="p-10 m-4 flex flex-col bg-gradient-to-b from-darkred to-red-600">
             <div className="flex lg:flex-row flex-col items-center lg:justify-around w-full">
                 <div className="flex flex-col items-center text-white pb-4 lg:pb-0">
-                    <h1 className="lg:text-7xl xs:text-5xl font-bold">NEW</h1>
-                    <h1 className="lg:text-7xl xs:text-5xl font-bold">ARRIVALS</h1>
+                    <h1 className="lg:text-7xl xs:text-5xl text-4xl font-bold">NEW</h1>
+                    <h1 className="lg:text-7xl xs:text-5xl text-4xl font-bold">ARRIVALS</h1>
                 </div>
                 <div className="lg:w-fit sm:w-2/3 w-full flex flex-col items-center justify-center">
-                    <Link to="/Audio/Audio%20Interfaces/Focusrite%20Scarlett%202i2%20USB-C%20Audio%20Interface%20Gen%204" className="text-xl mb-2 text-white">Focusrite Scarlett 2i2 USB-C Audio Interface Gen 4</Link>
+                    <Link to="/Audio/Audio%20Interfaces/Focusrite%20Scarlett%202i2%20USB-C%20Audio%20Interface%20Gen%204" className="text-xl mb-2 text-center text-white">Focusrite Scarlett 2i2 USB-C Audio Interface Gen 4</Link>
                     <ReactPlayer
                         url="https://www.youtube.com/embed/G02KlTmTcSg?si=s77MBKHnTzh5_ac8"
                         controls={true}
+                        width='100%'
                     >
 
                     </ReactPlayer>
