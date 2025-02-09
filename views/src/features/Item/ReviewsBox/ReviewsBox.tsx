@@ -42,7 +42,7 @@ export const ReviewsBox = () => {
 
 
     return (
-        <div className="py-10 px-20 w-full" ref={reviewsRef}>
+        <div className="py-10 lg:px-20 md:px-8 px-6 w-full" ref={reviewsRef}>
             {reviews.length === 0 ? (
                 <div className="flex flex-col items-center w-full">
                     <h3 className="mb-4">Be the first to review this product.</h3>
@@ -114,8 +114,8 @@ export const ReviewsBox = () => {
                         </div>
                        
                     )}
-                    <div className="flex rounded-md mt-10 px-4 py-4 bg-gray-300 items-center justify-between">
-                        <h3 className="text-lg font-semibold">
+                    <div className="flex flex-col sm:flex-row rounded-md mt-10 px-4 py-4 bg-gray-300 items-center justify-between">
+                        <h3 className="text-lg font-semibold sm:mb-0 mb-4">
                             {filteredReviews
                                 ? `${filteredReviews.length} ${filteredReviews.length === 1 ? 'result' : 'results'}`
                                 : `Reviewed by ${reviews.length} customers`}

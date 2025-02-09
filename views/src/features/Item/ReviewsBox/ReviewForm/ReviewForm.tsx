@@ -7,6 +7,7 @@ import { selectFirstName, selectIsAuthenticated } from "../../../../redux-store/
 import { getAverageRating, postReview } from "../../../../api/products";
 import { addReview, selectSelectedProduct, setAverageRating } from "../../../../redux-store/ProductsSlice";
 import { useDispatch } from "react-redux";
+import { useMediaQuery } from "@mui/material";
 const { TextArea } = Input; // Destructuring TextArea from Input
 
 interface ReviewFormProps {
@@ -29,6 +30,10 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
     const [missingRecommend, setMissingRecommend] = useState("");
     const dispatch = useDispatch();
 
+
+    const isSmallScreen = useMediaQuery("(max-width:450px)");
+    const isExtraSmallScreen = useMediaQuery("(max-width:350px)")
+
     useEffect(() => {
         if (isAuthenticated) {
             setFirstName(userFirstName);
@@ -38,7 +43,7 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
 
     const handleSubmitReview = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-      
+
         if (headline && comments && firstName && (wouldRecommend !== null) && rating) {
 
             const reviewData = await postReview(selectedProduct.id, rating, headline, comments, firstName, wouldRecommend, orderNumber);
@@ -67,19 +72,19 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
     }
 
     useEffect(() => {
-        if (!showSuccessMessage) return; 
+        if (!showSuccessMessage) return;
 
         const timeout = setTimeout(() => {
             setShowSuccessMessage(false);
             setShowWriteReview(false);
         }, 5000);
-    
-        return () => clearTimeout(timeout); 
+
+        return () => clearTimeout(timeout);
     }, [showSuccessMessage, setShowSuccessMessage, setShowWriteReview]);
 
 
     return (
-        <div className="mt-10 bg-gray-200 py-12 px-20 rounded-lg relative w-full">
+        <div className="mt-10 bg-gray-200 py-12 lg:px-20 md:px-8 px-6 rounded-lg relative w-full">
             {showSuccessMessage ? (
                 <p className="py-20 flex justify-center text-xl font-semibold">Your review has been submitted!</p>
             ) : (
@@ -110,23 +115,28 @@ export const ReviewForm: React.FC<ReviewFormProps> = ({ reviewsRef, setShowWrite
                                 required
                             />
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col w-full">
                             <label className="font-semibold mb-2">Your Rating:</label>
                             {missingRating && <p className="text-red-800 -mt-2 mb-2">{missingRating}</p>}
-                            <Rating
-                                name="simple-controlled"
-                                value={rating}
-                                onChange={(event, newValue) => {
-                                    if (newValue == null) {
-                                        setRating(5);
-                                        setMissingRating("");
-                                    } else {
-                                        setRating(newValue);
-                                        setMissingRating("");
-                                    }
-                                }}
-                                size="large"
-                            />
+                            <div className="w-full" style={{
+                                transform: isExtraSmallScreen ? "scale(0.5)" : isSmallScreen ? "scale(0.8)" : "scale(1)",
+                                transformOrigin: "left center"
+                            }}>
+                                <Rating
+                                    name="simple-controlled"
+                                    value={rating}
+                                    onChange={(event, newValue) => {
+                                        if (newValue == null) {
+                                            setRating(5);
+                                            setMissingRating("");
+                                        } else {
+                                            setRating(newValue);
+                                            setMissingRating("");
+                                        }
+                                    }}
+                                    size={"large"}
+                                />
+                            </div>
                         </div>
                         <div className="flex flex-col">
                             <label className="font-semibold mb-2">Would you recommend this product to a friend?</label>
