@@ -171,7 +171,7 @@ const resetPassword = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
         const result = await passwordReset(hashedPassword, user_id);
         if (result) {
-            res.status(200).json({ valid: result.valid, message: result.message, user_id: result.user_id })
+            res.status(200).json({ message: "Password has been reset" })
         } 
     } catch (error) {
         console.error(error);

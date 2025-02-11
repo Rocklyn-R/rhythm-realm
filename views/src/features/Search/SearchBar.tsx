@@ -32,7 +32,7 @@ export const SearchBar = () => {
             setDebouncedSearchTerms([]);
         }
     }, [searchInput]);
-   
+
     useEffect(() => {
         if (searchParameter) {
             const decodedSearchParameter = decodeURIComponent(searchParameter);
@@ -64,7 +64,7 @@ export const SearchBar = () => {
         // Debounce logic to set debouncedSearchTerms after 500ms of no typing
         const timerId = setTimeout(() => {
             if (searchTerms.length > 0 && searchTerms[0].length >= 3) {
-                
+
                 setDebouncedSearchTerms([...searchTerms]);
             } else {
                 setDebouncedSearchTerms([]);
@@ -105,7 +105,7 @@ export const SearchBar = () => {
         searchTermIndex: number,
         termsToUse: string[],
         reducerToUse: (results: SubcategoryByBrand[]) => { type: string; payload: SubcategoryByBrand[] }) => {
-            setIsTyping(true);
+        setIsTyping(true);
         const byBrandResults: SubcategoryByBrand[] = await getSearchByBrand(termsToUse[searchTermIndex]);
         if (byBrandResults && byBrandResults.length > 0) {
             if (termsToUse.length > 1) {
@@ -183,7 +183,7 @@ export const SearchBar = () => {
         searchTermIndex: number,
         termsToUse: string[],
         reducerToUse: (results: ProductResult[]) => PayloadAction<ProductResult[]>) => {
-            setIsTyping(true);
+        setIsTyping(true);
         const productsResults: ProductResult[] = await getSearchByProduct(termsToUse[searchTermIndex]);
         if (productsResults.length > 0) {
             if (termsToUse.length > 1) {
@@ -267,7 +267,7 @@ export const SearchBar = () => {
         searchType: "keywords" | "searchbar",
         termsToUse: string[],
         reducerToUse: (results: SubcategoryResult[]) => { type: string; payload: SubcategoryResult[] }) => {
-            setIsTyping(true);
+        setIsTyping(true);
         const subcategoryResults: SubcategoryResult[] = await getSearchSubcategories(termsToUse[0]);
 
         if (subcategoryResults && subcategoryResults.length > 0) {
@@ -355,7 +355,7 @@ export const SearchBar = () => {
         } else {
             setRecommendedProductResults([]);
         }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentByBrandResults]);
 
     useEffect(() => {
@@ -365,7 +365,7 @@ export const SearchBar = () => {
         else {
             setRecommendedProductResults([]);
         }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSubcategoryResults]);
 
     useEffect(() => {
@@ -383,7 +383,7 @@ export const SearchBar = () => {
                         if (!newBrandSearch) {
                             const brandNonmatchingIndex = debouncedSearchTerms.indexOf(brandNonmatchingTerm!);
                             const productSearch = await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
-                            if(!productSearch) {
+                            if (!productSearch) {
                                 dispatch(setProductsResults([]));
                             }
                         }
@@ -422,7 +422,7 @@ export const SearchBar = () => {
                 console.log(searchTerm);
             }
         }
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location]);
 
     const submitSearchForProducts = async (terms: string[], event?: any, submit?: string) => {
@@ -526,20 +526,19 @@ export const SearchBar = () => {
                         <IoSearch className="z-40" />
                     </button>
                 </form>
-
             </div>
             {searchTerms.length > 0 && searchTerms[0].length >= 3 && isFocused && (
                 <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-20"
-                onWheel={(e) => {
-                    const target = e.currentTarget;
-                    const isAtTop = target.scrollTop === 0;
-                    const isAtBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
-              
-                    if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
-                        e.preventDefault(); // Stop main page from scrolling
-                    }
-                }}
-              >
+                    onWheel={(e) => {
+                        const target = e.currentTarget;
+                        const isAtTop = target.scrollTop === 0;
+                        const isAtBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+
+                        if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
+                            e.preventDefault(); // Stop main page from scrolling
+                        }
+                    }}
+                >
                     <SearchResults
                         isTyping={isTyping}
                         handleBlur={handleBlur}
