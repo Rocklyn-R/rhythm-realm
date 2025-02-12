@@ -33,6 +33,7 @@ export const SearchBar = () => {
         }
     }, [searchInput]);
 
+
     useEffect(() => {
         if (searchParameter) {
             const decodedSearchParameter = decodeURIComponent(searchParameter);
@@ -369,7 +370,7 @@ export const SearchBar = () => {
     }, [currentSubcategoryResults]);
 
     useEffect(() => {
-
+        console.log("performingSearch");
         //Perform Search
         const performSearch = async () => {
             setIsTyping(true);
@@ -384,7 +385,7 @@ export const SearchBar = () => {
                             const brandNonmatchingIndex = debouncedSearchTerms.indexOf(brandNonmatchingTerm!);
                             const productSearch = await searchProducts("searchbar", brandNonmatchingIndex, debouncedSearchTerms, setProductsResults);
                             if (!productSearch) {
-                                dispatch(setProductsResults([]));
+                                clearOtherResults('none');
                             }
                         }
                     }
@@ -427,6 +428,7 @@ export const SearchBar = () => {
 
     const submitSearchForProducts = async (terms: string[], event?: any, submit?: string) => {
         if (event) {
+            console.log(event);
             event.preventDefault();
         }
         if (!searchInput && (submit === "search" || submit === "submit")) {
@@ -529,15 +531,7 @@ export const SearchBar = () => {
             </div>
             {searchTerms.length > 0 && searchTerms[0].length >= 3 && isFocused && (
                 <div className="absolute bg-gray-100 top-8 pt-3 border rounded-lg border-gray-300 shadow-lg w-full z-20"
-                    onWheel={(e) => {
-                        const target = e.currentTarget;
-                        const isAtTop = target.scrollTop === 0;
-                        const isAtBottom = target.scrollHeight - target.scrollTop === target.clientHeight;
-
-                        if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
-                            e.preventDefault(); // Stop main page from scrolling
-                        }
-                    }}
+                   
                 >
                     <SearchResults
                         isTyping={isTyping}

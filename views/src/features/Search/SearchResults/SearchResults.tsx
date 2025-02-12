@@ -58,7 +58,7 @@ export const SearchResults: React.FC<SearchResultsProps> = ({ isTyping, searchIn
     const noResults = debouncedSearchTerms.length > 0 && subcategoryResults.length === 0 && byBrandResults.length === 0 && productsResults.length === 0 && !isTyping;
 
     return (
-        <div className="flex rounded-md md:h-[70vh] h-[50vh] flex-col z-20 sm:flex-row w-full overflow-y-auto justify-between" style={{ maxHeight: '600px' }}>
+        <div className={`flex rounded-md max-h-[60vh] md:max-h-[70vh] flex-col z-20 sm:flex-row w-full overflow-y-auto justify-between`}>
             {/* Left Side - Categories or By Brand Section */}
             {/* No Results Found */}
             {noResults && (
