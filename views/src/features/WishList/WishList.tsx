@@ -43,7 +43,7 @@ export const WishList = () => {
         if (!isAuthenticated && !isLoadingAuth) {
             navigate("/");
         }
-    }, [isAuthenticated, isLoadingAuth]);
+    }, [isAuthenticated, isLoadingAuth, navigate]);
 
     useEffect(() => {
         if (showRemoveMessage) {
