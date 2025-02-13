@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom";
 import { removeFromWishList, selectIsAuthenticated, selectIsLoadingAuth, selectLoadingWishList, selectWishList } from "../../redux-store/UserSlice"
-import { formatPrice } from "../../utilities/utilities";
+import { formatImage, formatPrice } from "../../utilities/utilities";
 import { AddToCart } from "../Item/AddToCart/AddToCart";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { useEffect, useState } from "react";
@@ -72,23 +72,26 @@ export const WishList = () => {
                 <Loading />
             ) : (
                 wishListItems.length > 0 ? (
-                    <div className="space-y-4 w-2/3 py-4 bg-white shadow-lg rounded-md">
+                    <div className="space-y-4 py-4 lg:w-3/4 w-full bg-white shadow-lg rounded-md">
                         {wishListItems.map(item => (
-                            <div key={item.id} className="flex p-4 rounded-md w-full">
-                                <img src={item.image1} width={200} alt={item.name} />
-                                <div className="ml-4 space-y-2 w-full flex flex-col justify-between py-4">
-                                    <div>
-                                        <Link to={`/${item.category_name}/${item.subcategory_name}/${item.name}${item.variant_name ? `/${item.variant_name}` : ''}`} className="text-lg font-semibold hover:underline">
-                                            {item.name} {item.variant_name}
-                                        </Link>
-                                        <p className={`${item.sale_price && 'line-through'} text-lg font-semibold`}>${formatPrice(item.price)}</p>
-                                        {item.sale_price && <p className="text-red-800 font-semibold">${formatPrice(item.sale_price)}</p>}
-                                    </div>
-                                    <div className="w-1/2">
-                                        <AddToCart product={item} />
+                            <div key={item.id} className="flex p-4 rounded-md w-full lg:justify-between justify-around">
+                                <div className="flex md:flex-row flex-col justify-center lg:w-3/4 w-full items-center">
+                                    <img src={formatImage(item.image1, "l")} width={200} className="h-fit" alt={item.name} />
+                                    <div className="ml-4 space-y-2 w-full flex flex-col py-4 lg:items-start items-center">
+                                        <div className="">
+                                            <Link to={`/${item.category_name}/${item.subcategory_name}/${item.name}${item.variant_name ? `/${item.variant_name}` : ''}`} className="text-lg font-semibold hover:underline">
+                                                {item.name} {item.variant_name}
+                                            </Link>
+                                            <p className={`${item.sale_price && 'line-through'} text-lg font-semibold my-2`}>${formatPrice(item.price)}</p>
+                                            {item.sale_price && <p className="text-red-800 font-semibold">${formatPrice(item.sale_price)}</p>}
+                                        </div>
+                                        <div className="md:w-2/3 lg:w-5/6 sm:w-1/2 w-full">
+                                            <AddToCart product={item} />
+                                        </div>
                                     </div>
                                 </div>
-                                <button onClick={() => handleRemoveFromWishList(item)} className="flex flex-col items-center self-center">
+
+                                <button onClick={() => handleRemoveFromWishList(item)} className="p-4 flex flex-col items-center self-center">
                                     <FaRegTrashAlt className="text-xl" />
                                 </button>
                             </div>

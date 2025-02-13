@@ -74,12 +74,13 @@ export const Signup: React.FC<SignUpProps> = ({toggleLogin}) => {
                         onChange={(e) => setLastName(e.target.value)}
                     />
                     <Input
-                        name="Email"
+                        name="email"
                         placeholder="Email"
                         className="mb-6"
                         value={email}
                         required
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="Email"
                     />
                     <Input.Password
                         name="Password"

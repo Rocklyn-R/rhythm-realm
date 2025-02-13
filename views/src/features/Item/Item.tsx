@@ -14,6 +14,7 @@ import { AddToWishList } from "../ProductsPage/Products/AddToWishList/AddToWishL
 import { LuShieldCheck } from "react-icons/lu";
 import { ReviewsBox } from "./ReviewsBox/ReviewsBox";
 import { formatPrice, formatNameForDisplay, formatImage } from "../../utilities/utilities";
+import { Loading } from "../Loading/Loading";
 
 export const Item = () => {
     const selectedProduct = useSelector(selectSelectedProduct);
@@ -26,9 +27,11 @@ export const Item = () => {
     const reviewsRef = useRef<HTMLDivElement>(null);
     const formattedVariant = variantName ? formatNameForDisplay(variantName) : undefined;
     const formattedProductName = productName ? formatNameForDisplay(productName) : undefined;
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         dispatch(setVariants([]));
+
         const fetchSelectedProduct = async () => {
             const selectedProductData = await getSelectedProduct(formattedProductName!, formattedVariant!);
             if (selectedProductData) {
@@ -36,6 +39,7 @@ export const Item = () => {
                 const variantData = await getAllVariants(selectedProductData.id);
                 if (variantData) {
                     dispatch(setVariants(variantData));
+                    setLoading(false);
                 }
                 const reviewData = await getReviews(selectedProductData.id);
                 if (reviewData) {
@@ -45,8 +49,11 @@ export const Item = () => {
                 }
             }
         }
-
         fetchSelectedProduct();
+        return () => {
+            dispatch(setSelectedProduct({}))
+        }
+
     }, [dispatch, formattedVariant, formattedProductName]);
 
     const scrollToItemDescription = () => {
@@ -60,6 +67,12 @@ export const Item = () => {
             reviewsRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
+    if (loading) {
+        return (
+            <Loading />
+        )
+    }
 
 
     return (
