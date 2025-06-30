@@ -7,6 +7,8 @@ import { updateUserEmail, updateUserName, updateUserPassword } from "../../api/u
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
+import { OverlayWindow } from "../../components/OverlayWindow";
+import { DemoDisabled } from "./DemoDisabled/DemoDisabled";
 
 
 
@@ -30,6 +32,7 @@ export const AccountSettings = () => {
     const isAuthenticated = useSelector(selectIsAuthenticated);
     const isLoadingAuth = useSelector(selectIsLoadingAuth);
     const navigate = useNavigate();
+    const [showDemoDisabled, setShowDemoDisabled] = useState(false);
 
     const handleChangeName = async () => {
         const updateName = await updateUserName(firstName, lastName);
@@ -95,13 +98,29 @@ export const AccountSettings = () => {
         <div className="flex flex-col mb-14 w-full items-center">
             <h2 className="text-3xl text-center font-bold mb-6">Account Settings</h2>
             <div className="flex flex-col bg-white w-3/4 md:w-1/2 lg:w-2/5 shadow-lg items-center rounded-md p-6">
+            {showDemoDisabled && (
+                 <OverlayWindow
+                    headerText="Demo Account Settings Disabled"
+                    onClose={() => setShowDemoDisabled(false)}
+                    className="p-2 w-1/3"
+                    className2="p-2 text-center"
+                 >
+                    <DemoDisabled />
+                 </OverlayWindow>
+            )}
                 <div className="flex flex-col items-start w-full space-y-10">
                     <div className={`flex ${editName ? "lg:flex-row flex-col" : "flex-row"} justify-between items-center space-x-8 p-2 rounded-md w-full`}>
                         <p className={`font-semibold ${editName ? "lg:mb-0 mb-4" : ""}`}>Name:</p>
                         {!editName &&
                             <>
                                 <p>{userFirstName} {userLastName}</p>
-                                <button onClick={() => setEditName(true)} className="ml-auto"><FaEdit /></button>
+                                <button onClick={() => {
+                                if (userEmail === "demo@example.com") {
+                                    setShowDemoDisabled(true);
+                                    return;
+                                }
+                                    setEditName(true)
+                                    }} className="ml-auto"><FaEdit /></button>
                             </>
                         }
                         {editName &&
@@ -128,7 +147,13 @@ export const AccountSettings = () => {
                         {!editEmail &&
                             <>
                                 <p>{userEmail}</p>
-                                <button onClick={() => setEditEmail(true)}><FaEdit /></button>
+                                <button onClick={() => {
+                                  if (userEmail === "demo@example.com") {
+                                    setShowDemoDisabled(true);
+                                    return;
+                                }
+                                setEditEmail(true)
+                            }}><FaEdit /></button>
                             </>
                         }
                         {editEmail &&
@@ -152,7 +177,13 @@ export const AccountSettings = () => {
                         {!editPassword &&
                             <>
                                 <p>*********</p>
-                                <button onClick={() => setEditPassword(true)}><FaEdit /></button>
+                                <button onClick={() => {
+                                  if (userEmail === "demo@example.com") {
+                                    setShowDemoDisabled(true);
+                                    return;
+                                }
+                                setEditPassword(true)
+                            }}><FaEdit /></button>
                             </>
                         }
                         {editPassword &&

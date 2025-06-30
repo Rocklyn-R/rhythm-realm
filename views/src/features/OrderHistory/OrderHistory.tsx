@@ -23,7 +23,7 @@ export const OrderHistory = () => {
     return (
         <div className="flex flex-col mb-14 w-full items-center px-4">
             <h2 className="text-3xl text-center font-bold mb-6">Order History</h2>
-            {loadingOrderHistory ? <Loading /> : (
+            {loadingOrderHistory ? <Loading /> : orders.length > 0 ? (
                 <div className="flex flex-col bg-white rounded-md shadow-lg w-full md:w-2/3 lg:w-1/2 py-6 lg:p-6 min-h-80">
                     <div className="w-full flex justify-between pb-6 xs:text-xl font-semibold px-4">
                         <p>Order No:</p>
@@ -67,6 +67,10 @@ export const OrderHistory = () => {
                             </div>
                         </div>
                     ))}
+                </div>
+            ) : (
+                <div>
+                    <p>You haven't made any orders yet.</p>
                 </div>
             )}
         </div>
