@@ -75,7 +75,7 @@ npm install
 
 ## 👤 Author
 
-**Your Name**  
+**Antica Rocklyn Rusinovic**  
 [GitHub](https://github.com/rocklyn-r) • [LinkedIn](https://linkedin.com/in/antica-rocklyn-rusinovic)
 
 
